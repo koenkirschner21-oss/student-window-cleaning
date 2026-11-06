@@ -1,14 +1,15 @@
-# Student Window Cleaning Whitby
+# Student Window Cleaning
 
-Marketing website for Student Window Cleaning Whitby.
+Marketing website for Student Window Cleaning — student-run window and exterior cleaning.
 
 ## Stack
 
-- [Next.js](https://nextjs.org/) (App Router)
+- Next.js (App Router)
 - TypeScript
-- Tailwind CSS
+- Tailwind CSS v4
 - ESLint
 - npm
+- Typography: Manrope (headings), DM Sans (body)
 
 ## Development
 
@@ -20,17 +21,24 @@ npm run dev
 Open [http://localhost:3000](http://localhost:3000).
 
 ```bash
-npm run lint   # ESLint
-npm run build  # production build
-npm start      # serve production build
+npm run lint
+npm run build
+npm start
 ```
 
 ## Project layout
 
-- `src/app/` — App Router pages and layouts
-- `public/` — static assets
-- Import alias: `@/*` → `src/*`
+- `src/app/` — App Router pages, SEO (`robots.ts`, `sitemap.ts`)
+- `src/components/` — layout, homepage sections, quote form, UI primitives
+- `src/lib/site.ts` — shared nav + form options
+- `public/brand/` — official logo assets (do not redraw)
+
+Import alias: `@/*` → `src/*`
 
 ## Status
 
-Infrastructure scaffold only. Site content and design are not implemented yet. Deployed via Vercel from the `main` branch.
+Phase 1: design foundation, shared chrome, full homepage, reusable quote form (frontend only), and scaffold routes for Services, Cleaning Plans, About, Our Work, and Quote.
+
+Quote submissions are not connected to a backend yet — the form shows an honest non-submitting state.
+
+Production: [https://student-window-cleaning.vercel.app](https://student-window-cleaning.vercel.app)
