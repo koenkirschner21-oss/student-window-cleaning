@@ -1,79 +1,63 @@
-import { Button } from "@/components/ui/Button";
+import Link from "next/link";
 import { Container } from "@/components/ui/Container";
 
 export function Hero() {
   return (
     <section
       aria-labelledby="hero-heading"
-      className="relative overflow-hidden bg-cloud"
+      className="relative bg-midnight text-pure"
+      style={{
+        background:
+          "linear-gradient(180deg, #061A38 0%, #071F42 55%, #061A38 100%)",
+      }}
     >
-      <div
-        aria-hidden
-        className="pointer-events-none absolute inset-0"
-        style={{
-          background:
-            "linear-gradient(180deg, #FFFFFF 0%, #F3F7FB 48%, #E9F3FC 100%)",
-        }}
-      />
-      <div
-        aria-hidden
-        className="pointer-events-none absolute -right-24 top-0 h-[28rem] w-[28rem] rounded-full opacity-50 blur-3xl"
-        style={{
-          background:
-            "radial-gradient(circle, color-mix(in srgb, var(--color-clear-sky) 28%, white) 0%, transparent 70%)",
-        }}
-      />
-
-      <Container className="relative grid items-center gap-12 py-16 sm:py-20 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)] lg:gap-16 lg:py-24">
+      <Container className="grid items-center gap-10 py-12 sm:gap-12 sm:py-14 lg:grid-cols-2 lg:gap-14 lg:py-16">
         <div className="motion-fade-up max-w-xl">
-          <p className="text-sm font-semibold tracking-wide text-signature">
-            Student run. Professionally done.
+          <p className="text-[0.7rem] font-semibold uppercase tracking-[0.16em] text-sky sm:text-xs">
+            Window Cleaning in Whitby &amp; Durham Region
           </p>
+
           <h1
             id="hero-heading"
-            className="font-heading mt-4 text-[2.15rem] font-semibold leading-[1.12] tracking-tight text-midnight sm:text-5xl lg:text-[3.25rem] lg:leading-[1.08]"
+            className="font-heading mt-4 font-extrabold uppercase"
           >
-            Professional Window Cleaning in Whitby &amp; Durham Region.
+            <span className="block text-[clamp(1.85rem,4.6vw,3.35rem)] leading-[1.05] tracking-[0.02em] text-pure">
+              Student Run.
+            </span>
+            <span className="mt-1 block text-[clamp(1.45rem,3.7vw,2.75rem)] leading-[1.08] tracking-[0.015em] text-sky sm:mt-1.5">
+              Professionally Done.
+            </span>
           </h1>
-          <p className="mt-5 max-w-lg text-base leading-relaxed text-navy-muted sm:text-lg">
-            Reliable interior and exterior window cleaning, gutter cleaning, and
-            seasonal care plans from a local, student-run team. Clear results,
-            professional service, and free quotes.
+
+          <p className="mt-5 max-w-md text-[0.95rem] leading-relaxed text-white/70 sm:text-base">
+            Professional window and gutter cleaning for homeowners across Whitby
+            and Durham Region. Local students delivering quality you can count
+            on.
           </p>
-          <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
-            <Button href="/quote" size="lg">
+
+          <div className="mt-7 flex flex-col gap-3 sm:flex-row sm:items-center">
+            <Link
+              href="/quote"
+              className="inline-flex min-h-12 items-center justify-center rounded-md bg-signature px-6 text-sm font-semibold tracking-tight text-pure transition-colors duration-200 hover:bg-[#0656d6] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-sky sm:text-base"
+            >
               Get a Free Quote
-            </Button>
-            <Button href="/services" variant="secondary" size="lg">
+            </Link>
+            <Link
+              href="/services"
+              className="inline-flex min-h-12 items-center justify-center rounded-md border border-white/35 bg-transparent px-6 text-sm font-semibold tracking-tight text-pure transition-colors duration-200 hover:border-white/60 hover:bg-white/5 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-sky sm:text-base"
+            >
               Explore Services
-            </Button>
+            </Link>
           </div>
         </div>
 
-        <figure className="motion-soft-rise m-0">
-          <div className="overflow-hidden rounded-lg border border-border bg-pure shadow-[0_18px_50px_color-mix(in_srgb,var(--color-midnight-navy)_8%,transparent)]">
-            <div
-              className="relative flex aspect-[4/5] w-full flex-col justify-end sm:aspect-[5/6] lg:aspect-[4/5]"
-              style={{
-                background:
-                  "linear-gradient(165deg, #FFFFFF 0%, #F3F7FB 42%, #E9F3FC 100%)",
-              }}
-            >
-              <div
-                aria-hidden
-                className="absolute inset-6 rounded-md border border-dashed border-midnight/15"
-              />
-              <figcaption className="relative border-t border-border bg-pure px-5 py-4">
-                <p className="text-xs font-semibold uppercase tracking-[0.14em] text-signature">
-                  Photo coming soon
-                </p>
-                <p className="mt-1.5 text-sm leading-relaxed text-navy-muted">
-                  Real Student Window Cleaning work will sit in this frame. No
-                  stock or AI stand-ins.
-                </p>
-              </figcaption>
-            </div>
-          </div>
+        <figure className="motion-soft-rise m-0 w-full max-w-lg justify-self-center lg:max-w-none lg:justify-self-stretch">
+          <div
+            className="aspect-[4/5] w-full rounded-md sm:aspect-[5/6] lg:aspect-[4/5]"
+            style={{ backgroundColor: "#0A274F" }}
+            role="img"
+            aria-label="Placeholder for Student Window Cleaning service photography"
+          />
         </figure>
       </Container>
     </section>
