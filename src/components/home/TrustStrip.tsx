@@ -19,7 +19,7 @@ function GraduationCapIcon() {
   );
 }
 
-function MapPinIcon() {
+function CalendarIcon() {
   return (
     <svg
       viewBox="0 0 24 24"
@@ -31,24 +31,24 @@ function MapPinIcon() {
       aria-hidden
       className="size-5"
     >
-      <path d="M12 21s6.5-5.2 6.5-11A6.5 6.5 0 0 0 5.5 10c0 5.8 6.5 11 6.5 11Z" />
-      <circle cx="12" cy="10" r="2.4" />
+      <rect x="3.5" y="5" width="17" height="15.5" rx="2" />
+      <path d="M8 3.5v3M16 3.5v3M3.5 10h17" />
     </svg>
   );
 }
 
-function FiveStars() {
+function FiveGoldStars() {
   return (
     <span
-      className="inline-flex items-center gap-0.5 text-signature"
-      aria-label="Five star Google reviews"
+      className="inline-flex items-center justify-center gap-1"
+      style={{ color: "#E6B422" }}
+      aria-hidden
     >
       {Array.from({ length: 5 }, (_, index) => (
         <svg
           key={index}
           viewBox="0 0 20 20"
-          aria-hidden
-          className="size-3.5 fill-current"
+          className="size-4 fill-current sm:size-[1.05rem]"
         >
           <path d="M10 1.8 12.4 7l5.6.8-4 3.9.9 5.6L10 14.6 5.1 17.3l.9-5.6-4-3.9L7.6 7 10 1.8Z" />
         </svg>
@@ -61,50 +61,33 @@ export function TrustStrip() {
   return (
     <section
       aria-label="Trust highlights"
-      className="border-b border-border bg-pure"
+      className="border-b border-border bg-cloud"
     >
       <Container className="py-5 sm:py-6">
-        <ul className="grid gap-5 sm:grid-cols-3 sm:gap-6 lg:gap-10">
-          <li className="flex min-w-0 items-start gap-3">
-            <span className="mt-0.5 inline-flex size-9 shrink-0 items-center justify-center text-signature">
+        <ul className="grid gap-5 sm:grid-cols-3 sm:gap-6 lg:gap-8">
+          <li className="flex min-w-0 items-center justify-center gap-2.5 sm:justify-start">
+            <span className="inline-flex shrink-0 text-signature">
               <GraduationCapIcon />
             </span>
-            <div className="min-w-0">
-              <p className="font-heading text-sm font-semibold tracking-tight text-midnight sm:text-[0.95rem]">
-                Proudly Student-Run
-              </p>
-              <p className="mt-0.5 text-sm leading-snug text-navy-muted">
-                Local to Whitby
-              </p>
-            </div>
+            <p className="font-heading text-sm font-semibold tracking-tight text-midnight sm:text-[0.95rem]">
+              Proudly Student-Run
+            </p>
           </li>
 
-          <li className="flex min-w-0 items-start gap-3">
-            <span className="mt-1 inline-flex shrink-0 items-center">
-              <FiveStars />
-            </span>
-            <div className="min-w-0">
-              <p className="font-heading text-sm font-semibold tracking-tight text-midnight sm:text-[0.95rem]">
-                Google Reviews
-              </p>
-              <p className="mt-0.5 text-sm leading-snug text-navy-muted">
-                Trusted by local homeowners
-              </p>
-            </div>
+          <li className="flex min-w-0 flex-col items-center justify-center gap-1.5 text-center">
+            <FiveGoldStars />
+            <p className="font-heading text-sm font-semibold tracking-tight text-midnight sm:text-[0.95rem]">
+              Google Reviews
+            </p>
           </li>
 
-          <li className="flex min-w-0 items-start gap-3">
-            <span className="mt-0.5 inline-flex size-9 shrink-0 items-center justify-center text-signature">
-              <MapPinIcon />
+          <li className="flex min-w-0 items-center justify-center gap-2.5 sm:justify-start lg:justify-end">
+            <span className="inline-flex shrink-0 text-signature">
+              <CalendarIcon />
             </span>
-            <div className="min-w-0">
-              <p className="font-heading text-sm font-semibold tracking-tight text-midnight sm:text-[0.95rem]">
-                Serving Durham Region
-              </p>
-              <p className="mt-0.5 text-sm leading-snug text-navy-muted">
-                Professional service since 2023
-              </p>
-            </div>
+            <p className="font-heading text-sm font-semibold tracking-tight text-midnight sm:text-[0.95rem]">
+              4+ Years in Business
+            </p>
           </li>
         </ul>
       </Container>
