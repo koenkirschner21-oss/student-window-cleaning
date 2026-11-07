@@ -3,23 +3,55 @@
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useId, useState } from "react";
-import { Button } from "@/components/ui/Button";
+import { useEffect, useId, useRef, useState } from "react";
 import { Container } from "@/components/ui/Container";
 import { navLinks, site } from "@/lib/site";
+
+function navLinkClass(active: boolean) {
+  return [
+    "font-heading relative inline-flex min-h-11 items-center px-2.5 text-[0.9375rem] font-semibold tracking-tight text-midnight",
+    "transition-colors duration-150",
+    "after:absolute after:inset-x-2.5 after:bottom-2 after:h-px after:origin-left after:bg-signature after:transition-transform after:duration-150 after:ease-out",
+    active
+      ? "after:scale-x-100"
+      : "after:scale-x-0 hover:text-signature hover:after:scale-x-100",
+    "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-signature",
+  ].join(" ");
+}
+
+function mobileNavLinkClass(active: boolean) {
+  return [
+    "font-heading relative flex min-h-12 items-center px-1 text-base font-semibold tracking-tight text-midnight",
+    "transition-colors duration-150",
+    "after:absolute after:bottom-2 after:left-1 after:right-1 after:h-px after:origin-left after:bg-signature after:transition-transform after:duration-150",
+    active ? "after:scale-x-100" : "after:scale-x-0",
+    "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-signature",
+  ].join(" ");
+}
 
 export function Header() {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
   const menuId = useId();
+  const toggleRef = useRef<HTMLButtonElement>(null);
+  const menuRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (!open) return;
+
     const onKey = (event: KeyboardEvent) => {
-      if (event.key === "Escape") setOpen(false);
+      if (event.key === "Escape") {
+        setOpen(false);
+        toggleRef.current?.focus();
+      }
     };
+
     document.addEventListener("keydown", onKey);
     document.body.style.overflow = "hidden";
+
+    const firstLink = menuRef.current?.querySelector<HTMLElement>("a, button");
+    firstLink?.focus();
+
     return () => {
       document.removeEventListener("keydown", onKey);
       document.body.style.overflow = "";
@@ -31,27 +63,27 @@ export function Header() {
   }
 
   return (
-    <header className="sticky top-0 z-50 border-b border-border bg-pure/95 backdrop-blur-md">
-      <Container className="flex h-[var(--header-height)] items-center justify-between gap-4">
+    <header className="sticky top-0 z-50 border-b border-border bg-pure">
+      <Container className="grid h-[var(--header-height)] grid-cols-[1fr_auto] items-center gap-3 lg:grid-cols-[1fr_auto_1fr]">
         <Link
           href="/"
-          className="relative flex shrink-0 items-center focus-visible:outline-none"
+          className="relative flex shrink-0 items-center justify-self-start focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-signature"
           aria-label={`${site.name} home`}
           onClick={closeMenu}
         >
           <Image
-            src="/brand/logos/primary-horizontal-navy-on-white.png"
+            src="/brand/logos/primary-horizontal-navy-transparent.png"
             alt={site.name}
             width={2172}
             height={724}
             priority
-            className="h-10 w-auto sm:h-11"
+            className="h-12 w-auto sm:h-[3.25rem]"
           />
         </Link>
 
         <nav
           aria-label="Primary"
-          className="hidden items-center gap-1 lg:flex"
+          className="hidden items-center justify-center gap-1 lg:flex"
         >
           {navLinks.map((link) => {
             const active = pathname === link.href;
@@ -59,12 +91,7 @@ export function Header() {
               <Link
                 key={link.href}
                 href={link.href}
-                className={[
-                  "rounded-md px-3 py-2 text-sm font-medium transition-colors",
-                  active
-                    ? "bg-ice text-signature"
-                    : "text-midnight/80 hover:bg-cloud hover:text-midnight",
-                ].join(" ")}
+                className={navLinkClass(active)}
                 aria-current={active ? "page" : undefined}
               >
                 {link.label}
@@ -73,15 +100,19 @@ export function Header() {
           })}
         </nav>
 
-        <div className="hidden lg:block">
-          <Button href="/quote" size="md">
+        <div className="hidden justify-self-end lg:block">
+          <Link
+            href="/quote"
+            className="font-heading inline-flex min-h-11 items-center justify-center rounded-md bg-signature px-5 text-[0.9375rem] font-semibold tracking-tight text-pure transition-colors duration-150 hover:bg-[#0656d6] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-signature"
+          >
             Get a Free Quote
-          </Button>
+          </Link>
         </div>
 
         <button
+          ref={toggleRef}
           type="button"
-          className="inline-flex h-11 w-11 items-center justify-center rounded-md border border-border text-midnight lg:hidden"
+          className="inline-flex h-11 w-11 items-center justify-center justify-self-end rounded-md border border-border text-midnight transition-colors duration-150 hover:border-border-strong focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-signature lg:hidden"
           aria-expanded={open}
           aria-controls={menuId}
           onClick={() => setOpen((value) => !value)}
@@ -89,33 +120,32 @@ export function Header() {
           <span className="sr-only">{open ? "Close menu" : "Open menu"}</span>
           <span aria-hidden className="relative block h-4 w-5">
             <span
-              className={`absolute left-0 block h-0.5 w-5 bg-current transition ${open ? "top-1.5 rotate-45" : "top-0"}`}
+              className={`absolute left-0 block h-0.5 w-5 bg-current transition duration-150 motion-reduce:transition-none ${open ? "top-1.5 rotate-45" : "top-0"}`}
             />
             <span
-              className={`absolute left-0 top-1.5 block h-0.5 w-5 bg-current transition ${open ? "opacity-0" : ""}`}
+              className={`absolute left-0 top-1.5 block h-0.5 w-5 bg-current transition duration-150 motion-reduce:transition-none ${open ? "opacity-0" : ""}`}
             />
             <span
-              className={`absolute left-0 block h-0.5 w-5 bg-current transition ${open ? "top-1.5 -rotate-45" : "top-3"}`}
+              className={`absolute left-0 block h-0.5 w-5 bg-current transition duration-150 motion-reduce:transition-none ${open ? "top-1.5 -rotate-45" : "top-3"}`}
             />
           </span>
         </button>
       </Container>
 
       <div
+        ref={menuRef}
         id={menuId}
-        className={`border-t border-border bg-pure lg:hidden ${open ? "block" : "hidden"}`}
+        hidden={!open}
+        className="border-t border-border bg-pure lg:hidden"
       >
-        <Container className="flex flex-col gap-1 py-4">
+        <Container className="flex flex-col gap-1 py-3">
           {navLinks.map((link) => {
             const active = pathname === link.href;
             return (
               <Link
                 key={link.href}
                 href={link.href}
-                className={[
-                  "rounded-md px-3 py-3 text-base font-medium",
-                  active ? "bg-ice text-signature" : "text-midnight",
-                ].join(" ")}
+                className={mobileNavLinkClass(active)}
                 aria-current={active ? "page" : undefined}
                 onClick={closeMenu}
               >
@@ -123,14 +153,13 @@ export function Header() {
               </Link>
             );
           })}
-          <Button
+          <Link
             href="/quote"
-            className="mt-2 w-full"
-            size="lg"
+            className="font-heading mt-2 inline-flex min-h-12 w-full items-center justify-center rounded-md bg-signature px-5 text-base font-semibold tracking-tight text-pure transition-colors duration-150 hover:bg-[#0656d6] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-signature"
             onClick={closeMenu}
           >
             Get a Free Quote
-          </Button>
+          </Link>
         </Container>
       </div>
     </header>
