@@ -139,8 +139,8 @@ export const addressAutocomplete = {
 
 /**
  * Quote trust-band residential photo.
- * Full-house portrait from source; soft privacy treatment over house number /
- * street name above the garage. Prefer object-contain — do not cover-zoom.
+ * Approved landscape source (privacy-treated address above garage).
+ * Prefer object-cover in the shorter/wider trust band — no AI enhancement.
  * Not claimed as a completed Student Window Cleaning job.
  */
 export const quoteTrustPhoto: {
@@ -148,7 +148,7 @@ export const quoteTrustPhoto: {
   alt: string;
 } | null = {
   src: "/quote/residential-property.webp",
-  alt: "Full view of a modern two-story home with white-trimmed windows, garage, and driveway",
+  alt: "Landscape view of a modern two-story home with white-trimmed windows, garage, and driveway",
 };
 
 export type ServiceId = (typeof serviceOptions)[number]["id"];
