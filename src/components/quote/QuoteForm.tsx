@@ -111,11 +111,23 @@ function BenefitCheck() {
   );
 }
 
-function SelectedMark() {
+function SelectionIndicator({
+  selected,
+  shape = "circle",
+}: {
+  selected: boolean;
+  shape?: "circle" | "square";
+}) {
   return (
     <span
       aria-hidden
-      className="inline-flex size-5 shrink-0 items-center justify-center rounded-full bg-signature text-pure"
+      className={[
+        "inline-flex size-5 shrink-0 items-center justify-center border-2 transition-colors duration-150",
+        shape === "circle" ? "rounded-full" : "rounded-[4px]",
+        selected
+          ? "border-signature bg-signature text-pure"
+          : "border-border-strong bg-pure text-transparent",
+      ].join(" ")}
     >
       <svg viewBox="0 0 16 16" fill="none" className="size-3">
         <path
@@ -154,14 +166,14 @@ const fieldClass =
   "mt-2 w-full rounded-md border border-border bg-pure px-3.5 py-3 text-sm text-midnight transition-colors placeholder:text-navy-muted/70 focus:border-signature focus:outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-signature";
 
 const primaryActionClass =
-  "inline-flex min-h-12 w-full items-center justify-center rounded-md bg-signature px-6 text-base font-semibold tracking-tight text-pure transition-colors duration-150 hover:bg-[#0656d6] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-signature disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto";
+  "inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-md bg-signature px-6 text-base font-semibold tracking-tight text-pure transition-colors duration-150 hover:bg-[#0656d6] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-signature disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto";
 
 const secondaryActionClass =
   "inline-flex min-h-12 items-center justify-center rounded-md border border-border-strong bg-pure px-5 text-sm font-semibold tracking-tight text-midnight transition-colors duration-150 hover:border-signature hover:text-signature focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-signature";
 
-function chipClass(selected: boolean) {
+function choiceClass(selected: boolean) {
   return [
-    "inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-md border px-3.5 py-2.5 text-sm font-semibold tracking-tight transition-colors duration-150",
+    "inline-flex min-h-12 w-full items-center gap-3 rounded-md border px-3.5 py-3 text-left text-sm font-semibold tracking-tight transition-colors duration-150",
     "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-signature",
     selected
       ? "border-signature bg-ice text-midnight"
@@ -185,6 +197,7 @@ export function QuoteForm({
     frequency: seededFrequency,
   });
   const [stepError, setStepError] = useState<string | null>(null);
+  const [gutterPlanHint, setGutterPlanHint] = useState(false);
   const [attemptedSubmit, setAttemptedSubmit] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [submitBlocked, setSubmitBlocked] = useState(false);
@@ -194,11 +207,18 @@ export function QuoteForm({
 
   const windowSelected = hasWindowService(form.services);
   const gutterOnly = isGutterOnly(form.services);
-  const plansInteractive = windowSelected;
   const frequencyRequired = windowSelected;
+  const planGuidance = gutterOnly
+    ? gutterPlanHint
+      ? "Window cleaning plans aren’t needed for gutter-only requests."
+      : null
+    : form.frequency && !windowSelected
+      ? "Choose a window cleaning service to continue with this plan."
+      : null;
 
   function toggleService(serviceId: ServiceId) {
     setStepError(null);
+    setGutterPlanHint(false);
     setForm((current) => {
       const exists = current.services.includes(serviceId);
       let services: ServiceId[];
@@ -215,7 +235,9 @@ export function QuoteForm({
       }
 
       const next = { ...current, services };
-      if (!hasWindowService(services)) {
+      // Gutter-only quotes skip window plans; keep a preselected plan if
+      // the customer has not chosen a window service yet.
+      if (isGutterOnly(services)) {
         next.frequency = "";
       }
       return next;
@@ -223,14 +245,20 @@ export function QuoteForm({
   }
 
   function selectPlan(planId: QuotePlanId) {
-    if (!plansInteractive) return;
     setStepError(null);
+
+    if (gutterOnly) {
+      setGutterPlanHint(true);
+      return;
+    }
+
+    setGutterPlanHint(false);
     setForm((current) => ({ ...current, frequency: planId }));
   }
 
   function goToStep2() {
     if (form.services.length === 0) {
-      setStepError("Select at least one service.");
+      setStepError("Select at least one service to continue.");
       return;
     }
     if (frequencyRequired && !form.frequency) {
@@ -238,10 +266,11 @@ export function QuoteForm({
       return;
     }
     if (!form.propertyType) {
-      setStepError("Choose a property type.");
+      setStepError("Choose a property type to continue.");
       return;
     }
     setStepError(null);
+    setGutterPlanHint(false);
     setStep(2);
   }
 
@@ -274,9 +303,9 @@ export function QuoteForm({
 
   return (
     <div
-      className={`rounded-md border border-border bg-pure p-5 text-midnight sm:p-7 ${className}`.trim()}
+      className={`rounded-md border border-border bg-pure p-5 text-midnight sm:p-6 ${className}`.trim()}
     >
-      <div className="mb-6 border-b border-border pb-4">
+      <div className="mb-4 border-b border-border pb-3.5">
         <p className="text-xs font-semibold uppercase tracking-[0.16em] text-signature">
           Step {step} of 2
         </p>
@@ -289,8 +318,8 @@ export function QuoteForm({
             : "Your Property & Contact Details"}
         </h3>
         {step === 1 ? (
-          <p className="mt-2 text-sm leading-relaxed text-navy-muted">
-            A few quick selections to help us prepare your free virtual quote.
+          <p className="mt-1.5 text-sm leading-relaxed text-navy-muted">
+            Start by selecting the services you&apos;re interested in.
           </p>
         ) : null}
       </div>
@@ -299,20 +328,19 @@ export function QuoteForm({
         id={id}
         aria-labelledby={headingId}
         onSubmit={onSubmit}
-        className="space-y-6"
+        className="space-y-5"
         noValidate
       >
         {step === 1 ? (
-          <div className="space-y-6">
+          <div className="space-y-5">
             <fieldset>
               <legend className="text-sm font-semibold text-midnight">
-                What would you like cleaned?
+                1. What would you like cleaned?
               </legend>
               <p className="mt-1 text-sm text-navy-muted">
-                Exterior and Interior &amp; Exterior are alternative scopes.
-                Gutter can be added with either.
+                Choose a window cleaning option, gutter cleaning, or both.
               </p>
-              <div className="mt-3 grid grid-cols-1 gap-2.5 sm:grid-cols-3">
+              <div className="mt-2.5 grid grid-cols-1 gap-2.5 sm:grid-cols-3">
                 {serviceOptions.map((service) => {
                   const selected = form.services.includes(service.id);
                   return (
@@ -322,9 +350,9 @@ export function QuoteForm({
                       role="checkbox"
                       aria-checked={selected}
                       onClick={() => toggleService(service.id)}
-                      className={chipClass(selected)}
+                      className={choiceClass(selected)}
                     >
-                      {selected ? <SelectedMark /> : null}
+                      <SelectionIndicator selected={selected} shape="square" />
                       <span>{service.label}</span>
                     </button>
                   );
@@ -335,21 +363,14 @@ export function QuoteForm({
             {/* Always mounted — never conditionally reveal mid-flow. */}
             <fieldset>
               <legend className="text-sm font-semibold text-midnight">
-                Choose your cleaning plan
+                2. Choose your cleaning plan
               </legend>
               <p className="mt-1 text-sm text-navy-muted">
-                Save more with recurring professional cleaning.
+                Save on each visit with recurring cleaning.
               </p>
-              {gutterOnly || form.services.length === 0 ? (
-                <p className="mt-2 text-xs font-medium text-navy-muted">
-                  {gutterOnly
-                    ? "Window cleaning plans apply when a window service is selected. Gutter-only quotes are priced separately."
-                    : "Select a window service above to choose a cleaning plan."}
-                </p>
-              ) : null}
 
               <div
-                className="mt-3 grid gap-2.5 sm:grid-cols-3 sm:items-stretch"
+                className="mt-2.5 grid gap-2.5 sm:grid-cols-3 sm:items-stretch"
                 role="radiogroup"
                 aria-label="Cleaning plan"
               >
@@ -359,13 +380,11 @@ export function QuoteForm({
                     <label
                       key={plan.id}
                       className={[
-                        "relative flex h-full flex-col overflow-hidden rounded-md border bg-pure text-left transition-colors duration-150",
+                        "relative flex h-full min-h-0 flex-col overflow-hidden rounded-md border bg-pure text-left transition-colors duration-150",
                         "focus-within:outline focus-within:outline-2 focus-within:outline-offset-2 focus-within:outline-signature",
-                        !plansInteractive
-                          ? "cursor-not-allowed border-border"
-                          : selected
-                            ? "cursor-pointer border-signature bg-ice"
-                            : "cursor-pointer border-border hover:border-border-strong",
+                        selected
+                          ? "cursor-pointer border-signature bg-ice"
+                          : "cursor-pointer border-border hover:border-border-strong",
                       ].join(" ")}
                     >
                       <input
@@ -374,15 +393,14 @@ export function QuoteForm({
                         name={planGroupName}
                         value={plan.id}
                         checked={selected}
-                        disabled={!plansInteractive}
                         onChange={() => selectPlan(plan.id)}
                       />
                       {plan.recommended ? (
-                        <span className="bg-midnight px-3 py-1.5 text-center text-[0.65rem] font-semibold uppercase tracking-[0.14em] text-pure">
-                          Recommended
+                        <span className="bg-midnight px-3 py-1 text-center text-[0.65rem] font-semibold uppercase tracking-[0.14em] text-pure">
+                          Recommended · Best Value
                         </span>
                       ) : null}
-                      <span className="flex flex-1 flex-col p-3.5 pt-3">
+                      <span className="flex flex-1 flex-col p-3 pt-2.5">
                         <span className="flex items-start justify-between gap-2">
                           <span className="min-w-0">
                             <span className="block text-base font-semibold text-midnight">
@@ -392,9 +410,12 @@ export function QuoteForm({
                               {plan.subtitle}
                             </span>
                           </span>
-                          {selected ? <SelectedMark /> : null}
+                          <SelectionIndicator
+                            selected={selected}
+                            shape="circle"
+                          />
                         </span>
-                        <ul className="mt-3 space-y-1.5">
+                        <ul className="mt-2.5 space-y-1.5">
                           {plan.checks.map((check) => (
                             <li
                               key={check}
@@ -405,7 +426,7 @@ export function QuoteForm({
                             </li>
                           ))}
                         </ul>
-                        <span className="mt-auto border-t border-border/80 pt-3">
+                        <span className="mt-auto border-t border-border/80 pt-2.5">
                           <span
                             className={[
                               "block text-sm font-bold tracking-tight",
@@ -427,14 +448,20 @@ export function QuoteForm({
                   );
                 })}
               </div>
+
+              {planGuidance ? (
+                <p className="mt-2 text-xs font-medium text-navy-muted" role="status">
+                  {planGuidance}
+                </p>
+              ) : null}
             </fieldset>
 
             <fieldset>
               <legend className="text-sm font-semibold text-midnight">
-                What type of property?
+                3. What type of property do you have?
               </legend>
               <div
-                className="mt-3 grid grid-cols-1 gap-2.5 sm:grid-cols-2"
+                className="mt-2.5 grid grid-cols-1 gap-2.5 sm:grid-cols-2"
                 role="radiogroup"
                 aria-label="Property type"
               >
@@ -443,7 +470,7 @@ export function QuoteForm({
                   return (
                     <label
                       key={option.id}
-                      className={[chipClass(selected), "cursor-pointer"].join(
+                      className={[choiceClass(selected), "cursor-pointer"].join(
                         " ",
                       )}
                     >
@@ -461,7 +488,7 @@ export function QuoteForm({
                           }));
                         }}
                       />
-                      {selected ? <SelectedMark /> : null}
+                      <SelectionIndicator selected={selected} shape="circle" />
                       <span>{option.label}</span>
                     </label>
                   );
@@ -482,6 +509,20 @@ export function QuoteForm({
                 className={primaryActionClass}
               >
                 Continue
+                <svg
+                  viewBox="0 0 16 16"
+                  fill="none"
+                  aria-hidden
+                  className="size-4"
+                >
+                  <path
+                    d="M3 8h10M9 4l4 4-4 4"
+                    stroke="currentColor"
+                    strokeWidth="1.8"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
               </button>
             </div>
           </div>
