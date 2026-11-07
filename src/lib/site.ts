@@ -59,17 +59,58 @@ export const serviceOptions = [
   { id: "gutter-cleaning", label: "Gutter" },
 ] as const;
 
-/** Plan-aligned frequency choices shown in the quote form. */
-export const quoteFrequencyOptions = [
-  { id: "one-time", label: "One-Time / Basic", detail: "1 visit" },
-  { id: "two-visit", label: "Best Value", detail: "2 visits" },
-  { id: "three-visit", label: "Premium", detail: "3 visits" },
+/**
+ * Window cleaning plan choices for the quote form.
+ * Discount / priority copy is display-only and easy to update — business terms TBD.
+ * Do not apply window-plan discounts to gutter-only requests.
+ */
+export const quotePlanOptions = [
+  {
+    id: "one-time",
+    name: "Basic",
+    subtitle: "One-Time Cleaning",
+    visits: "1 visit",
+    benefits: ["Standard individually quoted price"],
+    discountLabel: null as string | null,
+    recommended: false,
+  },
+  {
+    id: "two-visit",
+    name: "Best Value",
+    subtitle: "Twice-Yearly Cleaning",
+    visits: "2 visits",
+    benefits: [
+      "$50 off each qualifying cleaning visit",
+      "Priority scheduling",
+    ],
+    discountLabel: "$50 off each qualifying visit",
+    recommended: true,
+  },
+  {
+    id: "three-visit",
+    name: "Premium",
+    subtitle: "Three Times Yearly",
+    visits: "3 visits",
+    benefits: [
+      "$100 off each qualifying cleaning visit",
+      "Priority scheduling",
+    ],
+    discountLabel: "$100 off each qualifying visit",
+    recommended: false,
+  },
 ] as const;
 
+/** @deprecated Prefer quotePlanOptions — kept for frequency id compatibility. */
+export const quoteFrequencyOptions = quotePlanOptions.map((plan) => ({
+  id: plan.id,
+  label: plan.name,
+  detail: plan.visits,
+}));
+
 export const frequencyOptions = [
-  ...quoteFrequencyOptions.map(({ id, label, detail }) => ({
-    id,
-    label: `${label} · ${detail}`,
+  ...quotePlanOptions.map((plan) => ({
+    id: plan.id,
+    label: `${plan.name} · ${plan.visits}`,
   })),
   { id: "monthly", label: "Monthly" },
   { id: "bi-monthly", label: "Every 2 months" },
@@ -78,11 +119,18 @@ export const frequencyOptions = [
 ] as const;
 
 export const propertyTypeOptions = [
-  { id: "detached-semi", label: "Detached / semi" },
+  { id: "detached-semi", label: "Detached/Semi-Detached" },
   { id: "townhouse", label: "Townhouse" },
   { id: "commercial", label: "Commercial" },
   { id: "other", label: "Other" },
 ] as const;
+
+/** Set when a Places/autocomplete provider is configured for the quote address field. */
+export const addressAutocomplete = {
+  provider: null as "google-places" | null,
+  /** Public browser key env name — never hardcode secrets. */
+  apiKeyEnv: "NEXT_PUBLIC_GOOGLE_PLACES_API_KEY",
+} as const;
 
 export type ServiceId = (typeof serviceOptions)[number]["id"];
 export type FrequencyId = (typeof frequencyOptions)[number]["id"];

@@ -2,15 +2,14 @@
 
 import {
   useId,
-  useMemo,
   useState,
-  type ChangeEvent,
   type FormEvent,
   type ReactNode,
 } from "react";
+import { AddressField } from "@/components/quote/AddressField";
 import {
   propertyTypeOptions,
-  quoteFrequencyOptions,
+  quotePlanOptions,
   serviceOptions,
   type FrequencyId,
   type PropertyTypeId,
@@ -28,9 +27,10 @@ type FormState = {
   services: ServiceId[];
   frequency: FrequencyId | "";
   propertyType: PropertyTypeId | "";
+  streetAddress: string;
+  unit: string;
   name: string;
   phone: string;
-  location: string;
   email: string;
   notes: string;
 };
@@ -39,9 +39,10 @@ const initialState: FormState = {
   services: [],
   frequency: "",
   propertyType: "",
+  streetAddress: "",
+  unit: "",
   name: "",
   phone: "",
-  location: "",
   email: "",
   notes: "",
 };
@@ -50,6 +51,26 @@ const windowServiceIds = new Set<ServiceId>(["exterior", "interior-exterior"]);
 
 function isGutterOnly(services: ServiceId[]) {
   return services.length === 1 && services[0] === "gutter-cleaning";
+}
+
+function hasWindowService(services: ServiceId[]) {
+  return services.some((id) => windowServiceIds.has(id));
+}
+
+function normalizePhone(value: string) {
+  return value.replace(/\D/g, "");
+}
+
+function isValidNaPhone(value: string) {
+  const digits = normalizePhone(value);
+  if (digits.length === 10) return true;
+  if (digits.length === 11 && digits.startsWith("1")) return true;
+  return false;
+}
+
+function isValidEmail(value: string) {
+  if (!value.trim()) return true;
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value.trim());
 }
 
 function ChoiceButton({
@@ -85,17 +106,23 @@ function ChoiceButton({
 function FieldLabel({
   children,
   optional,
+  htmlFor,
 }: {
   children: ReactNode;
   optional?: boolean;
+  htmlFor?: string;
 }) {
+  const Tag = htmlFor ? "label" : "span";
   return (
-    <span className="text-sm font-semibold text-midnight">
+    <Tag
+      htmlFor={htmlFor}
+      className="text-sm font-semibold text-midnight"
+    >
       {children}
       {optional ? (
         <span className="ml-1.5 font-normal text-navy-muted">(optional)</span>
       ) : null}
-    </span>
+    </Tag>
   );
 }
 
@@ -103,7 +130,7 @@ const fieldClass =
   "mt-2 w-full rounded-md border border-border bg-pure px-3.5 py-3 text-sm text-midnight transition-colors placeholder:text-navy-muted/70 focus:border-signature focus:outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-signature";
 
 const primaryActionClass =
-  "inline-flex min-h-12 w-full items-center justify-center rounded-md bg-signature px-6 text-base font-semibold tracking-tight text-pure transition-colors duration-150 hover:bg-[#0656d6] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-signature sm:w-auto";
+  "inline-flex min-h-12 w-full items-center justify-center rounded-md bg-signature px-6 text-base font-semibold tracking-tight text-pure transition-colors duration-150 hover:bg-[#0656d6] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-signature disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto";
 
 const secondaryActionClass =
   "inline-flex min-h-12 items-center justify-center rounded-md border border-border-strong bg-pure px-5 text-sm font-semibold tracking-tight text-midnight transition-colors duration-150 hover:border-signature hover:text-signature focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-signature";
@@ -124,28 +151,22 @@ export function QuoteForm({
   initialServices = [],
 }: QuoteFormProps) {
   const seededServices = normalizeInitialServices(initialServices);
-  const seededFrequency =
-    isGutterOnly(seededServices) && !initialFrequency
-      ? ""
-      : initialFrequency;
+  const seededFrequency = isGutterOnly(seededServices) ? "" : initialFrequency;
 
   const [step, setStep] = useState<1 | 2>(1);
   const [form, setForm] = useState<FormState>({
     ...initialState,
     services: seededServices,
-    frequency: isGutterOnly(seededServices) ? "" : seededFrequency,
+    frequency: seededFrequency,
   });
-  const [photos, setPhotos] = useState<File[]>([]);
   const [stepError, setStepError] = useState<string | null>(null);
   const [attemptedSubmit, setAttemptedSubmit] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [submitBlocked, setSubmitBlocked] = useState(false);
   const headingId = useId();
 
-  const frequencyRequired = useMemo(
-    () => form.services.length > 0 && !isGutterOnly(form.services),
-    [form.services],
-  );
-
-  const frequencyDisabled = isGutterOnly(form.services);
+  const showPlans = hasWindowService(form.services);
+  const frequencyRequired = showPlans;
 
   function toggleService(serviceId: ServiceId) {
     setStepError(null);
@@ -165,7 +186,7 @@ export function QuoteForm({
       }
 
       const next = { ...current, services };
-      if (isGutterOnly(services)) {
+      if (!hasWindowService(services)) {
         next.frequency = "";
       }
       return next;
@@ -177,55 +198,62 @@ export function QuoteForm({
       setStepError("Select at least one service.");
       return;
     }
-    if (!form.propertyType) {
-      setStepError("Choose a property type.");
+    if (frequencyRequired && !form.frequency) {
+      setStepError("Choose a cleaning plan for your windows.");
       return;
     }
-    if (frequencyRequired && !form.frequency) {
-      setStepError("Choose how often you’d like service.");
+    if (!form.propertyType) {
+      setStepError("Choose a property type.");
       return;
     }
     setStepError(null);
     setStep(2);
   }
 
-  function onPhotosChange(event: ChangeEvent<HTMLInputElement>) {
-    const files = Array.from(event.target.files ?? []);
-    setPhotos(files.slice(0, 6));
-  }
-
   function onSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    if (!form.name.trim() || !form.phone.trim() || !form.location.trim()) {
-      setAttemptedSubmit(true);
+    setAttemptedSubmit(true);
+
+    const phoneOk = isValidNaPhone(form.phone);
+    const emailOk = isValidEmail(form.email);
+    if (!form.streetAddress.trim() || !form.name.trim() || !phoneOk || !emailOk) {
       return;
     }
-    setAttemptedSubmit(true);
+
+    setSubmitting(true);
+    // No submission endpoint is connected — keep answers and show a truthful state.
+    window.setTimeout(() => {
+      setSubmitting(false);
+      setSubmitBlocked(true);
+    }, 400);
   }
 
-  const contactInvalid =
-    attemptedSubmit &&
-    (!form.name.trim() || !form.phone.trim() || !form.location.trim());
+  const streetInvalid = attemptedSubmit && !form.streetAddress.trim();
+  const nameInvalid = attemptedSubmit && !form.name.trim();
+  const phoneInvalid = attemptedSubmit && !isValidNaPhone(form.phone);
+  const emailInvalid = attemptedSubmit && !isValidEmail(form.email);
 
   return (
     <div
       className={`rounded-md border border-border bg-pure p-5 text-midnight sm:p-7 ${className}`.trim()}
     >
-      <div className="mb-5 flex flex-wrap items-start justify-between gap-3 border-b border-border pb-4">
-        <div>
-          <p className="text-xs font-semibold uppercase tracking-[0.16em] text-signature">
-            Step {step} of 2
-          </p>
-          <h3
-            id={headingId}
-            className="font-heading mt-1.5 text-xl font-semibold tracking-tight text-midnight sm:text-2xl"
-          >
-            {step === 1 ? "Your Cleaning Needs" : "Contact Details"}
-          </h3>
-        </div>
-        <p className="pt-1 text-sm text-navy-muted" aria-live="polite">
-          {step === 1 ? "Cleaning Needs" : "Contact Details"}
+      <div className="mb-5 border-b border-border pb-4">
+        <p className="text-xs font-semibold uppercase tracking-[0.16em] text-signature">
+          Step {step} of 2
         </p>
+        <h3
+          id={headingId}
+          className="font-heading mt-1.5 text-xl font-semibold tracking-tight text-midnight sm:text-2xl"
+        >
+          {step === 1
+            ? "Your Cleaning Details"
+            : "Your Property & Contact Details"}
+        </h3>
+        {step === 1 ? (
+          <p className="mt-2 text-sm leading-relaxed text-navy-muted">
+            A few quick selections to help us prepare your free virtual quote.
+          </p>
+        ) : null}
       </div>
 
       <div
@@ -253,11 +281,11 @@ export function QuoteForm({
           <div className="space-y-6">
             <fieldset>
               <legend className="text-sm font-semibold text-midnight">
-                Services needed
+                What would you like cleaned?
               </legend>
               <p className="mt-1 text-sm text-navy-muted">
-                Select all that apply. Gutter can combine with either window
-                option.
+                Exterior and Interior &amp; Exterior are alternative scopes.
+                Gutter can be added with either.
               </p>
               <div className="mt-3 grid gap-2.5 sm:grid-cols-3">
                 {serviceOptions.map((service) => {
@@ -276,61 +304,66 @@ export function QuoteForm({
               </div>
             </fieldset>
 
-            <fieldset>
-              <legend className="text-sm font-semibold text-midnight">
-                Cleaning visits
-                {frequencyDisabled ? (
-                  <span className="ml-1.5 font-normal text-navy-muted">
-                    (not needed for gutter-only)
-                  </span>
-                ) : null}
-              </legend>
-              <p className="mt-1 text-sm text-navy-muted">
-                Visit count for your plan — not a service upgrade.
-              </p>
-              <div
-                className={[
-                  "mt-3 grid gap-2.5 sm:grid-cols-3",
-                  frequencyDisabled ? "opacity-50" : "",
-                ].join(" ")}
-              >
-                {quoteFrequencyOptions.map((option) => {
-                  const selected = form.frequency === option.id;
-                  return (
-                    <ChoiceButton
-                      key={option.id}
-                      selected={selected}
-                      onClick={() => {
-                        if (frequencyDisabled) return;
-                        setStepError(null);
-                        setForm((current) => ({
-                          ...current,
-                          frequency: option.id,
-                        }));
-                      }}
-                      className={[
-                        "min-h-[3.75rem]",
-                        frequencyDisabled ? "cursor-not-allowed" : "",
-                      ].join(" ")}
-                    >
-                      <span className="block">{option.label}</span>
-                      <span
-                        className={[
-                          "mt-0.5 block text-xs font-medium",
-                          selected ? "text-signature" : "text-navy-muted",
-                        ].join(" ")}
+            {showPlans ? (
+              <fieldset>
+                <legend className="text-sm font-semibold text-midnight">
+                  How would you like to keep your windows clean?
+                </legend>
+                <div className="mt-3 grid gap-2.5 sm:grid-cols-3">
+                  {quotePlanOptions.map((plan) => {
+                    const selected = form.frequency === plan.id;
+                    return (
+                      <ChoiceButton
+                        key={plan.id}
+                        selected={selected}
+                        onClick={() => {
+                          setStepError(null);
+                          setForm((current) => ({
+                            ...current,
+                            frequency: plan.id,
+                          }));
+                        }}
+                        className="relative min-h-[8.5rem] flex-col items-start justify-start gap-1"
                       >
-                        {option.detail}
-                      </span>
-                    </ChoiceButton>
-                  );
-                })}
-              </div>
-            </fieldset>
+                        {plan.recommended ? (
+                          <span className="mb-1 inline-flex rounded bg-signature/10 px-1.5 py-0.5 text-[0.65rem] font-semibold uppercase tracking-[0.12em] text-signature">
+                            Recommended
+                          </span>
+                        ) : null}
+                        <span className="block text-base font-semibold">
+                          {plan.name}
+                        </span>
+                        <span className="block text-xs font-medium text-navy-muted">
+                          {plan.subtitle} · {plan.visits}
+                        </span>
+                        <ul className="mt-2 space-y-1">
+                          {plan.benefits.map((benefit) => (
+                            <li
+                              key={benefit}
+                              className={[
+                                "text-xs font-medium leading-snug",
+                                plan.discountLabel &&
+                                benefit.startsWith("$")
+                                  ? "text-signature"
+                                  : selected
+                                    ? "text-midnight/80"
+                                    : "text-navy-muted",
+                              ].join(" ")}
+                            >
+                              {benefit}
+                            </li>
+                          ))}
+                        </ul>
+                      </ChoiceButton>
+                    );
+                  })}
+                </div>
+              </fieldset>
+            ) : null}
 
             <fieldset>
               <legend className="text-sm font-semibold text-midnight">
-                Property type
+                What type of property?
               </legend>
               <div className="mt-3 grid gap-2.5 sm:grid-cols-2">
                 {propertyTypeOptions.map((option) => {
@@ -361,152 +394,165 @@ export function QuoteForm({
             ) : null}
 
             <div>
-              <button type="button" onClick={goToStep2} className={primaryActionClass}>
+              <button
+                type="button"
+                onClick={goToStep2}
+                className={primaryActionClass}
+              >
                 Continue
               </button>
             </div>
           </div>
         ) : (
           <div className="space-y-5">
-            <div className="grid gap-4 sm:grid-cols-2">
-              <label className="block">
-                <FieldLabel>Full name</FieldLabel>
+            <div>
+              <FieldLabel htmlFor="street-address">
+                Where will we be cleaning?
+              </FieldLabel>
+              <p className="mt-1 text-sm text-navy-muted">
+                We&apos;ll use your property address to assess it remotely and
+                prepare your free virtual quote.
+              </p>
+              <AddressField
+                value={form.streetAddress}
+                onChange={(streetAddress) =>
+                  setForm((current) => ({ ...current, streetAddress }))
+                }
+                invalid={streetInvalid}
+                className={fieldClass}
+              />
+              <label className="mt-3 block">
+                <FieldLabel optional>Unit / Suite</FieldLabel>
                 <input
                   type="text"
-                  name="name"
-                  autoComplete="name"
-                  required
-                  aria-invalid={attemptedSubmit && !form.name.trim()}
+                  name="unit"
+                  autoComplete="address-line2"
                   className={fieldClass}
-                  value={form.name}
+                  value={form.unit}
                   onChange={(event) =>
                     setForm((current) => ({
                       ...current,
-                      name: event.target.value,
+                      unit: event.target.value,
                     }))
                   }
                 />
-              </label>
-
-              <label className="block">
-                <FieldLabel>Phone</FieldLabel>
-                <input
-                  type="tel"
-                  name="phone"
-                  autoComplete="tel"
-                  inputMode="tel"
-                  required
-                  aria-invalid={attemptedSubmit && !form.phone.trim()}
-                  className={fieldClass}
-                  value={form.phone}
-                  onChange={(event) =>
-                    setForm((current) => ({
-                      ...current,
-                      phone: event.target.value,
-                    }))
-                  }
-                />
-              </label>
-
-              <label className="block sm:col-span-2">
-                <FieldLabel>Location / postal code</FieldLabel>
-                <input
-                  type="text"
-                  name="location"
-                  autoComplete="postal-code"
-                  required
-                  aria-invalid={attemptedSubmit && !form.location.trim()}
-                  className={fieldClass}
-                  value={form.location}
-                  onChange={(event) =>
-                    setForm((current) => ({
-                      ...current,
-                      location: event.target.value,
-                    }))
-                  }
-                />
-              </label>
-
-              <label className="block sm:col-span-2">
-                <FieldLabel optional>Email</FieldLabel>
-                <input
-                  type="email"
-                  name="email"
-                  autoComplete="email"
-                  className={fieldClass}
-                  value={form.email}
-                  onChange={(event) =>
-                    setForm((current) => ({
-                      ...current,
-                      email: event.target.value,
-                    }))
-                  }
-                />
-              </label>
-
-              <label className="block sm:col-span-2">
-                <FieldLabel optional>Notes</FieldLabel>
-                <textarea
-                  name="notes"
-                  rows={3}
-                  className={`${fieldClass} resize-y`}
-                  value={form.notes}
-                  onChange={(event) =>
-                    setForm((current) => ({
-                      ...current,
-                      notes: event.target.value,
-                    }))
-                  }
-                />
-              </label>
-
-              <label className="block sm:col-span-2">
-                <FieldLabel optional>Photos</FieldLabel>
-                <input
-                  type="file"
-                  name="photos"
-                  accept="image/*"
-                  multiple
-                  className="mt-2 block w-full text-sm text-navy-muted file:mr-3 file:rounded-md file:border-0 file:bg-ice file:px-3.5 file:py-2 file:text-sm file:font-semibold file:text-midnight"
-                  onChange={onPhotosChange}
-                />
-                {photos.length > 0 ? (
-                  <p className="mt-2 text-sm text-navy-muted">
-                    {photos.length} file{photos.length === 1 ? "" : "s"} selected
-                    — not uploaded yet.
-                  </p>
-                ) : (
-                  <p className="mt-1.5 text-xs text-navy-muted">Up to 6 images.</p>
-                )}
               </label>
             </div>
 
-            {attemptedSubmit ? (
+            <div>
+              <p className="text-sm font-semibold text-midnight">
+                How can we reach you?
+              </p>
+              <div className="mt-3 grid gap-4 sm:grid-cols-2">
+                <label className="block sm:col-span-2">
+                  <FieldLabel>Full name</FieldLabel>
+                  <input
+                    type="text"
+                    name="name"
+                    autoComplete="name"
+                    required
+                    aria-invalid={nameInvalid || undefined}
+                    className={fieldClass}
+                    value={form.name}
+                    onChange={(event) =>
+                      setForm((current) => ({
+                        ...current,
+                        name: event.target.value,
+                      }))
+                    }
+                  />
+                </label>
+
+                <label className="block">
+                  <FieldLabel>Phone</FieldLabel>
+                  <input
+                    type="tel"
+                    name="phone"
+                    autoComplete="tel"
+                    inputMode="tel"
+                    required
+                    aria-invalid={phoneInvalid || undefined}
+                    className={fieldClass}
+                    value={form.phone}
+                    onChange={(event) =>
+                      setForm((current) => ({
+                        ...current,
+                        phone: event.target.value,
+                      }))
+                    }
+                  />
+                  {phoneInvalid ? (
+                    <span className="mt-1 block text-xs font-medium text-red-700">
+                      Enter a valid North American phone number.
+                    </span>
+                  ) : null}
+                </label>
+
+                <label className="block">
+                  <FieldLabel optional>Email</FieldLabel>
+                  <input
+                    type="email"
+                    name="email"
+                    autoComplete="email"
+                    aria-invalid={emailInvalid || undefined}
+                    className={fieldClass}
+                    value={form.email}
+                    onChange={(event) =>
+                      setForm((current) => ({
+                        ...current,
+                        email: event.target.value,
+                      }))
+                    }
+                  />
+                  {emailInvalid ? (
+                    <span className="mt-1 block text-xs font-medium text-red-700">
+                      Enter a valid email, or leave it blank.
+                    </span>
+                  ) : null}
+                </label>
+              </div>
+            </div>
+
+            <label className="block">
+              <FieldLabel optional>Anything else we should know?</FieldLabel>
+              <textarea
+                name="notes"
+                rows={3}
+                className={`${fieldClass} resize-y`}
+                value={form.notes}
+                onChange={(event) =>
+                  setForm((current) => ({
+                    ...current,
+                    notes: event.target.value,
+                  }))
+                }
+              />
+            </label>
+
+            {streetInvalid || nameInvalid ? (
+              <p className="text-sm font-medium text-red-700" role="alert">
+                Add your property address and full name to continue.
+              </p>
+            ) : null}
+
+            {submitBlocked ? (
               <div
                 className="rounded-md border border-amber-300 bg-amber-50 px-4 py-3 text-sm text-amber-950"
                 role="status"
               >
-                {contactInvalid ? (
-                  <p className="font-semibold">
-                    Add your name, phone, and location to continue.
-                  </p>
-                ) : (
-                  <>
-                    <p className="font-semibold">
-                      Quote requests are not submitting yet.
-                    </p>
-                    <p className="mt-1">
-                      This form is frontend-only for now. Nothing was sent, and
-                      your answers stay in this browser session until a
-                      submission service is connected.
-                    </p>
-                  </>
-                )}
+                <p className="font-semibold">
+                  Quote requests are not submitting yet.
+                </p>
+                <p className="mt-1">
+                  A submission endpoint has not been connected. Nothing was
+                  sent, and your answers stay in this browser session. This is a
+                  quote request — not a booking.
+                </p>
               </div>
             ) : (
               <p className="text-sm text-navy-muted">
-                Quote request only — not a booking, and no price is calculated
-                online.
+                Requesting a quote is free and creates no obligation. It is not
+                a booking or payment.
               </p>
             )}
 
@@ -514,15 +560,23 @@ export function QuoteForm({
               <button
                 type="button"
                 className={secondaryActionClass}
+                disabled={submitting}
                 onClick={() => {
                   setAttemptedSubmit(false);
+                  setSubmitBlocked(false);
                   setStep(1);
                 }}
               >
                 Back
               </button>
-              <button type="submit" className={`${primaryActionClass} sm:flex-1`}>
-                Request My Free Quote
+              <button
+                type="submit"
+                className={`${primaryActionClass} sm:flex-1`}
+                disabled={submitting}
+              >
+                {submitting
+                  ? "Sending…"
+                  : "Request My Free Virtual Quote"}
               </button>
             </div>
           </div>
