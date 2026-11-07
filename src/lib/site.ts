@@ -7,12 +7,30 @@ export const site = {
   url: "https://student-window-cleaning.vercel.app",
 } as const;
 
+/** Verified contact details — keep as the single source of truth for the footer. */
+export const contact = {
+  phoneDisplay: "905-550-0400",
+  phoneHref: "tel:+19055500400",
+  email: "Studentwindowcleaning@outlook.com",
+  emailHref: "mailto:Studentwindowcleaning@outlook.com",
+} as const;
+
+export const serviceAreas = [
+  "Whitby",
+  "Ajax",
+  "Oshawa",
+  "Pickering",
+  "Bowmanville",
+  "Durham Region",
+] as const;
+
 /**
  * Verified social destinations only. Leave null until a URL is confirmed —
- * never invent Facebook / Instagram / Reel links for the About page.
+ * never invent Instagram / TikTok / Reel links.
  */
 export const socialLinks = {
-  facebook: null as string | null,
+  facebook:
+    "https://www.facebook.com/profile.php?id=100095625130012" as string | null,
   instagram: null as string | null,
   /** Educational Facebook Reel URL for the About page click-to-load player. */
   facebookReel: null as string | null,
@@ -23,6 +41,16 @@ export const navLinks = [
   { href: "/cleaning-plans", label: "Cleaning Plans" },
   { href: "/about", label: "About Us" },
   { href: "/our-work", label: "Our Work" },
+] as const;
+
+export const exploreLinks = [
+  { href: "/", label: "Home" },
+  ...navLinks,
+] as const;
+
+export const legalLinks = [
+  { href: "/privacy", label: "Privacy Policy" },
+  { href: "/terms", label: "Terms & Conditions" },
 ] as const;
 
 export const serviceOptions = [
