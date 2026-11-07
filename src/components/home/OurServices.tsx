@@ -1,67 +1,138 @@
 import Link from "next/link";
-import { Heading } from "@/components/ui/Heading";
-import { Section } from "@/components/ui/Section";
+import { Container } from "@/components/ui/Container";
 
 const services = [
   {
-    title: "Exterior window cleaning",
-    body: "Sills-to-glass exterior cleans for a brighter curb look after rain, pollen, or winter film.",
+    id: "exterior-window-cleaning",
+    title: "Exterior Window Cleaning",
+    href: "/services#exterior-window-cleaning",
+    inclusions: [
+      "Exterior glass",
+      "Frames & sills",
+      "Sliding doors & deck glass",
+    ],
   },
   {
-    title: "Interior glass",
-    body: "Careful indoor cleaning for living spaces, offices, and hard-to-reach panes.",
+    id: "interior-exterior-window-cleaning",
+    title: "Interior & Exterior Window Cleaning",
+    href: "/services#interior-exterior-window-cleaning",
+    inclusions: [
+      "Inside & outside glass",
+      "Interior & exterior frames",
+      "Sills & applicable glass surfaces",
+    ],
   },
   {
-    title: "Screens, tracks & sills",
-    body: "Detail work that makes the whole frame feel finished — not just the glass.",
-  },
-  {
-    title: "Gutter cleaning",
-    body: "Clear debris so water can move the way it should. Available on its own or with windows.",
+    id: "gutter-cleaning",
+    title: "Gutter Cleaning",
+    href: "/services#gutter-cleaning",
+    inclusions: [
+      "Leaves & debris removal",
+      "Accessible gutter clearing",
+      "Seasonal maintenance",
+    ],
   },
 ] as const;
 
+function CheckIcon() {
+  return (
+    <svg
+      viewBox="0 0 16 16"
+      fill="none"
+      aria-hidden
+      className="mt-0.5 size-3.5 shrink-0 text-signature"
+    >
+      <path
+        d="M3.2 8.2 6.4 11.3 12.8 4.7"
+        stroke="currentColor"
+        strokeWidth="1.75"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
+function ServicePhotoPlaceholder({ label }: { label: string }) {
+  return (
+    <div
+      className="relative aspect-[3/4] w-full overflow-hidden rounded-md bg-ice transition-transform duration-300 ease-out motion-safe:group-hover:scale-[1.015]"
+      style={{
+        background:
+          "linear-gradient(165deg, #F3F7FB 0%, #E9F3FC 55%, #DCEAF7 100%)",
+      }}
+      role="img"
+      aria-label={`${label} photography placeholder`}
+    >
+      <div
+        aria-hidden
+        className="absolute inset-0 opacity-40"
+        style={{
+          background:
+            "radial-gradient(80% 60% at 50% 35%, color-mix(in srgb, var(--color-clear-sky) 18%, transparent), transparent 70%)",
+        }}
+      />
+      <p className="absolute inset-x-0 bottom-0 px-4 pb-4 text-[0.7rem] font-medium tracking-wide text-navy-muted/80">
+        Photo coming soon
+      </p>
+    </div>
+  );
+}
+
 export function OurServices() {
   return (
-    <Section id="services" tone="white">
-      <div className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
-        <Heading
-          level={2}
-          eyebrow="Our services"
-          className="max-w-xl"
-        >
-          Clean glass and tidy exteriors, handled with care.
-        </Heading>
-        <p className="max-w-md text-base leading-relaxed text-navy-muted md:pb-1">
-          Full service pages are coming next. For Phase 1, this overview covers
-          what we typically take on.
-        </p>
-      </div>
+    <section
+      id="services"
+      aria-labelledby="services-heading"
+      className="bg-pure text-midnight"
+      style={{ paddingBlock: "var(--space-section-y)" }}
+    >
+      <Container>
+        <div className="max-w-2xl">
+          <h2
+            id="services-heading"
+            className="font-heading text-3xl font-semibold tracking-tight text-midnight sm:text-4xl"
+          >
+            Our Services
+          </h2>
+          <p className="mt-3 text-base leading-relaxed text-navy-muted sm:text-lg">
+            Professional window and gutter cleaning tailored to your property.
+          </p>
+        </div>
 
-      <ul className="mt-12 grid gap-x-10 gap-y-10 sm:grid-cols-2">
-        {services.map((service, index) => (
-          <li key={service.title} className="border-t border-border pt-6">
-            <p className="text-xs font-semibold uppercase tracking-[0.16em] text-signature">
-              {String(index + 1).padStart(2, "0")}
-            </p>
-            <h3 className="font-heading mt-3 text-xl font-semibold text-midnight">
-              {service.title}
-            </h3>
-            <p className="mt-3 max-w-md text-base leading-relaxed text-navy-muted">
-              {service.body}
-            </p>
-          </li>
-        ))}
-      </ul>
-
-      <p className="mt-10">
-        <Link
-          href="/services"
-          className="text-sm font-semibold text-signature underline-offset-4 hover:underline"
-        >
-          Browse the services overview
-        </Link>
-      </p>
-    </Section>
+        <ul className="mt-10 grid gap-10 md:grid-cols-2 md:gap-8 lg:mt-12 lg:grid-cols-3 lg:gap-10">
+          {services.map((service) => (
+            <li key={service.id} className="group min-w-0">
+              <ServicePhotoPlaceholder label={service.title} />
+              <h3 className="font-heading mt-5 text-lg font-semibold tracking-tight text-midnight sm:text-xl">
+                {service.title}
+              </h3>
+              <ul className="mt-3 space-y-2">
+                {service.inclusions.map((item) => (
+                  <li
+                    key={item}
+                    className="flex items-start gap-2 text-sm leading-snug text-navy-muted sm:text-[0.95rem]"
+                  >
+                    <CheckIcon />
+                    <span>{item}</span>
+                  </li>
+                ))}
+              </ul>
+              <p className="mt-5">
+                <Link
+                  href={service.href}
+                  className="inline-flex items-center gap-1.5 text-sm font-semibold text-signature transition-colors hover:text-midnight focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-signature"
+                >
+                  Explore Service
+                  <span aria-hidden className="translate-y-px text-base leading-none">
+                    →
+                  </span>
+                </Link>
+              </p>
+            </li>
+          ))}
+        </ul>
+      </Container>
+    </section>
   );
 }
