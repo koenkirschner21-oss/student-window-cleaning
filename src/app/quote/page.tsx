@@ -56,7 +56,12 @@ export default function QuotePage() {
         </div>
       </Container>
 
-      <QuoteTrustBand />
+      {/* Contained trust band: space above form → whitespace below before footer */}
+      <Container className="pb-16 pt-4 sm:pb-20 sm:pt-6 lg:pb-24">
+        <div className="mx-auto max-w-[820px]">
+          <QuoteTrustBand />
+        </div>
+      </Container>
     </main>
   );
 }

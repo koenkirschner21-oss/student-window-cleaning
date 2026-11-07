@@ -92,7 +92,7 @@ function seedPlan(
   return isQuotePlanId(initialFrequency) ? initialFrequency : "";
 }
 
-function CheckIcon() {
+function BenefitCheck() {
   return (
     <svg
       viewBox="0 0 16 16"
@@ -108,6 +108,25 @@ function CheckIcon() {
         strokeLinejoin="round"
       />
     </svg>
+  );
+}
+
+function SelectedMark() {
+  return (
+    <span
+      aria-hidden
+      className="inline-flex size-5 shrink-0 items-center justify-center rounded-full bg-signature text-pure"
+    >
+      <svg viewBox="0 0 16 16" fill="none" className="size-3">
+        <path
+          d="M3.6 8.2 6.5 11l5.9-6.4"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+      </svg>
+    </span>
   );
 }
 
@@ -140,6 +159,16 @@ const primaryActionClass =
 const secondaryActionClass =
   "inline-flex min-h-12 items-center justify-center rounded-md border border-border-strong bg-pure px-5 text-sm font-semibold tracking-tight text-midnight transition-colors duration-150 hover:border-signature hover:text-signature focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-signature";
 
+function chipClass(selected: boolean) {
+  return [
+    "inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-md border px-3.5 py-2.5 text-sm font-semibold tracking-tight transition-colors duration-150",
+    "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-signature",
+    selected
+      ? "border-signature bg-ice text-midnight"
+      : "border-border bg-pure text-midnight hover:border-border-strong",
+  ].join(" ");
+}
+
 export function QuoteForm({
   id = "quote-form",
   className = "",
@@ -161,10 +190,11 @@ export function QuoteForm({
   const [submitBlocked, setSubmitBlocked] = useState(false);
   const headingId = useId();
   const planGroupName = useId();
+  const propertyGroupName = useId();
 
   const windowSelected = hasWindowService(form.services);
   const gutterOnly = isGutterOnly(form.services);
-  const plansDisabled = gutterOnly || form.services.length === 0;
+  const plansInteractive = windowSelected;
   const frequencyRequired = windowSelected;
 
   function toggleService(serviceId: ServiceId) {
@@ -185,7 +215,6 @@ export function QuoteForm({
       }
 
       const next = { ...current, services };
-      // Clear irrelevant window plan when leaving window services / gutter-only.
       if (!hasWindowService(services)) {
         next.frequency = "";
       }
@@ -194,7 +223,7 @@ export function QuoteForm({
   }
 
   function selectPlan(planId: QuotePlanId) {
-    if (plansDisabled) return;
+    if (!plansInteractive) return;
     setStepError(null);
     setForm((current) => ({ ...current, frequency: planId }));
   }
@@ -232,7 +261,6 @@ export function QuoteForm({
     }
 
     setSubmitting(true);
-    // No submission endpoint is connected — keep answers and show a truthful state.
     window.setTimeout(() => {
       setSubmitting(false);
       setSubmitBlocked(true);
@@ -248,7 +276,7 @@ export function QuoteForm({
     <div
       className={`rounded-md border border-border bg-pure p-5 text-midnight sm:p-7 ${className}`.trim()}
     >
-      <div className="mb-5 border-b border-border pb-4">
+      <div className="mb-6 border-b border-border pb-4">
         <p className="text-xs font-semibold uppercase tracking-[0.16em] text-signature">
           Step {step} of 2
         </p>
@@ -265,20 +293,6 @@ export function QuoteForm({
             A few quick selections to help us prepare your free virtual quote.
           </p>
         ) : null}
-      </div>
-
-      <div
-        className="mb-6 h-1 overflow-hidden rounded-sm bg-ice"
-        role="progressbar"
-        aria-valuemin={1}
-        aria-valuemax={2}
-        aria-valuenow={step}
-        aria-label={`Step ${step} of 2`}
-      >
-        <div
-          className="h-full bg-signature transition-[width] duration-200"
-          style={{ width: step === 1 ? "50%" : "100%" }}
-        />
       </div>
 
       <form
@@ -298,24 +312,20 @@ export function QuoteForm({
                 Exterior and Interior &amp; Exterior are alternative scopes.
                 Gutter can be added with either.
               </p>
-              <div className="mt-3 flex flex-wrap gap-2">
+              <div className="mt-3 grid grid-cols-1 gap-2.5 sm:grid-cols-3">
                 {serviceOptions.map((service) => {
                   const selected = form.services.includes(service.id);
                   return (
                     <button
                       key={service.id}
                       type="button"
-                      aria-pressed={selected}
+                      role="checkbox"
+                      aria-checked={selected}
                       onClick={() => toggleService(service.id)}
-                      className={[
-                        "inline-flex min-h-10 items-center justify-center rounded-md border px-3.5 py-2 text-sm font-semibold tracking-tight transition-colors duration-150",
-                        "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-signature",
-                        selected
-                          ? "border-signature bg-ice text-midnight"
-                          : "border-border bg-pure text-midnight hover:border-border-strong",
-                      ].join(" ")}
+                      className={chipClass(selected)}
                     >
-                      {service.label}
+                      {selected ? <SelectedMark /> : null}
+                      <span>{service.label}</span>
                     </button>
                   );
                 })}
@@ -323,22 +333,18 @@ export function QuoteForm({
             </fieldset>
 
             {/* Always mounted — never conditionally reveal mid-flow. */}
-            <fieldset
-              aria-disabled={plansDisabled || undefined}
-              className={
-                plansDisabled ? "opacity-55 transition-opacity" : undefined
-              }
-            >
+            <fieldset>
               <legend className="text-sm font-semibold text-midnight">
                 Choose your cleaning plan
               </legend>
               <p className="mt-1 text-sm text-navy-muted">
                 Save more with recurring professional cleaning.
               </p>
-              {gutterOnly ? (
+              {gutterOnly || form.services.length === 0 ? (
                 <p className="mt-2 text-xs font-medium text-navy-muted">
-                  Window cleaning plans apply when a window service is selected.
-                  Gutter-only quotes are priced separately.
+                  {gutterOnly
+                    ? "Window cleaning plans apply when a window service is selected. Gutter-only quotes are priced separately."
+                    : "Select a window service above to choose a cleaning plan."}
                 </p>
               ) : null}
 
@@ -353,13 +359,13 @@ export function QuoteForm({
                     <label
                       key={plan.id}
                       className={[
-                        "relative flex h-full cursor-pointer flex-col rounded-md border p-3.5 text-left transition-colors duration-150",
+                        "relative flex h-full flex-col overflow-hidden rounded-md border bg-pure text-left transition-colors duration-150",
                         "focus-within:outline focus-within:outline-2 focus-within:outline-offset-2 focus-within:outline-signature",
-                        plansDisabled
-                          ? "cursor-not-allowed border-border bg-cloud/60"
+                        !plansInteractive
+                          ? "cursor-not-allowed border-border"
                           : selected
-                            ? "border-signature bg-ice"
-                            : "border-border bg-pure hover:border-border-strong",
+                            ? "cursor-pointer border-signature bg-ice"
+                            : "cursor-pointer border-border hover:border-border-strong",
                       ].join(" ")}
                     >
                       <input
@@ -368,50 +374,55 @@ export function QuoteForm({
                         name={planGroupName}
                         value={plan.id}
                         checked={selected}
-                        disabled={plansDisabled}
+                        disabled={!plansInteractive}
                         onChange={() => selectPlan(plan.id)}
                       />
                       {plan.recommended ? (
-                        <span className="mb-1.5 inline-flex w-fit rounded bg-signature/10 px-1.5 py-0.5 text-[0.65rem] font-semibold uppercase tracking-[0.12em] text-signature">
+                        <span className="bg-midnight px-3 py-1.5 text-center text-[0.65rem] font-semibold uppercase tracking-[0.14em] text-pure">
                           Recommended
                         </span>
-                      ) : (
-                        <span className="mb-1.5 block h-[1.15rem]" aria-hidden />
-                      )}
-                      <span className="block text-base font-semibold text-midnight">
-                        {plan.name}
-                      </span>
-                      <span className="mt-0.5 block text-xs font-medium text-navy-muted">
-                        {plan.subtitle}
-                      </span>
-                      <ul className="mt-3 space-y-1.5">
-                        {plan.checks.map((check) => (
-                          <li
-                            key={check}
-                            className="flex items-start gap-1.5 text-xs font-medium leading-snug text-midnight/80"
+                      ) : null}
+                      <span className="flex flex-1 flex-col p-3.5 pt-3">
+                        <span className="flex items-start justify-between gap-2">
+                          <span className="min-w-0">
+                            <span className="block text-base font-semibold text-midnight">
+                              {plan.name}
+                            </span>
+                            <span className="mt-0.5 block text-xs font-medium text-navy-muted">
+                              {plan.subtitle}
+                            </span>
+                          </span>
+                          {selected ? <SelectedMark /> : null}
+                        </span>
+                        <ul className="mt-3 space-y-1.5">
+                          {plan.checks.map((check) => (
+                            <li
+                              key={check}
+                              className="flex items-start gap-1.5 text-xs font-medium leading-snug text-midnight/85"
+                            >
+                              <BenefitCheck />
+                              <span>{check}</span>
+                            </li>
+                          ))}
+                        </ul>
+                        <span className="mt-auto border-t border-border/80 pt-3">
+                          <span
+                            className={[
+                              "block text-sm font-bold tracking-tight",
+                              plan.savingsDetail
+                                ? "text-signature"
+                                : "text-midnight",
+                            ].join(" ")}
                           >
-                            <CheckIcon />
-                            <span>{check}</span>
-                          </li>
-                        ))}
-                      </ul>
-                      <div className="mt-auto border-t border-border/80 pt-3">
-                        <p
-                          className={[
-                            "text-sm font-bold tracking-tight",
-                            plan.savingsDetail
-                              ? "text-signature"
-                              : "text-midnight",
-                          ].join(" ")}
-                        >
-                          {plan.savingsLabel}
-                        </p>
-                        {plan.savingsDetail ? (
-                          <p className="mt-0.5 text-[0.7rem] font-semibold uppercase tracking-[0.08em] text-navy-muted">
-                            {plan.savingsDetail}
-                          </p>
-                        ) : null}
-                      </div>
+                            {plan.savingsLabel}
+                          </span>
+                          {plan.savingsDetail ? (
+                            <span className="mt-0.5 block text-[0.7rem] font-semibold uppercase tracking-[0.1em] text-navy-muted">
+                              {plan.savingsDetail}
+                            </span>
+                          ) : null}
+                        </span>
+                      </span>
                     </label>
                   );
                 })}
@@ -422,31 +433,37 @@ export function QuoteForm({
               <legend className="text-sm font-semibold text-midnight">
                 What type of property?
               </legend>
-              <div className="mt-3 flex flex-wrap gap-2">
+              <div
+                className="mt-3 grid grid-cols-1 gap-2.5 sm:grid-cols-2"
+                role="radiogroup"
+                aria-label="Property type"
+              >
                 {propertyTypeOptions.map((option) => {
                   const selected = form.propertyType === option.id;
                   return (
-                    <button
+                    <label
                       key={option.id}
-                      type="button"
-                      aria-pressed={selected}
-                      onClick={() => {
-                        setStepError(null);
-                        setForm((current) => ({
-                          ...current,
-                          propertyType: option.id,
-                        }));
-                      }}
-                      className={[
-                        "inline-flex min-h-10 items-center justify-center rounded-md border px-3.5 py-2 text-sm font-semibold tracking-tight transition-colors duration-150",
-                        "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-signature",
-                        selected
-                          ? "border-signature bg-ice text-midnight"
-                          : "border-border bg-pure text-midnight hover:border-border-strong",
-                      ].join(" ")}
+                      className={[chipClass(selected), "cursor-pointer"].join(
+                        " ",
+                      )}
                     >
-                      {option.label}
-                    </button>
+                      <input
+                        type="radio"
+                        className="sr-only"
+                        name={propertyGroupName}
+                        value={option.id}
+                        checked={selected}
+                        onChange={() => {
+                          setStepError(null);
+                          setForm((current) => ({
+                            ...current,
+                            propertyType: option.id,
+                          }));
+                        }}
+                      />
+                      {selected ? <SelectedMark /> : null}
+                      <span>{option.label}</span>
+                    </label>
                   );
                 })}
               </div>
@@ -624,12 +641,7 @@ export function QuoteForm({
                     a quote request — not a booking.
                   </p>
                 </div>
-              ) : (
-                <p className="text-sm text-navy-muted">
-                  Requesting a quote is free and creates no obligation. It is not
-                  a booking or payment.
-                </p>
-              )}
+              ) : null}
 
               <div className="flex flex-col-reverse gap-3 sm:flex-row sm:items-center">
                 <button
