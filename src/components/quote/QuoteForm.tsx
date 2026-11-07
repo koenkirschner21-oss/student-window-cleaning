@@ -278,13 +278,16 @@ export function QuoteForm({
 
             <fieldset>
               <legend className="text-sm font-semibold text-midnight">
-                Frequency
+                Cleaning visits
                 {frequencyDisabled ? (
                   <span className="ml-1.5 font-normal text-navy-muted">
                     (not needed for gutter-only)
                   </span>
                 ) : null}
               </legend>
+              <p className="mt-1 text-sm text-navy-muted">
+                Visit count for your plan — not a service upgrade.
+              </p>
               <div
                 className={[
                   "mt-3 grid gap-2.5 sm:grid-cols-3",
@@ -391,6 +394,7 @@ export function QuoteForm({
                   type="tel"
                   name="phone"
                   autoComplete="tel"
+                  inputMode="tel"
                   required
                   aria-invalid={attemptedSubmit && !form.phone.trim()}
                   className={fieldClass}
