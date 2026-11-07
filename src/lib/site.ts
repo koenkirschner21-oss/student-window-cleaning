@@ -137,11 +137,18 @@ export const addressAutocomplete = {
   },
 } as const;
 
-/** Authentic trust-band photo path when available — null until approved asset ships. */
+/**
+ * Quote trust-band residential photo.
+ * Cropped to the window facade; house number / street name excluded from frame.
+ * Not claimed as a completed Student Window Cleaning job.
+ */
 export const quoteTrustPhoto: {
   src: string;
   alt: string;
-} | null = null;
+} | null = {
+  src: "/quote/residential-property.webp",
+  alt: "Modern two-story home with clean white-trimmed windows and a dark shingled roof",
+};
 
 export type ServiceId = (typeof serviceOptions)[number]["id"];
 export type FrequencyId = (typeof frequencyOptions)[number]["id"];
