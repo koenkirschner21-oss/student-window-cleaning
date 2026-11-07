@@ -139,7 +139,8 @@ export const addressAutocomplete = {
 
 /**
  * Quote trust-band residential photo.
- * Cropped to the window facade; house number / street name excluded from frame.
+ * Privacy-safe facade crop (house number / street name excluded from frame).
+ * Prefer meaningful window/gutter composition over a tight roofline zoom.
  * Not claimed as a completed Student Window Cleaning job.
  */
 export const quoteTrustPhoto: {
@@ -147,7 +148,7 @@ export const quoteTrustPhoto: {
   alt: string;
 } | null = {
   src: "/quote/residential-property.webp",
-  alt: "Modern two-story home with clean white-trimmed windows and a dark shingled roof",
+  alt: "Modern home facade with clean white-trimmed arched windows, gutters, and a dark shingled roof",
 };
 
 export type ServiceId = (typeof serviceOptions)[number]["id"];
