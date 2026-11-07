@@ -6,8 +6,9 @@ Brand Guidelines PDF path from user (`/Users/koenk/Downloads/Student_Window_Clea
 ## Logos in `logos/`
 | File | Description | Suggested use |
 |---|---|---|
-| primary-horizontal-navy-on-white.png | Primary horizontal logo (worker + wordmark) on white | Desktop header |
-| primary-horizontal-on-dark.png | Same horizontal logo on dark/black | Dark footer / dark surfaces |
+| primary-horizontal-navy-on-white.png | Primary horizontal logo (worker + wordmark) on white | Reference / print on white |
+| primary-horizontal-navy-transparent.png | Navy horizontal logo with transparent background (derived from navy-on-white) | White header / light UI |
+| primary-horizontal-on-dark.png | Same horizontal logo on dark/black (RGBA) | Dark footer / dark surfaces |
 | heritage-badge.png | Circular heritage badge | Footer / secondary branding |
 | worker-icon-navy-on-white.png | Standalone worker icon on white | Compact marks, favicon source |
 | worker-icon-on-dark.png | Standalone worker icon on dark | Compact on dark UI |

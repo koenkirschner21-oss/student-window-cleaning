@@ -9,7 +9,7 @@ export function PlansHero() {
       <Container className="py-12 sm:py-14 lg:py-16">
         <div className="motion-fade-up max-w-2xl">
           <p className="text-[0.7rem] font-semibold uppercase tracking-[0.18em] text-signature sm:text-xs">
-            Service Plans
+            Cleaning Plans
           </p>
           <h1
             id="service-plans-heading"
