@@ -20,6 +20,7 @@ import {
 type QuoteFormProps = {
   id?: string;
   className?: string;
+  initialFrequency?: FrequencyId | "";
 };
 
 type FormState = {
@@ -48,9 +49,16 @@ function isGutterOnly(services: ServiceId[]) {
   return services.length === 1 && services[0] === "gutter-cleaning";
 }
 
-export function QuoteForm({ id = "quote-form", className = "" }: QuoteFormProps) {
+export function QuoteForm({
+  id = "quote-form",
+  className = "",
+  initialFrequency = "",
+}: QuoteFormProps) {
   const [step, setStep] = useState<1 | 2>(1);
-  const [form, setForm] = useState<FormState>(initialState);
+  const [form, setForm] = useState<FormState>({
+    ...initialState,
+    frequency: initialFrequency,
+  });
   const [photos, setPhotos] = useState<File[]>([]);
   const [stepError, setStepError] = useState<string | null>(null);
   const [attemptedSubmit, setAttemptedSubmit] = useState(false);

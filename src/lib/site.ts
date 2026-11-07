@@ -23,7 +23,9 @@ export const serviceOptions = [
 ] as const;
 
 export const frequencyOptions = [
-  { id: "one-time", label: "One-time" },
+  { id: "one-time", label: "One-time (1 visit)" },
+  { id: "two-visit", label: "2 visits" },
+  { id: "three-visit", label: "3 visits" },
   { id: "monthly", label: "Monthly" },
   { id: "bi-monthly", label: "Every 2 months" },
   { id: "quarterly", label: "Quarterly" },
@@ -41,3 +43,9 @@ export const propertyTypeOptions = [
 export type ServiceId = (typeof serviceOptions)[number]["id"];
 export type FrequencyId = (typeof frequencyOptions)[number]["id"];
 export type PropertyTypeId = (typeof propertyTypeOptions)[number]["id"];
+
+export function isFrequencyId(
+  value: string | undefined | null,
+): value is FrequencyId {
+  return !!value && frequencyOptions.some((option) => option.id === value);
+}

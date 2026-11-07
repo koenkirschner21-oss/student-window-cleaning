@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import { QuoteForm } from "@/components/quote/QuoteForm";
+import { QuoteFormWithSearchParams } from "@/components/quote/QuoteFormWithSearchParams";
 import { Container } from "@/components/ui/Container";
 import { Heading } from "@/components/ui/Heading";
 
@@ -23,7 +25,9 @@ export default function QuotePage() {
             online.
           </p>
         </div>
-        <QuoteForm />
+        <Suspense fallback={<QuoteForm />}>
+          <QuoteFormWithSearchParams />
+        </Suspense>
       </Container>
     </main>
   );
