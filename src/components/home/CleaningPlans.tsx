@@ -73,7 +73,7 @@ export function CleaningPlans() {
       <Container>
         <div className="max-w-2xl">
           <p className="text-xs font-semibold uppercase tracking-[0.18em] text-signature">
-            Our Cleaning Plans
+            Our Service Plans
           </p>
           <h2
             id="cleaning-plans-heading"
@@ -174,7 +174,7 @@ export function CleaningPlans() {
             href="/cleaning-plans"
             className="inline-flex items-center gap-1.5 text-sm font-semibold text-midnight transition-colors hover:text-signature focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-signature"
           >
-            Explore Cleaning Plans
+            Explore Service Plans
             <span aria-hidden className="translate-y-px">
               →
             </span>
