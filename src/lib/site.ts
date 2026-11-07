@@ -54,3 +54,21 @@ export function isFrequencyId(
 ): value is FrequencyId {
   return !!value && frequencyOptions.some((option) => option.id === value);
 }
+
+export function isServiceId(
+  value: string | undefined | null,
+): value is ServiceId {
+  return !!value && serviceOptions.some((option) => option.id === value);
+}
+
+/** Build a quote URL with optional service / frequency preselection. */
+export function quoteHref(options?: {
+  service?: ServiceId;
+  frequency?: FrequencyId;
+}) {
+  const params = new URLSearchParams();
+  if (options?.service) params.set("service", options.service);
+  if (options?.frequency) params.set("frequency", options.frequency);
+  const query = params.toString();
+  return query ? `/quote?${query}` : "/quote";
+}
