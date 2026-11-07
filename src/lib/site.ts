@@ -60,8 +60,8 @@ export const serviceOptions = [
 ] as const;
 
 /**
- * Window cleaning plan choices for the quote form.
- * Discount / priority copy is display-only and easy to update — business terms TBD.
+ * Window cleaning plan choices for the quote form (single source of truth).
+ * Display-only savings copy — business terms TBD.
  * Do not apply window-plan discounts to gutter-only requests.
  */
 export const quotePlanOptions = [
@@ -69,33 +69,27 @@ export const quotePlanOptions = [
     id: "one-time",
     name: "Basic",
     subtitle: "One-Time Cleaning",
-    visits: "1 visit",
-    benefits: ["Standard individually quoted price"],
-    discountLabel: null as string | null,
+    checks: ["1 professional cleaning", "No ongoing commitment"],
+    savingsLabel: "Standard Quote",
+    savingsDetail: null as string | null,
     recommended: false,
   },
   {
     id: "two-visit",
     name: "Best Value",
     subtitle: "Twice-Yearly Cleaning",
-    visits: "2 visits",
-    benefits: [
-      "$50 off each qualifying cleaning visit",
-      "Priority scheduling",
-    ],
-    discountLabel: "$50 off each qualifying visit",
+    checks: ["2 cleaning visits", "Priority scheduling"],
+    savingsLabel: "$50 OFF",
+    savingsDetail: "Each visit",
     recommended: true,
   },
   {
     id: "three-visit",
     name: "Premium",
     subtitle: "Three Times Yearly",
-    visits: "3 visits",
-    benefits: [
-      "$100 off each qualifying cleaning visit",
-      "Priority scheduling",
-    ],
-    discountLabel: "$100 off each qualifying visit",
+    checks: ["3 cleaning visits", "Priority scheduling"],
+    savingsLabel: "$100 OFF",
+    savingsDetail: "Each visit",
     recommended: false,
   },
 ] as const;
@@ -104,13 +98,13 @@ export const quotePlanOptions = [
 export const quoteFrequencyOptions = quotePlanOptions.map((plan) => ({
   id: plan.id,
   label: plan.name,
-  detail: plan.visits,
+  detail: plan.subtitle,
 }));
 
 export const frequencyOptions = [
   ...quotePlanOptions.map((plan) => ({
     id: plan.id,
-    label: `${plan.name} · ${plan.visits}`,
+    label: `${plan.name} · ${plan.subtitle}`,
   })),
   { id: "monthly", label: "Monthly" },
   { id: "bi-monthly", label: "Every 2 months" },
@@ -125,21 +119,45 @@ export const propertyTypeOptions = [
   { id: "other", label: "Other" },
 ] as const;
 
-/** Set when a Places/autocomplete provider is configured for the quote address field. */
+/**
+ * Address autocomplete config.
+ * Activates Google Places when `NEXT_PUBLIC_GOOGLE_PLACES_API_KEY` is set at build time.
+ * Never hardcode API keys.
+ */
 export const addressAutocomplete = {
-  provider: null as "google-places" | null,
-  /** Public browser key env name — never hardcode secrets. */
-  apiKeyEnv: "NEXT_PUBLIC_GOOGLE_PLACES_API_KEY",
+  /** Public browser key env name. */
+  apiKeyEnv: "NEXT_PUBLIC_GOOGLE_PLACES_API_KEY" as const,
+  /** Bias predictions toward Whitby / Durham Region, Ontario. */
+  bias: {
+    country: "ca",
+    /** Approximate Whitby, ON center for location bias. */
+    lat: 43.8975,
+    lng: -78.9429,
+    radiusMeters: 45000,
+  },
 } as const;
+
+/** Authentic trust-band photo path when available — null until approved asset ships. */
+export const quoteTrustPhoto: {
+  src: string;
+  alt: string;
+} | null = null;
 
 export type ServiceId = (typeof serviceOptions)[number]["id"];
 export type FrequencyId = (typeof frequencyOptions)[number]["id"];
 export type PropertyTypeId = (typeof propertyTypeOptions)[number]["id"];
+export type QuotePlanId = (typeof quotePlanOptions)[number]["id"];
 
 export function isFrequencyId(
   value: string | undefined | null,
 ): value is FrequencyId {
   return !!value && frequencyOptions.some((option) => option.id === value);
+}
+
+export function isQuotePlanId(
+  value: string | undefined | null,
+): value is QuotePlanId {
+  return !!value && quotePlanOptions.some((option) => option.id === value);
 }
 
 export function isServiceId(

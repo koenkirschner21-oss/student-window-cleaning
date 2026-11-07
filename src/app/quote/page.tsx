@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Suspense } from "react";
 import { QuoteForm } from "@/components/quote/QuoteForm";
 import { QuoteFormWithSearchParams } from "@/components/quote/QuoteFormWithSearchParams";
-import { QuoteTrustPanel } from "@/components/quote/QuoteTrustPanel";
+import { QuoteTrustBand } from "@/components/quote/QuoteTrustBand";
 import { Container } from "@/components/ui/Container";
 import { contact } from "@/lib/site";
 
@@ -49,18 +49,14 @@ export default function QuotePage() {
           </p>
         </header>
 
-        <div className="mt-8 grid items-start gap-8 lg:mt-10 lg:grid-cols-[minmax(0,1.65fr)_minmax(0,0.9fr)] lg:gap-10 xl:gap-12">
-          <div className="min-w-0">
-            <Suspense fallback={<QuoteForm />}>
-              <QuoteFormWithSearchParams />
-            </Suspense>
-          </div>
-
-          <div className="min-w-0 lg:pt-1">
-            <QuoteTrustPanel />
-          </div>
+        <div className="mx-auto mt-8 w-full max-w-[820px] lg:mt-10">
+          <Suspense fallback={<QuoteForm />}>
+            <QuoteFormWithSearchParams />
+          </Suspense>
         </div>
       </Container>
+
+      <QuoteTrustBand />
     </main>
   );
 }

@@ -8,11 +8,13 @@ import {
 } from "react";
 import { AddressField } from "@/components/quote/AddressField";
 import {
+  isQuotePlanId,
   propertyTypeOptions,
   quotePlanOptions,
   serviceOptions,
   type FrequencyId,
   type PropertyTypeId,
+  type QuotePlanId,
   type ServiceId,
 } from "@/lib/site";
 
@@ -25,7 +27,7 @@ type QuoteFormProps = {
 
 type FormState = {
   services: ServiceId[];
-  frequency: FrequencyId | "";
+  frequency: QuotePlanId | "";
   propertyType: PropertyTypeId | "";
   streetAddress: string;
   unit: string;
@@ -73,33 +75,39 @@ function isValidEmail(value: string) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value.trim());
 }
 
-function ChoiceButton({
-  selected,
-  onClick,
-  children,
-  className = "",
-}: {
-  selected: boolean;
-  onClick: () => void;
-  children: ReactNode;
-  className?: string;
-}) {
+function normalizeInitialServices(services: ServiceId[] = []): ServiceId[] {
+  const unique = Array.from(new Set(services));
+  const windowPick = unique.find((id) => windowServiceIds.has(id));
+  const gutter = unique.includes("gutter-cleaning")
+    ? (["gutter-cleaning"] as ServiceId[])
+    : [];
+  return windowPick ? [windowPick, ...gutter] : gutter;
+}
+
+function seedPlan(
+  services: ServiceId[],
+  initialFrequency: FrequencyId | "",
+): QuotePlanId | "" {
+  if (isGutterOnly(services)) return "";
+  return isQuotePlanId(initialFrequency) ? initialFrequency : "";
+}
+
+function CheckIcon() {
   return (
-    <button
-      type="button"
-      aria-pressed={selected}
-      onClick={onClick}
-      className={[
-        "min-h-12 rounded-md border px-4 py-3 text-left text-sm font-semibold tracking-tight transition-colors duration-150",
-        "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-signature",
-        selected
-          ? "border-signature bg-ice text-midnight"
-          : "border-border bg-pure text-midnight hover:border-border-strong",
-        className,
-      ].join(" ")}
+    <svg
+      viewBox="0 0 16 16"
+      fill="none"
+      aria-hidden
+      className="mt-0.5 size-3.5 shrink-0 text-signature"
     >
-      {children}
-    </button>
+      <path
+        d="M3.5 8.2 6.4 11l6.1-6.5"
+        stroke="currentColor"
+        strokeWidth="1.8"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
   );
 }
 
@@ -114,10 +122,7 @@ function FieldLabel({
 }) {
   const Tag = htmlFor ? "label" : "span";
   return (
-    <Tag
-      htmlFor={htmlFor}
-      className="text-sm font-semibold text-midnight"
-    >
+    <Tag htmlFor={htmlFor} className="text-sm font-semibold text-midnight">
       {children}
       {optional ? (
         <span className="ml-1.5 font-normal text-navy-muted">(optional)</span>
@@ -135,15 +140,6 @@ const primaryActionClass =
 const secondaryActionClass =
   "inline-flex min-h-12 items-center justify-center rounded-md border border-border-strong bg-pure px-5 text-sm font-semibold tracking-tight text-midnight transition-colors duration-150 hover:border-signature hover:text-signature focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-signature";
 
-function normalizeInitialServices(services: ServiceId[] = []): ServiceId[] {
-  const unique = Array.from(new Set(services));
-  const windowPick = unique.find((id) => windowServiceIds.has(id));
-  const gutter = unique.includes("gutter-cleaning")
-    ? (["gutter-cleaning"] as ServiceId[])
-    : [];
-  return windowPick ? [windowPick, ...gutter] : gutter;
-}
-
 export function QuoteForm({
   id = "quote-form",
   className = "",
@@ -151,7 +147,7 @@ export function QuoteForm({
   initialServices = [],
 }: QuoteFormProps) {
   const seededServices = normalizeInitialServices(initialServices);
-  const seededFrequency = isGutterOnly(seededServices) ? "" : initialFrequency;
+  const seededFrequency = seedPlan(seededServices, initialFrequency);
 
   const [step, setStep] = useState<1 | 2>(1);
   const [form, setForm] = useState<FormState>({
@@ -164,9 +160,12 @@ export function QuoteForm({
   const [submitting, setSubmitting] = useState(false);
   const [submitBlocked, setSubmitBlocked] = useState(false);
   const headingId = useId();
+  const planGroupName = useId();
 
-  const showPlans = hasWindowService(form.services);
-  const frequencyRequired = showPlans;
+  const windowSelected = hasWindowService(form.services);
+  const gutterOnly = isGutterOnly(form.services);
+  const plansDisabled = gutterOnly || form.services.length === 0;
+  const frequencyRequired = windowSelected;
 
   function toggleService(serviceId: ServiceId) {
     setStepError(null);
@@ -186,11 +185,18 @@ export function QuoteForm({
       }
 
       const next = { ...current, services };
+      // Clear irrelevant window plan when leaving window services / gutter-only.
       if (!hasWindowService(services)) {
         next.frequency = "";
       }
       return next;
     });
+  }
+
+  function selectPlan(planId: QuotePlanId) {
+    if (plansDisabled) return;
+    setStepError(null);
+    setForm((current) => ({ ...current, frequency: planId }));
   }
 
   function goToStep2() {
@@ -216,7 +222,12 @@ export function QuoteForm({
 
     const phoneOk = isValidNaPhone(form.phone);
     const emailOk = isValidEmail(form.email);
-    if (!form.streetAddress.trim() || !form.name.trim() || !phoneOk || !emailOk) {
+    if (
+      !form.streetAddress.trim() ||
+      !form.name.trim() ||
+      !phoneOk ||
+      !emailOk
+    ) {
       return;
     }
 
@@ -265,7 +276,7 @@ export function QuoteForm({
         aria-label={`Step ${step} of 2`}
       >
         <div
-          className="h-full bg-signature"
+          className="h-full bg-signature transition-[width] duration-200"
           style={{ width: step === 1 ? "50%" : "100%" }}
         />
       </div>
@@ -287,91 +298,138 @@ export function QuoteForm({
                 Exterior and Interior &amp; Exterior are alternative scopes.
                 Gutter can be added with either.
               </p>
-              <div className="mt-3 grid gap-2.5 sm:grid-cols-3">
+              <div className="mt-3 flex flex-wrap gap-2">
                 {serviceOptions.map((service) => {
                   const selected = form.services.includes(service.id);
                   return (
-                    <ChoiceButton
+                    <button
                       key={service.id}
-                      selected={selected}
+                      type="button"
+                      aria-pressed={selected}
                       onClick={() => toggleService(service.id)}
-                      className="min-h-[3.25rem] justify-center text-center sm:px-3"
+                      className={[
+                        "inline-flex min-h-10 items-center justify-center rounded-md border px-3.5 py-2 text-sm font-semibold tracking-tight transition-colors duration-150",
+                        "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-signature",
+                        selected
+                          ? "border-signature bg-ice text-midnight"
+                          : "border-border bg-pure text-midnight hover:border-border-strong",
+                      ].join(" ")}
                     >
                       {service.label}
-                    </ChoiceButton>
+                    </button>
                   );
                 })}
               </div>
             </fieldset>
 
-            {showPlans ? (
-              <fieldset>
-                <legend className="text-sm font-semibold text-midnight">
-                  How would you like to keep your windows clean?
-                </legend>
-                <div className="mt-3 grid gap-2.5 sm:grid-cols-3">
-                  {quotePlanOptions.map((plan) => {
-                    const selected = form.frequency === plan.id;
-                    return (
-                      <ChoiceButton
-                        key={plan.id}
-                        selected={selected}
-                        onClick={() => {
-                          setStepError(null);
-                          setForm((current) => ({
-                            ...current,
-                            frequency: plan.id,
-                          }));
-                        }}
-                        className="relative min-h-[8.5rem] flex-col items-start justify-start gap-1"
-                      >
-                        {plan.recommended ? (
-                          <span className="mb-1 inline-flex rounded bg-signature/10 px-1.5 py-0.5 text-[0.65rem] font-semibold uppercase tracking-[0.12em] text-signature">
-                            Recommended
-                          </span>
+            {/* Always mounted — never conditionally reveal mid-flow. */}
+            <fieldset
+              aria-disabled={plansDisabled || undefined}
+              className={
+                plansDisabled ? "opacity-55 transition-opacity" : undefined
+              }
+            >
+              <legend className="text-sm font-semibold text-midnight">
+                Choose your cleaning plan
+              </legend>
+              <p className="mt-1 text-sm text-navy-muted">
+                Save more with recurring professional cleaning.
+              </p>
+              {gutterOnly ? (
+                <p className="mt-2 text-xs font-medium text-navy-muted">
+                  Window cleaning plans apply when a window service is selected.
+                  Gutter-only quotes are priced separately.
+                </p>
+              ) : null}
+
+              <div
+                className="mt-3 grid gap-2.5 sm:grid-cols-3 sm:items-stretch"
+                role="radiogroup"
+                aria-label="Cleaning plan"
+              >
+                {quotePlanOptions.map((plan) => {
+                  const selected = form.frequency === plan.id;
+                  return (
+                    <label
+                      key={plan.id}
+                      className={[
+                        "relative flex h-full cursor-pointer flex-col rounded-md border p-3.5 text-left transition-colors duration-150",
+                        "focus-within:outline focus-within:outline-2 focus-within:outline-offset-2 focus-within:outline-signature",
+                        plansDisabled
+                          ? "cursor-not-allowed border-border bg-cloud/60"
+                          : selected
+                            ? "border-signature bg-ice"
+                            : "border-border bg-pure hover:border-border-strong",
+                      ].join(" ")}
+                    >
+                      <input
+                        type="radio"
+                        className="sr-only"
+                        name={planGroupName}
+                        value={plan.id}
+                        checked={selected}
+                        disabled={plansDisabled}
+                        onChange={() => selectPlan(plan.id)}
+                      />
+                      {plan.recommended ? (
+                        <span className="mb-1.5 inline-flex w-fit rounded bg-signature/10 px-1.5 py-0.5 text-[0.65rem] font-semibold uppercase tracking-[0.12em] text-signature">
+                          Recommended
+                        </span>
+                      ) : (
+                        <span className="mb-1.5 block h-[1.15rem]" aria-hidden />
+                      )}
+                      <span className="block text-base font-semibold text-midnight">
+                        {plan.name}
+                      </span>
+                      <span className="mt-0.5 block text-xs font-medium text-navy-muted">
+                        {plan.subtitle}
+                      </span>
+                      <ul className="mt-3 space-y-1.5">
+                        {plan.checks.map((check) => (
+                          <li
+                            key={check}
+                            className="flex items-start gap-1.5 text-xs font-medium leading-snug text-midnight/80"
+                          >
+                            <CheckIcon />
+                            <span>{check}</span>
+                          </li>
+                        ))}
+                      </ul>
+                      <div className="mt-auto border-t border-border/80 pt-3">
+                        <p
+                          className={[
+                            "text-sm font-bold tracking-tight",
+                            plan.savingsDetail
+                              ? "text-signature"
+                              : "text-midnight",
+                          ].join(" ")}
+                        >
+                          {plan.savingsLabel}
+                        </p>
+                        {plan.savingsDetail ? (
+                          <p className="mt-0.5 text-[0.7rem] font-semibold uppercase tracking-[0.08em] text-navy-muted">
+                            {plan.savingsDetail}
+                          </p>
                         ) : null}
-                        <span className="block text-base font-semibold">
-                          {plan.name}
-                        </span>
-                        <span className="block text-xs font-medium text-navy-muted">
-                          {plan.subtitle} · {plan.visits}
-                        </span>
-                        <ul className="mt-2 space-y-1">
-                          {plan.benefits.map((benefit) => (
-                            <li
-                              key={benefit}
-                              className={[
-                                "text-xs font-medium leading-snug",
-                                plan.discountLabel &&
-                                benefit.startsWith("$")
-                                  ? "text-signature"
-                                  : selected
-                                    ? "text-midnight/80"
-                                    : "text-navy-muted",
-                              ].join(" ")}
-                            >
-                              {benefit}
-                            </li>
-                          ))}
-                        </ul>
-                      </ChoiceButton>
-                    );
-                  })}
-                </div>
-              </fieldset>
-            ) : null}
+                      </div>
+                    </label>
+                  );
+                })}
+              </div>
+            </fieldset>
 
             <fieldset>
               <legend className="text-sm font-semibold text-midnight">
                 What type of property?
               </legend>
-              <div className="mt-3 grid gap-2.5 sm:grid-cols-2">
+              <div className="mt-3 flex flex-wrap gap-2">
                 {propertyTypeOptions.map((option) => {
                   const selected = form.propertyType === option.id;
                   return (
-                    <ChoiceButton
+                    <button
                       key={option.id}
-                      selected={selected}
+                      type="button"
+                      aria-pressed={selected}
                       onClick={() => {
                         setStepError(null);
                         setForm((current) => ({
@@ -379,9 +437,16 @@ export function QuoteForm({
                           propertyType: option.id,
                         }));
                       }}
+                      className={[
+                        "inline-flex min-h-10 items-center justify-center rounded-md border px-3.5 py-2 text-sm font-semibold tracking-tight transition-colors duration-150",
+                        "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-signature",
+                        selected
+                          ? "border-signature bg-ice text-midnight"
+                          : "border-border bg-pure text-midnight hover:border-border-strong",
+                      ].join(" ")}
                     >
                       {option.label}
-                    </ChoiceButton>
+                    </button>
                   );
                 })}
               </div>
@@ -404,24 +469,29 @@ export function QuoteForm({
             </div>
           </div>
         ) : (
-          <div className="space-y-5">
-            <div>
-              <FieldLabel htmlFor="street-address">
-                Where will we be cleaning?
-              </FieldLabel>
-              <p className="mt-1 text-sm text-navy-muted">
-                We&apos;ll use your property address to assess it remotely and
-                prepare your free virtual quote.
-              </p>
-              <AddressField
-                value={form.streetAddress}
-                onChange={(streetAddress) =>
-                  setForm((current) => ({ ...current, streetAddress }))
-                }
-                invalid={streetInvalid}
-                className={fieldClass}
-              />
-              <label className="mt-3 block">
+          <div className="space-y-0">
+            <section className="space-y-3 pb-6">
+              <div>
+                <p className="text-sm font-semibold text-midnight">
+                  Property Address
+                </p>
+                <p className="mt-1 text-sm text-navy-muted">
+                  We&apos;ll use your address to assess the property remotely and
+                  prepare your free virtual quote.
+                </p>
+              </div>
+              <div>
+                <FieldLabel htmlFor="street-address">Street address</FieldLabel>
+                <AddressField
+                  value={form.streetAddress}
+                  onChange={(streetAddress) =>
+                    setForm((current) => ({ ...current, streetAddress }))
+                  }
+                  invalid={streetInvalid}
+                  className={fieldClass}
+                />
+              </div>
+              <label className="block">
                 <FieldLabel optional>Unit / Suite</FieldLabel>
                 <input
                   type="text"
@@ -437,13 +507,13 @@ export function QuoteForm({
                   }
                 />
               </label>
-            </div>
+            </section>
 
-            <div>
+            <section className="space-y-3 border-t border-border py-6">
               <p className="text-sm font-semibold text-midnight">
-                How can we reach you?
+                Contact Information
               </p>
-              <div className="mt-3 grid gap-4 sm:grid-cols-2">
+              <div className="grid gap-4 sm:grid-cols-2">
                 <label className="block sm:col-span-2">
                   <FieldLabel>Full name</FieldLabel>
                   <input
@@ -511,73 +581,79 @@ export function QuoteForm({
                   ) : null}
                 </label>
               </div>
-            </div>
+            </section>
 
-            <label className="block">
-              <FieldLabel optional>Anything else we should know?</FieldLabel>
-              <textarea
-                name="notes"
-                rows={3}
-                className={`${fieldClass} resize-y`}
-                value={form.notes}
-                onChange={(event) =>
-                  setForm((current) => ({
-                    ...current,
-                    notes: event.target.value,
-                  }))
-                }
-              />
-            </label>
+            <section className="space-y-3 border-t border-border pt-6">
+              <label className="block">
+                <FieldLabel optional>
+                  Anything else we should know?
+                </FieldLabel>
+                <textarea
+                  name="notes"
+                  rows={2}
+                  className={`${fieldClass} resize-y`}
+                  value={form.notes}
+                  onChange={(event) =>
+                    setForm((current) => ({
+                      ...current,
+                      notes: event.target.value,
+                    }))
+                  }
+                />
+              </label>
+            </section>
 
-            {streetInvalid || nameInvalid ? (
-              <p className="text-sm font-medium text-red-700" role="alert">
-                Add your property address and full name to continue.
-              </p>
-            ) : null}
-
-            {submitBlocked ? (
-              <div
-                className="rounded-md border border-amber-300 bg-amber-50 px-4 py-3 text-sm text-amber-950"
-                role="status"
-              >
-                <p className="font-semibold">
-                  Quote requests are not submitting yet.
+            <div className="mt-6 space-y-4">
+              {streetInvalid || nameInvalid ? (
+                <p className="text-sm font-medium text-red-700" role="alert">
+                  Add your property address and full name to continue.
                 </p>
-                <p className="mt-1">
-                  A submission endpoint has not been connected. Nothing was
-                  sent, and your answers stay in this browser session. This is a
-                  quote request — not a booking.
+              ) : null}
+
+              {submitBlocked ? (
+                <div
+                  className="rounded-md border border-amber-300 bg-amber-50 px-4 py-3 text-sm text-amber-950"
+                  role="status"
+                >
+                  <p className="font-semibold">
+                    Quote requests are not submitting yet.
+                  </p>
+                  <p className="mt-1">
+                    A submission endpoint has not been connected. Nothing was
+                    sent, and your answers stay in this browser session. This is
+                    a quote request — not a booking.
+                  </p>
+                </div>
+              ) : (
+                <p className="text-sm text-navy-muted">
+                  Requesting a quote is free and creates no obligation. It is not
+                  a booking or payment.
                 </p>
+              )}
+
+              <div className="flex flex-col-reverse gap-3 sm:flex-row sm:items-center">
+                <button
+                  type="button"
+                  className={secondaryActionClass}
+                  disabled={submitting}
+                  onClick={() => {
+                    setAttemptedSubmit(false);
+                    setSubmitBlocked(false);
+                    setStep(1);
+                  }}
+                >
+                  Back
+                </button>
+                <button
+                  type="submit"
+                  className={`${primaryActionClass} sm:flex-1`}
+                  disabled={submitting}
+                >
+                  {submitting
+                    ? "Sending…"
+                    : "Request My Free Virtual Quote"}
+                </button>
               </div>
-            ) : (
-              <p className="text-sm text-navy-muted">
-                Requesting a quote is free and creates no obligation. It is not
-                a booking or payment.
-              </p>
-            )}
-
-            <div className="flex flex-col-reverse gap-3 sm:flex-row sm:items-center">
-              <button
-                type="button"
-                className={secondaryActionClass}
-                disabled={submitting}
-                onClick={() => {
-                  setAttemptedSubmit(false);
-                  setSubmitBlocked(false);
-                  setStep(1);
-                }}
-              >
-                Back
-              </button>
-              <button
-                type="submit"
-                className={`${primaryActionClass} sm:flex-1`}
-                disabled={submitting}
-              >
-                {submitting
-                  ? "Sending…"
-                  : "Request My Free Virtual Quote"}
-              </button>
             </div>
           </div>
         )}
