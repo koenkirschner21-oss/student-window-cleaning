@@ -2,6 +2,7 @@
 
 import {
   useId,
+  useRef,
   useState,
   type FormEvent,
   type ReactNode,
@@ -204,6 +205,7 @@ export function QuoteForm({
   const headingId = useId();
   const planGroupName = useId();
   const propertyGroupName = useId();
+  const cardRef = useRef<HTMLDivElement>(null);
 
   const windowSelected = hasWindowService(form.services);
   const gutterOnly = isGutterOnly(form.services);
@@ -272,6 +274,16 @@ export function QuoteForm({
     setStepError(null);
     setGutterPlanHint(false);
     setStep(2);
+    // Jump to Step 2 card top, accounting for sticky header — no smooth scroll.
+    requestAnimationFrame(() => {
+      const card = cardRef.current;
+      if (!card || typeof window === "undefined") return;
+      const sticky = document.querySelector<HTMLElement>("header.sticky");
+      const headerOffset = sticky?.getBoundingClientRect().height ?? 76;
+      const top =
+        card.getBoundingClientRect().top + window.scrollY - headerOffset - 8;
+      window.scrollTo({ top: Math.max(0, top), behavior: "auto" });
+    });
   }
 
   function onSubmit(event: FormEvent<HTMLFormElement>) {
@@ -303,6 +315,7 @@ export function QuoteForm({
 
   return (
     <div
+      ref={cardRef}
       className={`rounded-md border border-border bg-pure p-5 text-midnight sm:p-6 ${className}`.trim()}
     >
       <div className="mb-4 border-b border-border pb-3.5">
@@ -527,8 +540,8 @@ export function QuoteForm({
             </div>
           </div>
         ) : (
-          <div className="space-y-0">
-            <section className="space-y-3 pb-6">
+          <div className="space-y-5">
+            <section className="space-y-2.5">
               <div>
                 <p className="text-sm font-semibold text-midnight">
                   Property Address
@@ -567,11 +580,11 @@ export function QuoteForm({
               </label>
             </section>
 
-            <section className="space-y-3 border-t border-border py-6">
+            <section className="space-y-2.5 border-t border-border pt-5">
               <p className="text-sm font-semibold text-midnight">
                 Contact Information
               </p>
-              <div className="grid gap-4 sm:grid-cols-2">
+              <div className="grid gap-2.5 sm:grid-cols-2 sm:gap-3">
                 <label className="block sm:col-span-2">
                   <FieldLabel>Full name</FieldLabel>
                   <input
@@ -641,7 +654,7 @@ export function QuoteForm({
               </div>
             </section>
 
-            <section className="space-y-3 border-t border-border pt-6">
+            <section className="space-y-2.5 border-t border-border pt-5">
               <label className="block">
                 <FieldLabel optional>
                   Anything else we should know?
@@ -661,7 +674,7 @@ export function QuoteForm({
               </label>
             </section>
 
-            <div className="mt-6 space-y-4">
+            <div className="space-y-3">
               {streetInvalid || nameInvalid ? (
                 <p className="text-sm font-medium text-red-700" role="alert">
                   Add your property address and full name to continue.
@@ -684,7 +697,7 @@ export function QuoteForm({
                 </div>
               ) : null}
 
-              <div className="flex flex-col-reverse gap-3 sm:flex-row sm:items-center">
+              <div className="flex flex-col-reverse gap-2.5 sm:flex-row sm:items-center sm:gap-3">
                 <button
                   type="button"
                   className={secondaryActionClass}

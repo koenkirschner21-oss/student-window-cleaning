@@ -5,9 +5,8 @@ import { quoteTrustPhoto } from "@/lib/site";
  * Contained trust band shown below the quote form on `/quote` only.
  * Do not mount on the homepage FinalCta — that layout stays independent.
  *
- * Shorter horizontal editorial band: photo left, solid midnight navy right.
- * Photo uses contained fit on a neutral plane so the privacy-safe facade crop
- * is not further zoomed by aggressive object-cover.
+ * Photo left / solid midnight navy right. Portrait source uses object-contain
+ * on a restrained cloud plane so the full house stays visible — no cover zoom.
  */
 export function QuoteTrustBand() {
   return (
@@ -15,16 +14,16 @@ export function QuoteTrustBand() {
       aria-labelledby="quote-trust-heading"
       className="overflow-hidden rounded-md border border-border bg-pure shadow-none"
     >
-      <div className="grid lg:grid-cols-2 lg:min-h-[15.5rem]">
-        <div className="relative flex min-h-[13.5rem] items-center justify-center overflow-hidden bg-cloud sm:min-h-[15rem] lg:min-h-full">
+      <div className="grid lg:grid-cols-2 lg:min-h-[22rem]">
+        <div className="relative flex min-h-[18rem] items-center justify-center overflow-hidden bg-cloud sm:min-h-[20rem] lg:min-h-full">
           {quoteTrustPhoto ? (
             <Image
               src={quoteTrustPhoto.src}
               alt={quoteTrustPhoto.alt}
-              width={1800}
-              height={1035}
-              className="h-full max-h-[16rem] w-full object-contain object-center lg:max-h-[17.5rem]"
-              sizes="(min-width: 1024px) 600px, 100vw"
+              width={1400}
+              height={1720}
+              className="h-auto max-h-[22rem] w-auto max-w-full object-contain object-center p-2 sm:max-h-[24rem] sm:p-3 lg:max-h-[26rem]"
+              sizes="(min-width: 1024px) 560px, 100vw"
               priority={false}
             />
           ) : (
