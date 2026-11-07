@@ -6,11 +6,11 @@ import {
   useState,
   type ChangeEvent,
   type FormEvent,
+  type ReactNode,
 } from "react";
-import { Button } from "@/components/ui/Button";
 import {
-  frequencyOptions,
   propertyTypeOptions,
+  quoteFrequencyOptions,
   serviceOptions,
   type FrequencyId,
   type PropertyTypeId,
@@ -45,9 +45,67 @@ const initialState: FormState = {
   notes: "",
 };
 
+const windowServiceIds = new Set<ServiceId>(["exterior", "interior-exterior"]);
+
 function isGutterOnly(services: ServiceId[]) {
   return services.length === 1 && services[0] === "gutter-cleaning";
 }
+
+function ChoiceButton({
+  selected,
+  onClick,
+  children,
+  className = "",
+}: {
+  selected: boolean;
+  onClick: () => void;
+  children: ReactNode;
+  className?: string;
+}) {
+  return (
+    <button
+      type="button"
+      aria-pressed={selected}
+      onClick={onClick}
+      className={[
+        "min-h-12 rounded-md border px-4 py-3 text-left text-sm font-semibold tracking-tight transition-colors duration-150",
+        "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-signature",
+        selected
+          ? "border-signature bg-ice text-midnight"
+          : "border-border bg-pure text-midnight hover:border-border-strong",
+        className,
+      ].join(" ")}
+    >
+      {children}
+    </button>
+  );
+}
+
+function FieldLabel({
+  children,
+  optional,
+}: {
+  children: ReactNode;
+  optional?: boolean;
+}) {
+  return (
+    <span className="text-sm font-semibold text-midnight">
+      {children}
+      {optional ? (
+        <span className="ml-1.5 font-normal text-navy-muted">(optional)</span>
+      ) : null}
+    </span>
+  );
+}
+
+const fieldClass =
+  "mt-2 w-full rounded-md border border-border bg-pure px-3.5 py-3 text-sm text-midnight transition-colors placeholder:text-navy-muted/70 focus:border-signature focus:outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-signature";
+
+const primaryActionClass =
+  "inline-flex min-h-12 w-full items-center justify-center rounded-md bg-signature px-6 text-base font-semibold tracking-tight text-pure transition-colors duration-150 hover:bg-[#0656d6] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-signature sm:w-auto";
+
+const secondaryActionClass =
+  "inline-flex min-h-12 items-center justify-center rounded-md border border-border-strong bg-pure px-5 text-sm font-semibold tracking-tight text-midnight transition-colors duration-150 hover:border-signature hover:text-signature focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-signature";
 
 export function QuoteForm({
   id = "quote-form",
@@ -69,13 +127,25 @@ export function QuoteForm({
     [form.services],
   );
 
+  const frequencyDisabled = isGutterOnly(form.services);
+
   function toggleService(serviceId: ServiceId) {
     setStepError(null);
     setForm((current) => {
       const exists = current.services.includes(serviceId);
-      const services = exists
-        ? current.services.filter((id) => id !== serviceId)
-        : [...current.services, serviceId];
+      let services: ServiceId[];
+
+      if (exists) {
+        services = current.services.filter((value) => value !== serviceId);
+      } else if (windowServiceIds.has(serviceId)) {
+        services = [
+          ...current.services.filter((value) => !windowServiceIds.has(value)),
+          serviceId,
+        ];
+      } else {
+        services = [...current.services, serviceId];
+      }
+
       const next = { ...current, services };
       if (isGutterOnly(services)) {
         next.frequency = "";
@@ -108,31 +178,48 @@ export function QuoteForm({
 
   function onSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    if (!form.name.trim() || !form.phone.trim() || !form.location.trim()) {
+      setAttemptedSubmit(true);
+      return;
+    }
     setAttemptedSubmit(true);
   }
 
+  const contactInvalid =
+    attemptedSubmit &&
+    (!form.name.trim() || !form.phone.trim() || !form.location.trim());
+
   return (
-    <div className={`rounded-lg border border-border bg-pure p-6 shadow-[var(--shadow-soft)] sm:p-8 ${className}`.trim()}>
-      <div className="mb-6 flex flex-wrap items-end justify-between gap-3">
+    <div
+      className={`rounded-md border border-border bg-pure p-5 text-midnight sm:p-7 ${className}`.trim()}
+    >
+      <div className="mb-5 flex flex-wrap items-start justify-between gap-3 border-b border-border pb-4">
         <div>
-          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-signature">
-            Free quote
+          <p className="text-xs font-semibold uppercase tracking-[0.16em] text-signature">
+            Step {step} of 2
           </p>
-          <h3 id={headingId} className="font-heading mt-2 text-2xl font-semibold text-midnight">
-            {step === 1 ? "Tell us about the job" : "How can we reach you?"}
+          <h3
+            id={headingId}
+            className="font-heading mt-1.5 text-xl font-semibold tracking-tight text-midnight sm:text-2xl"
+          >
+            {step === 1 ? "Your Cleaning Needs" : "Contact Details"}
           </h3>
         </div>
-        <p className="text-sm text-navy-muted" aria-live="polite">
-          Step {step} of 2
+        <p className="pt-1 text-sm text-navy-muted" aria-live="polite">
+          {step === 1 ? "Cleaning Needs" : "Contact Details"}
         </p>
       </div>
 
       <div
-        className="mb-6 h-1.5 overflow-hidden rounded-full bg-ice"
-        aria-hidden
+        className="mb-6 h-1 overflow-hidden rounded-sm bg-ice"
+        role="progressbar"
+        aria-valuemin={1}
+        aria-valuemax={2}
+        aria-valuenow={step}
+        aria-label={`Step ${step} of 2`}
       >
         <div
-          className="h-full rounded-full bg-signature transition-[width] duration-300"
+          className="h-full bg-signature"
           style={{ width: step === 1 ? "50%" : "100%" }}
         />
       </div>
@@ -151,95 +238,100 @@ export function QuoteForm({
                 Services needed
               </legend>
               <p className="mt-1 text-sm text-navy-muted">
-                Select all that apply.
+                Select all that apply. Gutter can combine with either window
+                option.
               </p>
-              <div className="mt-4 grid gap-3 sm:grid-cols-2">
+              <div className="mt-3 grid gap-2.5 sm:grid-cols-3">
                 {serviceOptions.map((service) => {
-                  const checked = form.services.includes(service.id);
+                  const selected = form.services.includes(service.id);
                   return (
-                    <label
+                    <ChoiceButton
                       key={service.id}
-                      className={[
-                        "flex cursor-pointer items-center gap-3 rounded-md border px-4 py-3 text-sm transition",
-                        checked
-                          ? "border-signature bg-ice text-midnight"
-                          : "border-border bg-pure text-midnight hover:border-border-strong",
-                      ].join(" ")}
+                      selected={selected}
+                      onClick={() => toggleService(service.id)}
+                      className="min-h-[3.25rem] justify-center text-center sm:px-3"
                     >
-                      <input
-                        type="checkbox"
-                        className="size-4 accent-[var(--color-signature-blue)]"
-                        checked={checked}
-                        onChange={() => toggleService(service.id)}
-                      />
-                      <span className="font-medium">{service.label}</span>
-                    </label>
+                      {service.label}
+                    </ChoiceButton>
                   );
                 })}
               </div>
             </fieldset>
 
-            <div className="grid gap-6 sm:grid-cols-2">
-              <label className="block">
-                <span className="text-sm font-semibold text-midnight">
-                  Property type
-                </span>
-                <select
-                  className="mt-2 w-full rounded-md border border-border bg-pure px-3 py-3 text-sm text-midnight"
-                  value={form.propertyType}
-                  onChange={(event) => {
-                    setStepError(null);
-                    setForm((current) => ({
-                      ...current,
-                      propertyType: event.target.value as PropertyTypeId | "",
-                    }));
-                  }}
-                  required
-                >
-                  <option value="">Select property type</option>
-                  {propertyTypeOptions.map((option) => (
-                    <option key={option.id} value={option.id}>
-                      {option.label}
-                    </option>
-                  ))}
-                </select>
-              </label>
+            <fieldset>
+              <legend className="text-sm font-semibold text-midnight">
+                Frequency
+                {frequencyDisabled ? (
+                  <span className="ml-1.5 font-normal text-navy-muted">
+                    (not needed for gutter-only)
+                  </span>
+                ) : null}
+              </legend>
+              <div
+                className={[
+                  "mt-3 grid gap-2.5 sm:grid-cols-3",
+                  frequencyDisabled ? "opacity-50" : "",
+                ].join(" ")}
+              >
+                {quoteFrequencyOptions.map((option) => {
+                  const selected = form.frequency === option.id;
+                  return (
+                    <ChoiceButton
+                      key={option.id}
+                      selected={selected}
+                      onClick={() => {
+                        if (frequencyDisabled) return;
+                        setStepError(null);
+                        setForm((current) => ({
+                          ...current,
+                          frequency: option.id,
+                        }));
+                      }}
+                      className={[
+                        "min-h-[3.75rem]",
+                        frequencyDisabled ? "cursor-not-allowed" : "",
+                      ].join(" ")}
+                    >
+                      <span className="block">{option.label}</span>
+                      <span
+                        className={[
+                          "mt-0.5 block text-xs font-medium",
+                          selected ? "text-signature" : "text-navy-muted",
+                        ].join(" ")}
+                      >
+                        {option.detail}
+                      </span>
+                    </ChoiceButton>
+                  );
+                })}
+              </div>
+            </fieldset>
 
-              <label className="block">
-                <span className="text-sm font-semibold text-midnight">
-                  Frequency
-                  {!frequencyRequired ? (
-                    <span className="ml-2 font-normal text-navy-muted">
-                      (optional for gutter-only)
-                    </span>
-                  ) : null}
-                </span>
-                <select
-                  className="mt-2 w-full rounded-md border border-border bg-pure px-3 py-3 text-sm text-midnight disabled:cursor-not-allowed disabled:bg-cloud disabled:text-navy-muted"
-                  value={form.frequency}
-                  disabled={isGutterOnly(form.services)}
-                  onChange={(event) => {
-                    setStepError(null);
-                    setForm((current) => ({
-                      ...current,
-                      frequency: event.target.value as FrequencyId | "",
-                    }));
-                  }}
-                  required={frequencyRequired}
-                >
-                  <option value="">
-                    {isGutterOnly(form.services)
-                      ? "Not required for gutter-only"
-                      : "Select frequency"}
-                  </option>
-                  {frequencyOptions.map((option) => (
-                    <option key={option.id} value={option.id}>
+            <fieldset>
+              <legend className="text-sm font-semibold text-midnight">
+                Property type
+              </legend>
+              <div className="mt-3 grid gap-2.5 sm:grid-cols-2">
+                {propertyTypeOptions.map((option) => {
+                  const selected = form.propertyType === option.id;
+                  return (
+                    <ChoiceButton
+                      key={option.id}
+                      selected={selected}
+                      onClick={() => {
+                        setStepError(null);
+                        setForm((current) => ({
+                          ...current,
+                          propertyType: option.id,
+                        }));
+                      }}
+                    >
                       {option.label}
-                    </option>
-                  ))}
-                </select>
-              </label>
-            </div>
+                    </ChoiceButton>
+                  );
+                })}
+              </div>
+            </fieldset>
 
             {stepError ? (
               <p className="text-sm font-medium text-red-700" role="alert">
@@ -247,24 +339,24 @@ export function QuoteForm({
               </p>
             ) : null}
 
-            <div className="flex flex-wrap gap-3">
-              <Button type="button" onClick={goToStep2} size="lg">
+            <div>
+              <button type="button" onClick={goToStep2} className={primaryActionClass}>
                 Continue
-              </Button>
+              </button>
             </div>
           </div>
         ) : (
-          <div className="space-y-6">
-            <div className="grid gap-5 sm:grid-cols-2">
-              <label className="block sm:col-span-1">
-                <span className="text-sm font-semibold text-midnight">
-                  Full name
-                </span>
+          <div className="space-y-5">
+            <div className="grid gap-4 sm:grid-cols-2">
+              <label className="block">
+                <FieldLabel>Full name</FieldLabel>
                 <input
                   type="text"
+                  name="name"
                   autoComplete="name"
                   required
-                  className="mt-2 w-full rounded-md border border-border bg-pure px-3 py-3 text-sm"
+                  aria-invalid={attemptedSubmit && !form.name.trim()}
+                  className={fieldClass}
                   value={form.name}
                   onChange={(event) =>
                     setForm((current) => ({
@@ -276,14 +368,14 @@ export function QuoteForm({
               </label>
 
               <label className="block">
-                <span className="text-sm font-semibold text-midnight">
-                  Phone
-                </span>
+                <FieldLabel>Phone</FieldLabel>
                 <input
                   type="tel"
+                  name="phone"
                   autoComplete="tel"
                   required
-                  className="mt-2 w-full rounded-md border border-border bg-pure px-3 py-3 text-sm"
+                  aria-invalid={attemptedSubmit && !form.phone.trim()}
+                  className={fieldClass}
                   value={form.phone}
                   onChange={(event) =>
                     setForm((current) => ({
@@ -295,14 +387,14 @@ export function QuoteForm({
               </label>
 
               <label className="block sm:col-span-2">
-                <span className="text-sm font-semibold text-midnight">
-                  Location / postal code
-                </span>
+                <FieldLabel>Location / postal code</FieldLabel>
                 <input
                   type="text"
+                  name="location"
                   autoComplete="postal-code"
                   required
-                  className="mt-2 w-full rounded-md border border-border bg-pure px-3 py-3 text-sm"
+                  aria-invalid={attemptedSubmit && !form.location.trim()}
+                  className={fieldClass}
                   value={form.location}
                   onChange={(event) =>
                     setForm((current) => ({
@@ -314,14 +406,12 @@ export function QuoteForm({
               </label>
 
               <label className="block sm:col-span-2">
-                <span className="text-sm font-semibold text-midnight">
-                  Email{" "}
-                  <span className="font-normal text-navy-muted">(optional)</span>
-                </span>
+                <FieldLabel optional>Email</FieldLabel>
                 <input
                   type="email"
+                  name="email"
                   autoComplete="email"
-                  className="mt-2 w-full rounded-md border border-border bg-pure px-3 py-3 text-sm"
+                  className={fieldClass}
                   value={form.email}
                   onChange={(event) =>
                     setForm((current) => ({
@@ -333,13 +423,11 @@ export function QuoteForm({
               </label>
 
               <label className="block sm:col-span-2">
-                <span className="text-sm font-semibold text-midnight">
-                  Notes{" "}
-                  <span className="font-normal text-navy-muted">(optional)</span>
-                </span>
+                <FieldLabel optional>Notes</FieldLabel>
                 <textarea
-                  rows={4}
-                  className="mt-2 w-full rounded-md border border-border bg-pure px-3 py-3 text-sm"
+                  name="notes"
+                  rows={3}
+                  className={`${fieldClass} resize-y`}
                   value={form.notes}
                   onChange={(event) =>
                     setForm((current) => ({
@@ -351,25 +439,23 @@ export function QuoteForm({
               </label>
 
               <label className="block sm:col-span-2">
-                <span className="text-sm font-semibold text-midnight">
-                  Photos{" "}
-                  <span className="font-normal text-navy-muted">
-                    (optional, up to 6)
-                  </span>
-                </span>
+                <FieldLabel optional>Photos</FieldLabel>
                 <input
                   type="file"
+                  name="photos"
                   accept="image/*"
                   multiple
-                  className="mt-2 block w-full text-sm text-navy-muted file:mr-4 file:rounded-md file:border-0 file:bg-ice file:px-4 file:py-2 file:text-sm file:font-semibold file:text-midnight"
+                  className="mt-2 block w-full text-sm text-navy-muted file:mr-3 file:rounded-md file:border-0 file:bg-ice file:px-3.5 file:py-2 file:text-sm file:font-semibold file:text-midnight"
                   onChange={onPhotosChange}
                 />
                 {photos.length > 0 ? (
                   <p className="mt-2 text-sm text-navy-muted">
                     {photos.length} file{photos.length === 1 ? "" : "s"} selected
-                    (not uploaded yet).
+                    — not uploaded yet.
                   </p>
-                ) : null}
+                ) : (
+                  <p className="mt-1.5 text-xs text-navy-muted">Up to 6 images.</p>
+                )}
               </label>
             </div>
 
@@ -378,34 +464,44 @@ export function QuoteForm({
                 className="rounded-md border border-amber-300 bg-amber-50 px-4 py-3 text-sm text-amber-950"
                 role="status"
               >
-                <p className="font-semibold">Quote requests are not submitting yet.</p>
-                <p className="mt-1">
-                  This form is wired for the frontend only. A backend or form
-                  service has not been connected, so nothing was sent. Your
-                  answers stay in this browser session.
-                </p>
+                {contactInvalid ? (
+                  <p className="font-semibold">
+                    Add your name, phone, and location to continue.
+                  </p>
+                ) : (
+                  <>
+                    <p className="font-semibold">
+                      Quote requests are not submitting yet.
+                    </p>
+                    <p className="mt-1">
+                      This form is frontend-only for now. Nothing was sent, and
+                      your answers stay in this browser session until a
+                      submission service is connected.
+                    </p>
+                  </>
+                )}
               </div>
             ) : (
               <p className="text-sm text-navy-muted">
-                This is a quote request — not a booking — and no price is
-                calculated automatically.
+                Quote request only — not a booking, and no price is calculated
+                online.
               </p>
             )}
 
-            <div className="flex flex-wrap gap-3">
-              <Button
+            <div className="flex flex-col-reverse gap-3 sm:flex-row sm:items-center">
+              <button
                 type="button"
-                variant="secondary"
+                className={secondaryActionClass}
                 onClick={() => {
                   setAttemptedSubmit(false);
                   setStep(1);
                 }}
               >
                 Back
-              </Button>
-              <Button type="submit" size="lg">
-                Request quote
-              </Button>
+              </button>
+              <button type="submit" className={`${primaryActionClass} sm:flex-1`}>
+                Request My Free Quote
+              </button>
             </div>
           </div>
         )}

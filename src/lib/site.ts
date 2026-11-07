@@ -15,17 +15,23 @@ export const navLinks = [
 ] as const;
 
 export const serviceOptions = [
-  { id: "exterior-windows", label: "Exterior windows" },
-  { id: "interior-windows", label: "Interior windows" },
-  { id: "screens", label: "Screens" },
-  { id: "tracks-sills", label: "Tracks & sills" },
-  { id: "gutter-cleaning", label: "Gutter cleaning" },
+  { id: "exterior", label: "Exterior" },
+  { id: "interior-exterior", label: "Interior & Exterior" },
+  { id: "gutter-cleaning", label: "Gutter" },
+] as const;
+
+/** Plan-aligned frequency choices shown in the quote form. */
+export const quoteFrequencyOptions = [
+  { id: "one-time", label: "One-Time / Basic", detail: "1 visit" },
+  { id: "two-visit", label: "Best Value", detail: "2 visits" },
+  { id: "three-visit", label: "Premium", detail: "3 visits" },
 ] as const;
 
 export const frequencyOptions = [
-  { id: "one-time", label: "One-time (1 visit)" },
-  { id: "two-visit", label: "2 visits" },
-  { id: "three-visit", label: "3 visits" },
+  ...quoteFrequencyOptions.map(({ id, label, detail }) => ({
+    id,
+    label: `${label} · ${detail}`,
+  })),
   { id: "monthly", label: "Monthly" },
   { id: "bi-monthly", label: "Every 2 months" },
   { id: "quarterly", label: "Quarterly" },
@@ -33,10 +39,9 @@ export const frequencyOptions = [
 ] as const;
 
 export const propertyTypeOptions = [
-  { id: "house", label: "House" },
+  { id: "detached-semi", label: "Detached / semi" },
   { id: "townhouse", label: "Townhouse" },
-  { id: "condo-apartment", label: "Condo / apartment" },
-  { id: "storefront", label: "Storefront / small commercial" },
+  { id: "commercial", label: "Commercial" },
   { id: "other", label: "Other" },
 ] as const;
 
