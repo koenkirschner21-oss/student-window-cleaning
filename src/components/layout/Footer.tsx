@@ -14,11 +14,14 @@ function FacebookIcon() {
   return (
     <svg
       viewBox="0 0 24 24"
-      fill="currentColor"
       aria-hidden
-      className="size-4 shrink-0"
+      className="size-[1.375rem] shrink-0"
     >
-      <path d="M14.5 8.5V6.75c0-.69.56-1.25 1.25-1.25H17V3h-1.75A3.75 3.75 0 0 0 11.5 6.75V8.5H9.5v2.5h2v8h3v-8h2.15l.35-2.5H14.5Z" />
+      <circle cx="12" cy="12" r="12" fill="#1877F2" />
+      <path
+        fill="#FFFFFF"
+        d="M13.35 19.2v-6.3h2.12l.32-2.46h-2.44V8.87c0-.71.2-1.2 1.22-1.2h1.3V5.47c-.22-.03-.99-.1-1.89-.1-1.87 0-3.15 1.14-3.15 3.24v1.81H8.7v2.46h2.13v6.32h2.52Z"
+      />
     </svg>
   );
 }
@@ -34,8 +37,8 @@ export function Footer() {
 
   return (
     <footer className="border-t border-white/10 bg-midnight text-pure">
-      <Container className="grid gap-10 py-12 sm:grid-cols-2 sm:gap-x-8 sm:gap-y-10 lg:grid-cols-4 lg:gap-8 lg:py-14">
-        <div className="max-w-xs space-y-4">
+      <Container className="grid gap-10 py-12 sm:grid-cols-2 sm:gap-x-8 sm:gap-y-10 lg:grid-cols-[1.05fr_0.8fr_0.8fr_1.4fr] lg:gap-6 lg:py-14 xl:gap-8">
+        <div className="max-w-xs space-y-4 lg:max-w-none">
           <div>
             <p className="font-heading text-lg font-semibold tracking-tight text-pure sm:text-xl">
               {site.name.toUpperCase()}
@@ -87,7 +90,7 @@ export function Footer() {
             <li>
               <a
                 href={contact.emailHref}
-                className={`${footerLinkClass} break-all`}
+                className={`${footerLinkClass} break-all lg:break-normal lg:whitespace-nowrap`}
               >
                 {contact.email}
               </a>
@@ -98,7 +101,7 @@ export function Footer() {
                   href={facebook}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className={`${footerLinkClass} inline-flex items-center gap-2`}
+                  className={`${footerLinkClass} inline-flex items-center gap-2.5`}
                 >
                   <FacebookIcon />
                   <span>Facebook</span>
