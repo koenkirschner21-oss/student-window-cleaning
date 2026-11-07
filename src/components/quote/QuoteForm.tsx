@@ -21,6 +21,7 @@ type QuoteFormProps = {
   id?: string;
   className?: string;
   initialFrequency?: FrequencyId | "";
+  initialServices?: ServiceId[];
 };
 
 type FormState = {
@@ -107,15 +108,32 @@ const primaryActionClass =
 const secondaryActionClass =
   "inline-flex min-h-12 items-center justify-center rounded-md border border-border-strong bg-pure px-5 text-sm font-semibold tracking-tight text-midnight transition-colors duration-150 hover:border-signature hover:text-signature focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-signature";
 
+function normalizeInitialServices(services: ServiceId[] = []): ServiceId[] {
+  const unique = Array.from(new Set(services));
+  const windowPick = unique.find((id) => windowServiceIds.has(id));
+  const gutter = unique.includes("gutter-cleaning")
+    ? (["gutter-cleaning"] as ServiceId[])
+    : [];
+  return windowPick ? [windowPick, ...gutter] : gutter;
+}
+
 export function QuoteForm({
   id = "quote-form",
   className = "",
   initialFrequency = "",
+  initialServices = [],
 }: QuoteFormProps) {
+  const seededServices = normalizeInitialServices(initialServices);
+  const seededFrequency =
+    isGutterOnly(seededServices) && !initialFrequency
+      ? ""
+      : initialFrequency;
+
   const [step, setStep] = useState<1 | 2>(1);
   const [form, setForm] = useState<FormState>({
     ...initialState,
-    frequency: initialFrequency,
+    services: seededServices,
+    frequency: isGutterOnly(seededServices) ? "" : seededFrequency,
   });
   const [photos, setPhotos] = useState<File[]>([]);
   const [stepError, setStepError] = useState<string | null>(null);
