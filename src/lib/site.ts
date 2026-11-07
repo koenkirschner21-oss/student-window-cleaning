@@ -7,6 +7,17 @@ export const site = {
   url: "https://student-window-cleaning.vercel.app",
 } as const;
 
+/**
+ * Verified social destinations only. Leave null until a URL is confirmed —
+ * never invent Facebook / Instagram / Reel links for the About page.
+ */
+export const socialLinks = {
+  facebook: null as string | null,
+  instagram: null as string | null,
+  /** Educational Facebook Reel URL for the About page click-to-load player. */
+  facebookReel: null as string | null,
+} as const;
+
 export const navLinks = [
   { href: "/services", label: "Services" },
   { href: "/cleaning-plans", label: "Service Plans" },
