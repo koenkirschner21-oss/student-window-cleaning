@@ -1,17 +1,35 @@
 import type { Metadata } from "next";
-import { ScaffoldPage } from "@/components/layout/ScaffoldPage";
+import { AboutFinalCta } from "@/components/about/AboutFinalCta";
+import { AboutHero } from "@/components/about/AboutHero";
+import { AboutSocial } from "@/components/about/AboutSocial";
+import { BehindTheBusiness } from "@/components/about/BehindTheBusiness";
+import { OurStandards } from "@/components/about/OurStandards";
+import { OurStory } from "@/components/about/OurStory";
 
 export const metadata: Metadata = {
-  title: "About Us",
+  title: "About Us | Student-Run Window Cleaning in Whitby",
   description:
-    "About Student Window Cleaning. Team story and verified facts will be added when ready.",
+    "Meet Student Window Cleaning — a locally operated, student-run team serving homeowners across Whitby and Durham Region with professional window and gutter cleaning.",
+  alternates: {
+    canonical: "/about",
+  },
+  openGraph: {
+    title: "About Student Window Cleaning",
+    description:
+      "Built by students. Driven by quality. Learn our story and standards for window cleaning across Whitby and Durham Region.",
+    url: "/about",
+  },
 };
 
 export default function AboutPage() {
   return (
-    <ScaffoldPage
-      title="About Us"
-      description="We’re holding this page as scaffolding until verified story details, photos, and contact facts are ready. The homepage tagline already captures the brand promise: student run, professionally done."
-    />
+    <main id="main-content" className="flex-1">
+      <AboutHero />
+      <OurStory />
+      <OurStandards />
+      <BehindTheBusiness />
+      <AboutSocial />
+      <AboutFinalCta />
+    </main>
   );
 }
