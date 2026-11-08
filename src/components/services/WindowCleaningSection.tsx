@@ -34,8 +34,8 @@ function CheckIcon() {
 }
 
 /**
- * Unified Window Cleaning service section (Phase 2 Final).
- * Copy left / genuine IMG_3283 action photo right; editorial options; single quote CTA.
+ * Unified Window Cleaning service section.
+ * Copy left / About-hero scrubber photo right (reused path); editorial options; single quote CTA.
  */
 export function WindowCleaningSection() {
   return (
@@ -46,7 +46,7 @@ export function WindowCleaningSection() {
       style={{ paddingBlock: "clamp(3.5rem, 6vw, 5rem)" }}
     >
       <Container width="portfolio">
-        <div className="grid items-center gap-10 lg:grid-cols-2 lg:gap-14">
+        <div className="grid items-center gap-8 lg:grid-cols-[1.22fr_1fr] lg:gap-12">
           <div className="max-w-xl">
             <p className="text-[0.7rem] font-semibold uppercase tracking-[0.18em] text-signature sm:text-xs">
               Professional Window Care
@@ -64,20 +64,20 @@ export function WindowCleaningSection() {
             </p>
           </div>
 
-          <figure className="m-0 justify-self-center lg:justify-self-end">
-            <div className="relative aspect-[3/4] w-full max-w-[28rem] overflow-hidden rounded-lg bg-cloud lg:h-[min(33.75rem,540px)] lg:w-[min(100%,28rem)] lg:max-w-none lg:aspect-auto">
+          <figure className="m-0 w-full justify-self-center lg:justify-self-end">
+            <div className="relative aspect-[7/8] w-full max-w-[26rem] overflow-hidden rounded-lg bg-cloud lg:ml-auto lg:h-[28.5rem] lg:w-[26rem] lg:max-w-none lg:aspect-auto">
               <Image
-                src="/services/window-cleaning-branded-scrub.webp"
-                alt="Student Window Cleaning team member scrubbing a residential window with a blue scrubber"
+                src="/about/about-hero-student-window-cleaning.webp"
+                alt="Student Window Cleaning team member cleaning a residential window with a squeegee"
                 fill
-                sizes="(max-width: 1024px) 100vw, 28rem"
+                sizes="(max-width: 1024px) min(100vw, 26rem), 26rem"
                 className="object-cover object-[center_18%]"
               />
             </div>
           </figure>
         </div>
 
-        <div className="mt-12 grid gap-8 border-t border-border pt-10 sm:mt-14 sm:pt-12 md:grid-cols-2 md:gap-0">
+        <div className="mt-8 grid gap-8 border-t border-border pt-8 sm:mt-10 sm:pt-10 md:grid-cols-2 md:gap-0">
           <div
             id="exterior-window-cleaning"
             className="scroll-mt-28 md:border-r md:border-border md:pr-10 lg:pr-12"
