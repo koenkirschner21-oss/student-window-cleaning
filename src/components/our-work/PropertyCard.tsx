@@ -1,92 +1,84 @@
+"use client";
+
+import Image from "next/image";
 import type { WorkProject } from "@/lib/our-work";
+import { isProjectMediaReady } from "@/lib/our-work";
 
 type PropertyCardProps = {
   project: WorkProject;
   /** Wider media frame for commercial cards. */
   variant?: "residential" | "commercial";
+  onOpen?: (project: WorkProject) => void;
 };
 
-function HouseIcon() {
-  return (
-    <svg
-      viewBox="0 0 24 24"
-      fill="none"
-      aria-hidden
-      className="size-4 text-signature"
-    >
-      <path
-        d="M4.5 10.5 12 4.5l7.5 6V19a1 1 0 0 1-1 1h-4.25v-5.25h-4.5V20H5.5a1 1 0 0 1-1-1v-8.5Z"
-        stroke="currentColor"
-        strokeWidth="1.6"
-        strokeLinejoin="round"
-      />
-    </svg>
-  );
-}
-
-function BuildingIcon() {
-  return (
-    <svg
-      viewBox="0 0 24 24"
-      fill="none"
-      aria-hidden
-      className="size-4 text-signature"
-    >
-      <path
-        d="M5.5 20.5V5.75A1.25 1.25 0 0 1 6.75 4.5h6a1.25 1.25 0 0 1 1.25 1.25V20.5M13.999 9.5h3.75A1.25 1.25 0 0 1 19 10.75V20.5M5.5 20.5h13M8.25 8h2.5M8.25 11.5h2.5M8.25 15h2.5M15.75 13h1M15.75 16.25h1"
-        stroke="currentColor"
-        strokeWidth="1.6"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-  );
-}
-
 /**
- * Non-interactive project card — subtle hover only.
- * No buttons, links, or lightbox until media is ready.
+ * Project card with real property photography.
+ * Opens that project's own media slideshow when ready — no decorative house icons.
  */
 export function PropertyCard({
   project,
   variant = "residential",
+  onOpen,
 }: PropertyCardProps) {
   const aspect =
-    variant === "commercial" ? "aspect-[16/10]" : "aspect-[4/3]";
+    variant === "commercial" ? "aspect-[5/3]" : "aspect-[4/3]";
+  const ready = isProjectMediaReady(project);
+  const cover = project.thumbnail ?? project.media[0]?.src ?? null;
+  const coverAlt = project.media[0]?.alt ?? project.title;
+
+  const mediaFrame = (
+    <div
+      className={`relative w-full overflow-hidden rounded-md bg-cloud ${aspect}`}
+    >
+      {ready && cover ? (
+        <Image
+          src={cover}
+          alt={coverAlt}
+          fill
+          sizes={
+            variant === "commercial"
+              ? "(max-width: 640px) 100vw, 28rem"
+              : "(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+          }
+          className="object-cover transition-transform duration-300 ease-out motion-safe:group-hover:scale-[1.02]"
+        />
+      ) : (
+        <div
+          className="absolute inset-0"
+          style={{
+            background:
+              "linear-gradient(160deg, #F7FAFC 0%, #E9F3FC 48%, #DEEAF6 100%)",
+          }}
+          role="img"
+          aria-label={`${project.title} — media coming soon`}
+        />
+      )}
+      <div
+        aria-hidden
+        className="absolute inset-0 border border-transparent transition-[border-color,box-shadow] duration-300 motion-safe:group-hover:border-signature/25 motion-safe:group-hover:shadow-[inset_0_0_0_1px_color-mix(in_srgb,var(--color-signature-blue)_18%,transparent)]"
+      />
+      {ready && project.media.length > 1 ? (
+        <span className="absolute bottom-2.5 right-2.5 rounded bg-midnight/75 px-2 py-0.5 text-[0.65rem] font-semibold tracking-wide text-pure">
+          {project.media.length} photos
+        </span>
+      ) : null}
+    </div>
+  );
 
   return (
     <article className="group min-w-0">
-      <div
-        className={`relative w-full overflow-hidden rounded-md border border-border bg-cloud ${aspect}`}
-        style={{
-          background:
-            "linear-gradient(160deg, #F7FAFC 0%, #E9F3FC 48%, #DEEAF6 100%)",
-        }}
-        role="img"
-        aria-label={`${project.title} — media coming soon`}
-      >
-        <div
-          aria-hidden
-          className="absolute inset-0 opacity-50 transition-opacity duration-300 motion-safe:group-hover:opacity-70"
-          style={{
-            background:
-              "radial-gradient(70% 55% at 50% 40%, color-mix(in srgb, var(--color-clear-sky) 20%, transparent), transparent 72%)",
-          }}
-        />
-        <div
-          aria-hidden
-          className="absolute inset-0 transition-transform duration-300 ease-out motion-safe:group-hover:scale-[1.02]"
-        />
-        <div
-          aria-hidden
-          className="absolute inset-0 border border-transparent transition-[border-color,box-shadow] duration-300 motion-safe:group-hover:border-signature/25 motion-safe:group-hover:shadow-[inset_0_0_0_1px_color-mix(in_srgb,var(--color-signature-blue)_18%,transparent)]"
-        />
-        <div className="absolute inset-0 flex items-center justify-center">
-          <span className="inline-flex size-10 items-center justify-center rounded-full bg-pure/70 text-signature shadow-sm backdrop-blur-[2px] transition-transform duration-300 motion-safe:group-hover:scale-105">
-            {variant === "commercial" ? <BuildingIcon /> : <HouseIcon />}
-          </span>
-        </div>
-      </div>
+      {ready && onOpen ? (
+        <button
+          type="button"
+          onClick={() => onOpen(project)}
+          className="block w-full cursor-zoom-in text-left focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-signature"
+          aria-label={`View photos of ${project.title}`}
+        >
+          {mediaFrame}
+        </button>
+      ) : (
+        mediaFrame
+      )}
 
       <div className="mt-3.5 px-0.5">
         {project.typeLabel ? (
