@@ -136,7 +136,8 @@ export const residentialProjects: WorkProject[] = [
         ...PORTFOLIO_FRAME,
         sourceFilename: "IMG_0085.jpg",
         objectFit: "cover",
-        objectPosition: "center 36%",
+        // Bias upward so the elevated windows and roof stay in frame
+        objectPosition: "center 32%",
       },
     ],
     status: "ready",
@@ -155,7 +156,8 @@ export const residentialProjects: WorkProject[] = [
         ...PORTFOLIO_FRAME,
         sourceFilename: "IMG_0089(1).jpg",
         objectFit: "cover",
-        objectPosition: "center 40%",
+        // Keep the full two-storey facade and roof edge recognizable
+        objectPosition: "center 34%",
       },
     ],
     status: "ready",
@@ -174,7 +176,8 @@ export const residentialProjects: WorkProject[] = [
         ...PORTFOLIO_FRAME,
         sourceFilename: "IMG_0155(1).jpg",
         objectFit: "cover",
-        objectPosition: "center 42%",
+        // Favor facade / bay window over excess driveway foreground
+        objectPosition: "center 36%",
       },
     ],
     status: "ready",

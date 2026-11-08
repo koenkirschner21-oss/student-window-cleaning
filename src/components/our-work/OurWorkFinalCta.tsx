@@ -9,7 +9,7 @@ export function OurWorkFinalCta() {
   return (
     <section
       aria-labelledby="our-work-final-cta-heading"
-      className="bg-white text-midnight pt-16 pb-[4.5rem] sm:pt-20 sm:pb-20"
+      className="bg-white text-midnight pt-14 pb-[4.5rem] sm:pt-16 sm:pb-20"
     >
       <Container width="portfolio">
         <div className="rounded-lg bg-midnight px-6 py-12 text-center text-pure sm:px-12 sm:py-14">
@@ -36,7 +36,7 @@ export function OurWorkFinalCta() {
             <p className="text-sm text-pure/70 sm:text-base">
               Prefer to talk?{" "}
               <a
-                href={contact.phoneHref}
+                href="tel:9055500400"
                 className="font-semibold text-pure underline-offset-2 transition-colors hover:text-sky hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-clear-sky"
               >
                 {contact.phoneDisplay}
