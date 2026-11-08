@@ -12,8 +12,8 @@ type WorkLightboxProps = {
 };
 
 /**
- * Accessible media lightbox retained for future project media.
- * V3 portfolio placeholders do not open this dialog.
+ * Accessible per-project media lightbox.
+ * Each card opens only its own `media[]` slideshow.
  */
 export function WorkLightbox({
   media,
