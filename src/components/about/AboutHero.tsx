@@ -24,9 +24,10 @@ export function AboutHero() {
             id="about-page-heading"
             className="font-heading mt-3 text-[clamp(1.85rem,3.8vw,2.85rem)] font-semibold tracking-tight text-pure"
           >
-            Built by Students. Driven by Quality.
+            Built by Students.
+            <br className="hidden lg:inline" /> Driven by Quality.
           </h1>
-          <p className="mt-4 max-w-md text-[0.95rem] leading-relaxed text-white/72 sm:mt-5 sm:text-base">
+          <p className="mt-4 max-w-[32rem] text-[0.95rem] leading-relaxed text-white/72 sm:mt-5 sm:text-base">
             A student-run team bringing professional window cleaning and genuine
             care to homes across Whitby and Durham Region.
           </p>
