@@ -34,8 +34,8 @@ function CheckIcon() {
 }
 
 /**
- * Unified Window Cleaning service section.
- * Copy left / About-hero scrubber photo right (reused path); editorial options; single quote CTA.
+ * Window Cleaning service section — photography-led options.
+ * Intro split preserved; 4:3 option photos reuse genuine Our Work assets.
  */
 export function WindowCleaningSection() {
   return (
@@ -77,12 +77,23 @@ export function WindowCleaningSection() {
           </figure>
         </div>
 
-        <div className="mt-8 grid gap-8 border-t border-border pt-8 sm:mt-10 sm:pt-10 md:grid-cols-2 md:gap-0">
+        <div className="mt-8 grid gap-10 border-t border-border pt-8 sm:mt-10 sm:gap-0 sm:pt-10 md:grid-cols-2">
           <div
             id="exterior-window-cleaning"
             className="scroll-mt-28 md:border-r md:border-border md:pr-10 lg:pr-12"
           >
-            <h3 className="font-heading text-xl font-semibold tracking-tight text-midnight sm:text-[1.35rem]">
+            <figure className="m-0">
+              <div className="relative aspect-[4/3] w-full overflow-hidden rounded-lg bg-cloud">
+                <Image
+                  src="/our-work/cleaning-action-bay-window.webp"
+                  alt="Student Window Cleaning team member washing the exterior glass of a residential bay window"
+                  fill
+                  sizes="(max-width: 768px) 100vw, 36rem"
+                  className="object-cover object-[center_40%]"
+                />
+              </div>
+            </figure>
+            <h3 className="font-heading mt-5 text-xl font-semibold tracking-tight text-midnight sm:text-[1.35rem]">
               Exterior Window Cleaning
             </h3>
             <p className="mt-3 text-base leading-relaxed text-navy-muted">
@@ -91,7 +102,10 @@ export function WindowCleaningSection() {
             </p>
             <ul className="mt-5 space-y-2.5">
               {exteriorChecks.map((item) => (
-                <li key={item} className="flex gap-2.5 text-sm leading-snug text-navy-muted">
+                <li
+                  key={item}
+                  className="flex gap-2.5 text-sm leading-snug text-navy-muted"
+                >
                   <CheckIcon />
                   <span>{item}</span>
                 </li>
@@ -103,7 +117,18 @@ export function WindowCleaningSection() {
             id="interior-exterior-window-cleaning"
             className="scroll-mt-28 border-t border-border pt-8 md:border-t-0 md:pl-10 md:pt-0 lg:pl-12"
           >
-            <h3 className="font-heading text-xl font-semibold tracking-tight text-midnight sm:text-[1.35rem]">
+            <figure className="m-0">
+              <div className="relative aspect-[4/3] w-full overflow-hidden rounded-lg bg-cloud">
+                <Image
+                  src="/our-work/cleaning-action-squeegee.webp"
+                  alt="Close-up of a Student Window Cleaning team member squeegeeing residential window glass"
+                  fill
+                  sizes="(max-width: 768px) 100vw, 36rem"
+                  className="object-cover object-[center_35%]"
+                />
+              </div>
+            </figure>
+            <h3 className="font-heading mt-5 text-xl font-semibold tracking-tight text-midnight sm:text-[1.35rem]">
               Interior &amp; Exterior Window Cleaning
             </h3>
             <p className="mt-3 text-base leading-relaxed text-navy-muted">
@@ -112,7 +137,10 @@ export function WindowCleaningSection() {
             </p>
             <ul className="mt-5 space-y-2.5">
               {interiorExteriorChecks.map((item) => (
-                <li key={item} className="flex gap-2.5 text-sm leading-snug text-navy-muted">
+                <li
+                  key={item}
+                  className="flex gap-2.5 text-sm leading-snug text-navy-muted"
+                >
                   <CheckIcon />
                   <span>{item}</span>
                 </li>
