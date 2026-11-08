@@ -6,53 +6,43 @@ import { isProjectMediaReady } from "@/lib/our-work";
 
 type PropertyCardProps = {
   project: WorkProject;
-  /** Featured lead uses a wider standalone frame. */
-  variant?: "featured" | "residential" | "commercial";
-  onOpen?: (project: WorkProject) => void;
+  variant?: "residential" | "commercial";
+  priority?: boolean;
 };
 
 /**
- * Photo containers sized to the image — object-contain, natural ratios.
- * Title below only. Clickable only when a project has multiple photos.
+ * Equal 4:3 photo frame + title (and optional type label).
+ * Frame size is fixed — source aspect never dictates card height.
  */
 export function PropertyCard({
   project,
   variant = "residential",
-  onOpen,
+  priority = false,
 }: PropertyCardProps) {
   const ready = isProjectMediaReady(project);
   const cover = project.media[0];
   const coverSrc = project.thumbnail ?? cover?.src ?? null;
   const coverAlt = cover?.alt ?? project.title;
-  const width = cover?.width ?? 1536;
-  const height = cover?.height ?? 2048;
-  const multiPhoto = project.media.length > 1;
-  const canOpen = ready && multiPhoto && onOpen;
-
-  const frameClass =
-    variant === "featured"
-      ? "mx-auto w-full max-w-[68.75rem]"
-      : "w-full";
+  const objectFit = cover?.objectFit ?? "cover";
+  const objectPosition = cover?.objectPosition ?? "center center";
 
   const mediaFrame = (
-    <div
-      className={`relative overflow-hidden rounded-sm bg-[#eef1f4] ${frameClass}`}
-      style={{ aspectRatio: `${width} / ${height}` }}
-    >
+    <div className="relative aspect-[4/3] w-full overflow-hidden rounded-lg bg-[#eef1f4]">
       {ready && coverSrc ? (
         <Image
           src={coverSrc}
           alt={coverAlt}
           fill
           sizes={
-            variant === "featured"
-              ? "(max-width: 768px) 100vw, 68.75rem"
-              : variant === "commercial"
-                ? "(max-width: 768px) 100vw, 36rem"
-                : "(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 24rem"
+            variant === "commercial"
+              ? "(max-width: 768px) 100vw, 36rem"
+              : "(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 24rem"
           }
-          className="object-contain object-center transition-opacity duration-300 ease-out motion-safe:group-hover:opacity-[0.97]"
-          priority={variant === "featured"}
+          className={
+            objectFit === "contain" ? "object-contain" : "object-cover"
+          }
+          style={{ objectPosition }}
+          priority={priority}
         />
       ) : (
         <div
@@ -65,29 +55,16 @@ export function PropertyCard({
   );
 
   return (
-    <article className="group min-w-0">
-      {canOpen ? (
-        <button
-          type="button"
-          onClick={() => onOpen(project)}
-          className="block w-full cursor-zoom-in text-left focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-signature"
-          aria-label={`View photos of ${project.title}`}
-        >
-          {mediaFrame}
-        </button>
-      ) : (
-        mediaFrame
-      )}
-
-      <h3
-        className={`font-heading mt-3 font-semibold tracking-tight text-midnight ${
-          variant === "featured"
-            ? "text-lg sm:text-xl"
-            : "text-[1.05rem] sm:text-lg"
-        }`}
-      >
+    <article className="min-w-0">
+      {mediaFrame}
+      <h3 className="font-heading mt-2.5 text-base font-semibold tracking-tight text-midnight">
         {project.title}
       </h3>
+      {project.typeLabel ? (
+        <p className="mt-0.5 text-sm leading-snug text-navy-muted">
+          {project.typeLabel}
+        </p>
+      ) : null}
     </article>
   );
 }

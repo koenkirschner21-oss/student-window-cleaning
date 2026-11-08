@@ -1,12 +1,12 @@
 /**
- * Our Work — curated property portfolio (V5).
+ * Our Work — curated property portfolio (V6).
  *
  * Rules:
  * - Authentic photography only — no AI, no artificial privacy blur on facades
  * - Do not invent locations, dates, outcomes, or before/after claims
- * - Residential titles are short property-type labels from visible architecture
+ * - Residential titles are short property-type labels
  * - Commercial names are owner-confirmed jobs only — no endorsement implication
- * - Alternates are lightbox-only for the same property, never separate jobs
+ * - Display frames are fixed 4:3; source originals stay intact
  * - Filenames stay traceable to source IMG_* originals
  */
 
@@ -29,13 +29,20 @@ export type WorkMediaItem = {
   poster?: string;
   /** Owner-supplied original filename for audit / provenance. */
   sourceFilename?: string;
+  /**
+   * CSS object-position for the fixed 4:3 card frame.
+   * Tuned per photo so the primary facade stays recognizable.
+   */
+  objectPosition?: string;
+  /** object-fit for the card frame — cover preferred when facade fits. */
+  objectFit?: "cover" | "contain";
 };
 
 export type WorkProject = {
   id: string;
   title: string;
   category: WorkProjectCategory;
-  /** Optional short type eyebrow — unused on V5 cards. */
+  /** Secondary label under the title (commercial category). */
   typeLabel?: string;
   /** Cover path for the card thumbnail. */
   thumbnail?: string | null;
@@ -51,36 +58,32 @@ export type WorkProject = {
   status: "draft" | "ready";
 };
 
-const PORTRAIT = { width: 1536, height: 2048 } as const;
-const LANDSCAPE = { width: 2048, height: 1536 } as const;
+/** Display frame size for all portfolio cards (4:3 landscape). */
+export const PORTFOLIO_FRAME = { width: 1600, height: 1200 } as const;
 
 /**
- * Featured residential lead — IMG_0510 Detached Home.
- * Displayed large and standalone under the residential intro.
+ * Six residential properties — equal 3×2 gallery, locked order.
  */
-export const featuredResidential: WorkProject = {
-  id: "featured-detached-img-0510",
-  title: "Detached Home",
-  category: "residential",
-  thumbnail: "/our-work/projects/featured-detached-img-0510.webp",
-  media: [
-    {
-      id: "featured-detached-img-0510-1",
-      kind: "image",
-      src: "/our-work/projects/featured-detached-img-0510.webp",
-      alt: "Detached home with light brick facade, arched windows, and double garage",
-      ...PORTRAIT,
-      sourceFilename: "IMG_0510.jpg",
-    },
-  ],
-  status: "ready",
-};
-
-/**
- * Five supporting residential jobs (distinct properties).
- * Titles confirmed from visible architecture — no bungalow / semi invented.
- */
-export const supportingResidential: WorkProject[] = [
+export const residentialProjects: WorkProject[] = [
+  {
+    id: "large-detached-img-0510",
+    title: "Large Detached Home",
+    category: "residential",
+    thumbnail: "/our-work/projects/featured-detached-img-0510.webp",
+    media: [
+      {
+        id: "large-detached-img-0510-1",
+        kind: "image",
+        src: "/our-work/projects/featured-detached-img-0510.webp",
+        alt: "Large detached home with light facade, arched windows, and double garage",
+        ...PORTFOLIO_FRAME,
+        sourceFilename: "IMG_0510.jpg",
+        objectFit: "cover",
+        objectPosition: "center 42%",
+      },
+    ],
+    status: "ready",
+  },
   {
     id: "townhouse-img-2194",
     title: "Townhouse",
@@ -92,8 +95,10 @@ export const supportingResidential: WorkProject[] = [
         kind: "image",
         src: "/our-work/projects/townhouse-img-2194.webp",
         alt: "Townhouse with grey vertical siding, brick chimney, and clean upper windows",
-        ...LANDSCAPE,
+        ...PORTFOLIO_FRAME,
         sourceFilename: "IMG_2194.jpg",
+        objectFit: "cover",
+        objectPosition: "center 40%",
       },
     ],
     status: "ready",
@@ -109,15 +114,17 @@ export const supportingResidential: WorkProject[] = [
         kind: "image",
         src: "/our-work/projects/two-garage-img-0509.webp",
         alt: "Two-garage home with grey brick facade and white-trimmed windows",
-        ...PORTRAIT,
+        ...PORTFOLIO_FRAME,
         sourceFilename: "IMG_0509.jpg",
+        objectFit: "cover",
+        objectPosition: "center 38%",
       },
     ],
     status: "ready",
   },
   {
     id: "split-level-img-0085",
-    title: "Split-Level",
+    title: "Split-Level Home",
     category: "residential",
     thumbnail: "/our-work/projects/split-level-img-0085.webp",
     media: [
@@ -126,15 +133,17 @@ export const supportingResidential: WorkProject[] = [
         kind: "image",
         src: "/our-work/projects/split-level-img-0085.webp",
         alt: "Split-level home with red brick facade, elevated entrance, and single garage",
-        ...PORTRAIT,
+        ...PORTFOLIO_FRAME,
         sourceFilename: "IMG_0085.jpg",
+        objectFit: "cover",
+        objectPosition: "center 36%",
       },
     ],
     status: "ready",
   },
   {
     id: "two-storey-img-0089",
-    title: "Two-Storey",
+    title: "Two-Storey Home",
     category: "residential",
     thumbnail: "/our-work/projects/two-storey-img-0089.webp",
     media: [
@@ -143,45 +152,44 @@ export const supportingResidential: WorkProject[] = [
         kind: "image",
         src: "/our-work/projects/two-storey-img-0089.webp",
         alt: "Two-storey home with brick lower level and light horizontal siding above",
-        ...PORTRAIT,
+        ...PORTFOLIO_FRAME,
         sourceFilename: "IMG_0089(1).jpg",
+        objectFit: "cover",
+        objectPosition: "center 40%",
       },
     ],
     status: "ready",
   },
   {
-    id: "two-storey-img-0155",
-    title: "Two-Storey",
+    id: "detached-img-0155",
+    title: "Detached Home",
     category: "residential",
     thumbnail: "/our-work/projects/two-storey-img-0155.webp",
     media: [
       {
-        id: "two-storey-img-0155-1",
+        id: "detached-img-0155-1",
         kind: "image",
         src: "/our-work/projects/two-storey-img-0155.webp",
-        alt: "Two-storey home with light siding, bay window, and attached garage",
-        ...PORTRAIT,
+        alt: "Detached home with light siding, bay window, and attached garage",
+        ...PORTFOLIO_FRAME,
         sourceFilename: "IMG_0155(1).jpg",
+        objectFit: "cover",
+        objectPosition: "center 42%",
       },
     ],
     status: "ready",
   },
 ];
 
-/** All residential projects in display order (featured first). */
-export const residentialProjects: WorkProject[] = [
-  featuredResidential,
-  ...supportingResidential,
-];
-
 /**
  * Commercial projects — owner-confirmed jobs.
- * The Brick alt (IMG_0343) is lightbox-only for the same job.
+ * Single cover photo each; equal 4:3 frames.
  */
 export const commercialProjects: WorkProject[] = [
   {
     id: "commercial-the-brick",
     title: "The Brick",
+    typeLabel: "Retail Property",
     category: "commercial",
     thumbnail: "/our-work/projects/commercial-the-brick-img-0350.webp",
     media: [
@@ -190,16 +198,10 @@ export const commercialProjects: WorkProject[] = [
         kind: "image",
         src: "/our-work/projects/commercial-the-brick-img-0350.webp",
         alt: "The Brick storefront exterior with arched glass entrance",
-        ...PORTRAIT,
+        ...PORTFOLIO_FRAME,
         sourceFilename: "IMG_0350 2.jpg",
-      },
-      {
-        id: "commercial-the-brick-2",
-        kind: "image",
-        src: "/our-work/projects/commercial-the-brick-img-0343.webp",
-        alt: "Alternate angle of The Brick storefront entrance",
-        ...PORTRAIT,
-        sourceFilename: "IMG_0343 2.jpg",
+        objectFit: "cover",
+        objectPosition: "center 45%",
       },
     ],
     status: "ready",
@@ -207,6 +209,7 @@ export const commercialProjects: WorkProject[] = [
   {
     id: "commercial-montessori-learning-centre",
     title: "Montessori Learning Centre",
+    typeLabel: "Educational Facility",
     category: "commercial",
     thumbnail: "/our-work/projects/commercial-montessori-img-5402.webp",
     media: [
@@ -215,8 +218,10 @@ export const commercialProjects: WorkProject[] = [
         kind: "image",
         src: "/our-work/projects/commercial-montessori-img-5402.webp",
         alt: "Montessori Learning Centre storefront with brick pillars and glass windows",
-        ...LANDSCAPE,
+        ...PORTFOLIO_FRAME,
         sourceFilename: "IMG_5402.png",
+        objectFit: "cover",
+        objectPosition: "center 40%",
       },
     ],
     status: "ready",

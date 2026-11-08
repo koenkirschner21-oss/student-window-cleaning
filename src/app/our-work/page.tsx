@@ -4,8 +4,7 @@ import { OurWorkHero } from "@/components/our-work/OurWorkHero";
 import { PropertyPortfolio } from "@/components/our-work/PropertyPortfolio";
 import {
   commercialProjects,
-  featuredResidential,
-  supportingResidential,
+  residentialProjects,
 } from "@/lib/our-work";
 
 export const metadata: Metadata = {
@@ -28,8 +27,7 @@ export default function OurWorkPage() {
     <main id="main-content" className="flex-1">
       <OurWorkHero />
       <PropertyPortfolio
-        featured={featuredResidential}
-        supporting={supportingResidential}
+        residential={residentialProjects}
         commercial={commercialProjects}
       />
       <OurWorkFinalCta />
