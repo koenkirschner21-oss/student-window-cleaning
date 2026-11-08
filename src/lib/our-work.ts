@@ -1,10 +1,10 @@
 /**
- * Our Work — property portfolio data model (V3 media pack).
+ * Our Work — property portfolio data model (V4).
  *
  * Rules:
- * - No logos, mockups, stock, or AI imagery as finished work
- * - Do not invent locations, dates, addresses, outcomes, or before/after claims
- * - Private homes / identifiable people: mask house numbers & plates on public derivatives
+ * - Authentic photography only — no AI enhance, no artificial privacy blur on facades
+ * - Do not invent locations, dates, outcomes, or before/after claims
+ * - Residential titles are short property-type labels from visible architecture
  * - Commercial names are owner-confirmed jobs only — no endorsement / testimonial implication
  */
 
@@ -31,7 +31,7 @@ export type WorkProject = {
   id: string;
   title: string;
   category: WorkProjectCategory;
-  /** Short type label on the card, e.g. "Residential" / "Commercial". */
+  /** Optional short type eyebrow — unused on V4 cards. */
   typeLabel?: string;
   /** Cover path for the card thumbnail. */
   thumbnail?: string | null;
@@ -42,95 +42,94 @@ export type WorkProject = {
   /**
    * Publication readiness:
    * - draft: structural placeholder only
-   * - ready: media privacy-safe and approved for publish
+   * - ready: media approved for publish
    */
   status: "draft" | "ready";
 };
 
-const PROJECT_MEDIA_SIZE = { width: 1400, height: 840 } as const;
+const RESIDENTIAL_MEDIA_SIZE = { width: 1600, height: 1200 } as const;
+const COMMERCIAL_MEDIA_SIZE = { width: 1600, height: 1000 } as const;
 
-/** Six distinct residential jobs — descriptive titles from visible architecture. */
+/**
+ * Six distinct residential jobs.
+ * Titles are short property-type labels from inspecting originals — not forced variety.
+ */
 export const residentialProjects: WorkProject[] = [
   {
     id: "residential-grey-two-storey",
-    title: "Two-Storey Home with Grey Siding",
+    title: "Townhouse",
     category: "residential",
-    typeLabel: "Residential",
     thumbnail: "/our-work/projects/residential-grey-two-storey.webp",
     media: [
       {
         id: "residential-grey-two-storey-1",
         kind: "image",
         src: "/our-work/projects/residential-grey-two-storey.webp",
-        alt: "Two-storey home with grey vertical siding, brick chimney, and clean upper windows",
-        ...PROJECT_MEDIA_SIZE,
+        alt: "Townhouse with grey vertical siding, brick chimney, and clean upper windows",
+        ...RESIDENTIAL_MEDIA_SIZE,
       },
     ],
     status: "ready",
   },
   {
     id: "residential-large-brick",
-    title: "Large Brick Detached Home",
+    title: "Detached Home",
     category: "residential",
-    typeLabel: "Residential",
     thumbnail: "/our-work/projects/residential-large-brick.webp",
     media: [
       {
         id: "residential-large-brick-1",
         kind: "image",
         src: "/our-work/projects/residential-large-brick.webp",
-        alt: "Large beige brick detached home with arched windows and a two-car garage",
-        ...PROJECT_MEDIA_SIZE,
+        alt: "Detached home with beige brick facade, arched windows, and two-car garage",
+        ...RESIDENTIAL_MEDIA_SIZE,
       },
     ],
     status: "ready",
   },
   {
     id: "residential-stone-facade",
-    title: "Large Stone-Facade Home",
+    title: "Detached Home",
     category: "residential",
-    typeLabel: "Residential",
     thumbnail: "/our-work/projects/residential-stone-facade.webp",
     media: [
       {
         id: "residential-stone-facade-1",
         kind: "image",
         src: "/our-work/projects/residential-stone-facade.webp",
-        alt: "Large stone-facade home with arched windows, covered porch, and multi-gable roof",
-        ...PROJECT_MEDIA_SIZE,
+        alt: "Detached home with stone accents, arched windows, and multi-gable roof",
+        ...RESIDENTIAL_MEDIA_SIZE,
       },
     ],
     status: "ready",
   },
   {
     id: "residential-red-brick-split",
-    title: "Red Brick Split-Level Home",
+    title: "Split-Level",
     category: "residential",
-    typeLabel: "Residential",
     thumbnail: "/our-work/projects/residential-red-brick-split.webp",
     media: [
       {
         id: "residential-red-brick-split-1",
         kind: "image",
         src: "/our-work/projects/residential-red-brick-split.webp",
-        alt: "Red brick split-level home exterior with white-trimmed windows",
-        ...PROJECT_MEDIA_SIZE,
+        alt: "Split-level home with red brick facade and white-trimmed windows",
+        ...RESIDENTIAL_MEDIA_SIZE,
       },
       {
         id: "residential-red-brick-split-2",
         kind: "image",
         src: "/our-work/projects/residential-red-brick-split-alt.webp",
-        alt: "Alternate view of the same red brick split-level home entry and windows",
-        ...PROJECT_MEDIA_SIZE,
+        alt: "Alternate view of the same split-level home entry and windows",
+        ...RESIDENTIAL_MEDIA_SIZE,
       },
     ],
     status: "ready",
   },
   {
     id: "residential-brick-siding",
-    title: "Two-Storey Brick and Siding Home",
+    title: "Two-Storey",
     category: "residential",
-    typeLabel: "Residential",
     thumbnail: "/our-work/projects/residential-brick-siding.webp",
     media: [
       {
@@ -138,16 +137,15 @@ export const residentialProjects: WorkProject[] = [
         kind: "image",
         src: "/our-work/projects/residential-brick-siding.webp",
         alt: "Two-storey home with red brick lower level and light horizontal siding above",
-        ...PROJECT_MEDIA_SIZE,
+        ...RESIDENTIAL_MEDIA_SIZE,
       },
     ],
     status: "ready",
   },
   {
     id: "residential-two-storey-bay",
-    title: "Two-Storey Home with Bay Window",
+    title: "Two-Storey",
     category: "residential",
-    typeLabel: "Residential",
     thumbnail: "/our-work/projects/residential-two-storey-bay.webp",
     media: [
       {
@@ -155,14 +153,14 @@ export const residentialProjects: WorkProject[] = [
         kind: "image",
         src: "/our-work/projects/residential-two-storey-bay.webp",
         alt: "Two-storey home with bay window being cleaned by a Student Window Cleaning team member",
-        ...PROJECT_MEDIA_SIZE,
+        ...RESIDENTIAL_MEDIA_SIZE,
       },
       {
         id: "residential-two-storey-bay-2",
         kind: "image",
         src: "/our-work/projects/residential-two-storey-bay-alt.webp",
-        alt: "Upper-storey windows on the same two-storey home with bay window",
-        ...PROJECT_MEDIA_SIZE,
+        alt: "Upper-storey windows on the same two-storey home",
+        ...RESIDENTIAL_MEDIA_SIZE,
       },
     ],
     status: "ready",
@@ -178,7 +176,6 @@ export const commercialProjects: WorkProject[] = [
     id: "commercial-the-brick",
     title: "The Brick",
     category: "commercial",
-    typeLabel: "Commercial",
     thumbnail: "/our-work/projects/commercial-the-brick.webp",
     media: [
       {
@@ -186,21 +183,21 @@ export const commercialProjects: WorkProject[] = [
         kind: "image",
         src: "/our-work/projects/commercial-the-brick.webp",
         alt: "The Brick storefront exterior",
-        ...PROJECT_MEDIA_SIZE,
+        ...COMMERCIAL_MEDIA_SIZE,
       },
       {
         id: "commercial-the-brick-2",
         kind: "image",
         src: "/our-work/projects/commercial-the-brick-alt.webp",
         alt: "Alternate view of The Brick storefront",
-        ...PROJECT_MEDIA_SIZE,
+        ...COMMERCIAL_MEDIA_SIZE,
       },
       {
         id: "commercial-the-brick-3",
         kind: "image",
         src: "/our-work/projects/commercial-the-brick-wide.webp",
         alt: "Wider view of The Brick commercial exterior",
-        ...PROJECT_MEDIA_SIZE,
+        ...COMMERCIAL_MEDIA_SIZE,
       },
     ],
     status: "ready",
@@ -209,7 +206,6 @@ export const commercialProjects: WorkProject[] = [
     id: "commercial-montessori-learning-centre",
     title: "Montessori Learning Centre",
     category: "commercial",
-    typeLabel: "Commercial",
     thumbnail: "/our-work/projects/commercial-montessori.webp",
     media: [
       {
@@ -217,7 +213,7 @@ export const commercialProjects: WorkProject[] = [
         kind: "image",
         src: "/our-work/projects/commercial-montessori.webp",
         alt: "Montessori Learning Centre storefront exterior",
-        ...PROJECT_MEDIA_SIZE,
+        ...COMMERCIAL_MEDIA_SIZE,
       },
     ],
     status: "ready",
@@ -270,7 +266,7 @@ export type WorkPhoto = {
 };
 
 /**
- * Authentic V2 pack retained in-repo. Not rendered on the V3 portfolio page —
+ * Authentic V2 pack retained in-repo. Not rendered on the portfolio page —
  * reserved for Home / Services / About and future reuse.
  */
 export const workPhotos: WorkPhoto[] = [
