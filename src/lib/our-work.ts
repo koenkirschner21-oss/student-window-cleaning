@@ -1,14 +1,154 @@
 /**
- * Our Work gallery data — authentic Student Window Cleaning job photos only.
+ * Our Work — property portfolio data model (V3 structural foundation).
  *
  * Rules:
  * - No logos, mockups, stock, or AI imagery as finished work
  * - Do not invent locations, dates, addresses, outcomes, or before/after claims
  * - Private homes / identifiable people require permission; mask house numbers & plates
- * - Categories are internal organization only — no public filter UI in V2
+ * - Commercial names are owner-confirmed jobs only — no endorsement / testimonial implication
+ * - V3 ships placeholders with empty media; integrate authentic assets later
  */
 
-export const workCategories = [
+export const workProjectCategories = ["residential", "commercial"] as const;
+
+export type WorkProjectCategory = (typeof workProjectCategories)[number];
+
+export type WorkMediaKind = "image" | "video";
+
+/** Individual media item for a project lightbox / gallery (filled in later packs). */
+export type WorkMediaItem = {
+  id: string;
+  kind: WorkMediaKind;
+  /** Public path under /public, e.g. /our-work/….webp */
+  src: string;
+  alt: string;
+  width?: number;
+  height?: number;
+  caption?: string;
+  poster?: string;
+};
+
+export type WorkProject = {
+  id: string;
+  title: string;
+  category: WorkProjectCategory;
+  /** Short type label on the card, e.g. "Residential" / "Commercial". */
+  typeLabel?: string;
+  /** Optional cover path once media is ready. */
+  thumbnail?: string | null;
+  /** Ordered media for detail / lightbox. Empty while structural. */
+  media: WorkMediaItem[];
+  description?: string;
+  tags?: string[];
+  /**
+   * Publication readiness:
+   * - draft: structural placeholder only (V3)
+   * - ready: media approved; may publish on page
+   */
+  status: "draft" | "ready";
+};
+
+/** Residential placeholders — six cards for the V3 structural layout. */
+export const residentialProjects: WorkProject[] = [
+  {
+    id: "residential-01",
+    title: "Residential Property 01",
+    category: "residential",
+    typeLabel: "Residential",
+    thumbnail: null,
+    media: [],
+    status: "draft",
+  },
+  {
+    id: "residential-02",
+    title: "Residential Property 02",
+    category: "residential",
+    typeLabel: "Residential",
+    thumbnail: null,
+    media: [],
+    status: "draft",
+  },
+  {
+    id: "residential-03",
+    title: "Residential Property 03",
+    category: "residential",
+    typeLabel: "Residential",
+    thumbnail: null,
+    media: [],
+    status: "draft",
+  },
+  {
+    id: "residential-04",
+    title: "Residential Property 04",
+    category: "residential",
+    typeLabel: "Residential",
+    thumbnail: null,
+    media: [],
+    status: "draft",
+  },
+  {
+    id: "residential-05",
+    title: "Residential Property 05",
+    category: "residential",
+    typeLabel: "Residential",
+    thumbnail: null,
+    media: [],
+    status: "draft",
+  },
+  {
+    id: "residential-06",
+    title: "Residential Property 06",
+    category: "residential",
+    typeLabel: "Residential",
+    thumbnail: null,
+    media: [],
+    status: "draft",
+  },
+];
+
+/**
+ * Commercial placeholders — owner-confirmed jobs.
+ * Names only; no endorsement or testimonial language.
+ */
+export const commercialProjects: WorkProject[] = [
+  {
+    id: "commercial-the-brick",
+    title: "The Brick",
+    category: "commercial",
+    typeLabel: "Commercial",
+    thumbnail: null,
+    media: [],
+    status: "draft",
+  },
+  {
+    id: "commercial-montessori-learning-centre",
+    title: "Montessori Learning Centre",
+    category: "commercial",
+    typeLabel: "Commercial",
+    thumbnail: null,
+    media: [],
+    status: "draft",
+  },
+];
+
+export const workProjects: WorkProject[] = [
+  ...residentialProjects,
+  ...commercialProjects,
+];
+
+export function getProjectsByCategory(category: WorkProjectCategory) {
+  return workProjects.filter((project) => project.category === category);
+}
+
+export function isProjectMediaReady(project: WorkProject) {
+  return project.status === "ready" && project.media.length > 0;
+}
+
+/* -------------------------------------------------------------------------- */
+/* V2 photo catalog — assets retained under public/our-work/ for later reuse  */
+/* -------------------------------------------------------------------------- */
+
+export const workPhotoCategories = [
   "exterior",
   "interior-exterior",
   "gutter",
@@ -17,42 +157,28 @@ export const workCategories = [
   "finished-results",
 ] as const;
 
-export type WorkCategory = (typeof workCategories)[number];
+export type WorkPhotoCategory = (typeof workPhotoCategories)[number];
 
-/**
- * Editorial grid treatment hints for the responsive layout.
- * - featured: ~2-column hero action
- * - portrait: standard portrait cell
- * - span: wider row accent
- * - detail: tighter detail cell (gutters / close-ups)
- */
 export type WorkGridTreatment = "featured" | "portrait" | "span" | "detail";
 
+/** Legacy photo shape kept for cataloguing existing public/our-work assets. */
 export type WorkPhoto = {
   id: string;
-  /** Public path under /public, e.g. /our-work/cleaning-action-brick-scrub.webp */
   src: string;
   alt: string;
-  category: WorkCategory;
-  /** Only include when the location is known and approved to publish. */
+  category: WorkPhotoCategory;
   location?: string;
-  /** Only include genuine known context — never invent captions. */
   caption?: string;
   width: number;
   height: number;
   treatment?: WorkGridTreatment;
-  /**
-   * Optional same-job before/after pairing.
-   * Both photos in a pair must be verified from the same job.
-   * Not used in V2 — gutter details are published as independent details.
-   */
   pairId?: string;
   pairRole?: "before" | "after";
 };
 
 /**
- * Curated V2 gallery (~9 photos) from the authentic media pack.
- * Source originals preserved in the project store under media/our-work/source/.
+ * Authentic V2 pack retained in-repo. Not rendered on the V3 portfolio page —
+ * reserved for future project media integration.
  */
 export const workPhotos: WorkPhoto[] = [
   {
@@ -139,22 +265,3 @@ export const workPhotos: WorkPhoto[] = [
     treatment: "detail",
   },
 ];
-
-export function getBeforeAfterPairs(photos: WorkPhoto[] = workPhotos) {
-  const byPair = new Map<string, { before?: WorkPhoto; after?: WorkPhoto }>();
-
-  for (const photo of photos) {
-    if (!photo.pairId || !photo.pairRole) continue;
-    const entry = byPair.get(photo.pairId) ?? {};
-    entry[photo.pairRole] = photo;
-    byPair.set(photo.pairId, entry);
-  }
-
-  return Array.from(byPair.entries())
-    .filter(([, pair]) => pair.before && pair.after)
-    .map(([id, pair]) => ({
-      id,
-      before: pair.before as WorkPhoto,
-      after: pair.after as WorkPhoto,
-    }));
-}
