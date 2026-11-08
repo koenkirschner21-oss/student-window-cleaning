@@ -8,37 +8,40 @@ const REEL_HREF =
   "https://www.facebook.com/share/r/18tUKafgk3/";
 
 /**
- * Behind the Clean — Facebook Reel editorial section.
+ * Behind the Clean — full-bleed Midnight band with Facebook Reel.
  */
 export function AboutSocial() {
   return (
     <section
       aria-labelledby="behind-the-clean-heading"
-      className="bg-white text-midnight"
-      style={{ paddingBlock: "clamp(5rem, 8vw, 6rem)" }}
+      className="bg-midnight text-pure"
+      style={{ backgroundColor: "#061A38" }}
     >
-      <Container width="portfolio">
-        <div className="grid items-center gap-10 md:grid-cols-2 md:gap-12 lg:gap-14">
-          <div className="mx-auto max-w-md text-center md:mx-0 md:max-w-xl md:justify-self-center md:text-left">
-            <p className="text-[0.7rem] font-semibold uppercase tracking-[0.18em] text-navy-muted sm:text-xs">
+      <Container
+        width="portfolio"
+        className="py-10 sm:py-12 lg:py-16"
+      >
+        <div className="grid items-center gap-8 md:grid-cols-2 md:gap-10 lg:gap-12">
+          <div className="mx-auto max-w-md text-center md:mx-0 md:max-w-xl md:justify-self-start md:text-left">
+            <p className="text-[0.7rem] font-semibold uppercase tracking-[0.18em] text-[#3999EA] sm:text-xs">
               Behind the Clean
             </p>
             <h2
               id="behind-the-clean-heading"
-              className="font-heading mt-2.5 text-3xl font-semibold tracking-tight text-midnight sm:text-[2.15rem] sm:leading-tight"
+              className="font-heading mt-2.5 text-3xl font-semibold tracking-tight text-pure sm:text-[2.15rem] sm:leading-tight"
             >
               See Our Work in Action.
             </h2>
-            <p className="mt-4 text-base leading-relaxed text-navy-muted">
-              Take a closer look at Student Window Cleaning and learn more about
-              the care that goes into our work.
+            <p className="mt-4 text-base leading-relaxed text-white/72">
+              Get a closer look at the techniques and care behind our
+              student-run window cleaning service.
             </p>
             <p className="mt-6">
               <a
                 href={REEL_HREF}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-1.5 text-sm font-semibold text-signature transition-colors hover:text-midnight focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-signature"
+                className="inline-flex items-center gap-1.5 text-sm font-semibold text-[#3999EA] transition-colors hover:text-pure focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-sky"
               >
                 Watch on Facebook
                 <span aria-hidden className="translate-y-px">
