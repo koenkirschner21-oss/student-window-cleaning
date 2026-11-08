@@ -32,8 +32,14 @@ export const socialLinks = {
   facebook:
     "https://www.facebook.com/profile.php?id=100095625130012" as string | null,
   instagram: null as string | null,
-  /** Educational Facebook Reel URL for the About page click-to-load player. */
-  facebookReel: null as string | null,
+  /**
+   * Canonical Facebook Reel for About “Behind the Clean”.
+   * Resolved from https://www.facebook.com/share/r/18tUKafgk3/
+   */
+  facebookReel: "https://www.facebook.com/reel/1476745103290363" as string | null,
+  /** Original share URL — reliable “Watch on Facebook” fallback. */
+  facebookReelShare:
+    "https://www.facebook.com/share/r/18tUKafgk3/" as string | null,
 } as const;
 
 export const navLinks = [
