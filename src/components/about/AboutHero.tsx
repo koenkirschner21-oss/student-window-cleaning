@@ -1,68 +1,50 @@
-import Link from "next/link";
+import Image from "next/image";
 import { Container } from "@/components/ui/Container";
 
+/**
+ * About page hero — Midnight split with authentic team photo (IMG_3243).
+ * No CTA: header already provides Get a Free Quote.
+ */
 export function AboutHero() {
   return (
     <section
       aria-labelledby="about-page-heading"
-      className="bg-pure text-midnight"
+      className="bg-midnight text-pure"
+      style={{ backgroundColor: "#061A38" }}
     >
-      <div
-        className="relative overflow-hidden"
-        style={{
-          background:
-            "linear-gradient(165deg, #0A274F 0%, #061A38 48%, #041228 100%)",
-        }}
+      <Container
+        width="portfolio"
+        className="grid items-center gap-8 py-10 sm:gap-10 sm:py-11 md:grid-cols-[1.2fr_1fr] md:gap-10 md:py-12 lg:grid-cols-[1.22fr_1fr] lg:min-h-[32rem] lg:max-h-[35rem] lg:gap-12 lg:py-0"
       >
-        <div
-          aria-hidden
-          className="absolute inset-0 opacity-70"
-          style={{
-            background:
-              "radial-gradient(70% 55% at 70% 40%, color-mix(in srgb, var(--color-clear-sky) 26%, transparent), transparent 68%)",
-          }}
-        />
-        <div
-          aria-hidden
-          className="absolute inset-0"
-          style={{
-            background:
-              "linear-gradient(105deg, rgba(6,26,56,0.82) 0%, rgba(6,26,56,0.55) 55%, rgba(6,26,56,0.28) 100%)",
-          }}
-        />
+        <div className="motion-fade-up max-w-xl lg:py-14">
+          <p className="text-[0.7rem] font-semibold uppercase tracking-[0.18em] text-[#3999EA] sm:text-xs">
+            About Student Window Cleaning
+          </p>
+          <h1
+            id="about-page-heading"
+            className="font-heading mt-3 text-[clamp(1.85rem,3.8vw,2.85rem)] font-semibold tracking-tight text-pure"
+          >
+            Built by Students. Driven by Quality.
+          </h1>
+          <p className="mt-4 max-w-md text-[0.95rem] leading-relaxed text-white/72 sm:mt-5 sm:text-base">
+            A student-run team bringing professional window cleaning and genuine
+            care to homes across Whitby and Durham Region.
+          </p>
+        </div>
 
-        <Container className="relative py-16 sm:py-[4.5rem] lg:py-20">
-          <div className="motion-fade-up max-w-2xl text-pure">
-            <p className="text-[0.7rem] font-semibold uppercase tracking-[0.18em] text-sky sm:text-xs">
-              About Student Window Cleaning
-            </p>
-            <h1
-              id="about-page-heading"
-              className="font-heading mt-3 text-[clamp(1.9rem,4vw,3rem)] font-semibold tracking-tight"
-            >
-              Built by Students. Driven by Quality.
-            </h1>
-            <p className="mt-5 max-w-xl text-[0.95rem] leading-relaxed text-white/72 sm:text-base">
-              Student Window Cleaning is a locally operated, student-run
-              business serving homeowners across Whitby and Durham Region.
-              We&apos;re committed to professional service, careful workmanship,
-              and results we&apos;re proud to stand behind.
-            </p>
-            <div className="mt-7 flex flex-col gap-3 sm:flex-row sm:items-center">
-              <Link
-                href="/quote"
-                className="inline-flex min-h-12 items-center justify-center rounded-md bg-signature px-6 text-sm font-semibold tracking-tight text-pure transition-colors duration-200 hover:bg-[#0656d6] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-sky sm:text-base"
-              >
-                Get a Free Quote
-              </Link>
-            </div>
-            <p className="mt-6 text-xs font-medium tracking-wide text-white/40">
-              Team-at-job photography placeholder — authentic SWC photos coming
-              soon.
-            </p>
+        <figure className="motion-soft-rise m-0 flex w-full justify-center lg:justify-end lg:py-10">
+          <div className="relative aspect-[4/5] w-full max-w-md overflow-hidden rounded-lg bg-[#0A274F] md:max-w-none lg:h-[28rem] lg:w-auto lg:max-w-full">
+            <Image
+              src="/about/about-hero-student-window-cleaning.webp"
+              alt="Student Window Cleaning team member cleaning a residential window with a squeegee"
+              fill
+              priority
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 42vw, 22rem"
+              className="object-cover object-[center_18%]"
+            />
           </div>
-        </Container>
-      </div>
+        </figure>
+      </Container>
     </section>
   );
 }
