@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
+import { GutterCleaningSection } from "@/components/services/GutterCleaningSection";
 import { PlansPreview } from "@/components/services/PlansPreview";
-import { ServiceDetail } from "@/components/services/ServiceDetail";
 import { ServicesFinalCta } from "@/components/services/ServicesFinalCta";
 import { ServicesHero } from "@/components/services/ServicesHero";
 import { WindowCleaningSection } from "@/components/services/WindowCleaningSection";
@@ -25,21 +25,7 @@ export default function ServicesPage() {
     <main id="main-content" className="flex-1">
       <ServicesHero />
       <WindowCleaningSection />
-
-      <ServiceDetail
-        id="gutter-cleaning"
-        title="Gutter Cleaning"
-        description="Clear accessible gutters of leaves and buildup so water can flow as intended. This service covers cleaning only — not repairs, roof work, or structural guarantees."
-        inclusions={[
-          "Leaf removal",
-          "Debris clearing",
-          "Cleaning of accessible gutters",
-        ]}
-        quoteService="gutter-cleaning"
-        imageSide="left"
-        tone="white"
-      />
-
+      <GutterCleaningSection />
       <PlansPreview />
       <ServicesFinalCta />
     </main>
