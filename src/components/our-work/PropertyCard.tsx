@@ -6,44 +6,57 @@ import { isProjectMediaReady } from "@/lib/our-work";
 
 type PropertyCardProps = {
   project: WorkProject;
-  /** Wider landscape frame for commercial cards. */
-  variant?: "residential" | "commercial";
+  /** Featured lead uses a wider standalone frame. */
+  variant?: "featured" | "residential" | "commercial";
   onOpen?: (project: WorkProject) => void;
 };
 
 /**
- * Photo + short title only. No eyebrows, badges, icons, overlays, or photo counts.
+ * Photo containers sized to the image — object-contain, natural ratios.
+ * Title below only. Clickable only when a project has multiple photos.
  */
 export function PropertyCard({
   project,
   variant = "residential",
   onOpen,
 }: PropertyCardProps) {
-  const aspect =
-    variant === "commercial" ? "aspect-[8/5]" : "aspect-[4/3]";
   const ready = isProjectMediaReady(project);
-  const cover = project.thumbnail ?? project.media[0]?.src ?? null;
-  const coverAlt = project.media[0]?.alt ?? project.title;
+  const cover = project.media[0];
+  const coverSrc = project.thumbnail ?? cover?.src ?? null;
+  const coverAlt = cover?.alt ?? project.title;
+  const width = cover?.width ?? 1536;
+  const height = cover?.height ?? 2048;
+  const multiPhoto = project.media.length > 1;
+  const canOpen = ready && multiPhoto && onOpen;
+
+  const frameClass =
+    variant === "featured"
+      ? "mx-auto w-full max-w-[68.75rem]"
+      : "w-full";
 
   const mediaFrame = (
     <div
-      className={`relative w-full overflow-hidden rounded-sm bg-[#f3f5f7] ${aspect}`}
+      className={`relative overflow-hidden rounded-sm bg-[#eef1f4] ${frameClass}`}
+      style={{ aspectRatio: `${width} / ${height}` }}
     >
-      {ready && cover ? (
+      {ready && coverSrc ? (
         <Image
-          src={cover}
+          src={coverSrc}
           alt={coverAlt}
           fill
           sizes={
-            variant === "commercial"
-              ? "(max-width: 768px) 100vw, 36rem"
-              : "(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 36rem"
+            variant === "featured"
+              ? "(max-width: 768px) 100vw, 68.75rem"
+              : variant === "commercial"
+                ? "(max-width: 768px) 100vw, 36rem"
+                : "(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 24rem"
           }
-          className="object-cover transition-transform duration-300 ease-out motion-safe:group-hover:scale-[1.015]"
+          className="object-contain object-center transition-opacity duration-300 ease-out motion-safe:group-hover:opacity-[0.97]"
+          priority={variant === "featured"}
         />
       ) : (
         <div
-          className="absolute inset-0 bg-[#eef2f6]"
+          className="absolute inset-0 bg-[#e8ecf0]"
           role="img"
           aria-label={`${project.title} — media coming soon`}
         />
@@ -53,7 +66,7 @@ export function PropertyCard({
 
   return (
     <article className="group min-w-0">
-      {ready && onOpen ? (
+      {canOpen ? (
         <button
           type="button"
           onClick={() => onOpen(project)}
@@ -66,7 +79,13 @@ export function PropertyCard({
         mediaFrame
       )}
 
-      <h3 className="font-heading mt-3 text-[1.05rem] font-semibold tracking-tight text-midnight sm:text-lg">
+      <h3
+        className={`font-heading mt-3 font-semibold tracking-tight text-midnight ${
+          variant === "featured"
+            ? "text-lg sm:text-xl"
+            : "text-[1.05rem] sm:text-lg"
+        }`}
+      >
         {project.title}
       </h3>
     </article>

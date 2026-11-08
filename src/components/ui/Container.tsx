@@ -4,13 +4,15 @@ type ContainerProps = {
   children: ReactNode;
   className?: string;
   as?: "div" | "section" | "header" | "footer" | "main" | "nav";
-  width?: "default" | "narrow" | "wide";
+  width?: "default" | "narrow" | "wide" | "portfolio";
 };
 
 const widthClass = {
   default: "max-w-6xl",
   narrow: "max-w-3xl",
   wide: "max-w-7xl",
+  /** Our Work content plane ≈ 1184px */
+  portfolio: "max-w-[74rem]",
 } as const;
 
 export function Container({

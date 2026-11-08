@@ -8,7 +8,8 @@ import { Container } from "@/components/ui/Container";
 import type { WorkMediaItem, WorkProject } from "@/lib/our-work";
 
 type PropertyPortfolioProps = {
-  residential: WorkProject[];
+  featured: WorkProject;
+  supporting: WorkProject[];
   commercial: WorkProject[];
 };
 
@@ -18,13 +19,14 @@ type LightboxState = {
 } | null;
 
 export function PropertyPortfolio({
-  residential,
+  featured,
+  supporting,
   commercial,
 }: PropertyPortfolioProps) {
   const [lightbox, setLightbox] = useState<LightboxState>(null);
 
   const openProject = useCallback((project: WorkProject) => {
-    if (project.media.length === 0) return;
+    if (project.media.length < 2) return;
     setLightbox({ media: project.media, index: 0 });
   }, []);
 
@@ -38,6 +40,9 @@ export function PropertyPortfolio({
     );
   }, []);
 
+  const supportingRowA = supporting.slice(0, 2);
+  const supportingRowB = supporting.slice(2, 5);
+
   return (
     <>
       <section
@@ -45,8 +50,7 @@ export function PropertyPortfolio({
         className="bg-white text-midnight"
         style={{ paddingBlock: "var(--space-section-y)" }}
       >
-        {/* max-w-6xl ≈ 1152px — larger 2×3 residential photos */}
-        <Container>
+        <Container width="portfolio">
           <div className="max-w-2xl">
             <h2
               id="residential-properties-heading"
@@ -60,17 +64,40 @@ export function PropertyPortfolio({
             </p>
           </div>
 
-          <ul className="mt-10 grid grid-cols-1 gap-x-8 gap-y-10 sm:grid-cols-2 sm:gap-x-9 sm:gap-y-12">
-            {residential.map((project) => (
-              <li key={project.id} className="min-w-0">
-                <PropertyCard
-                  project={project}
-                  variant="residential"
-                  onOpen={openProject}
-                />
-              </li>
-            ))}
-          </ul>
+          {/* Featured lead — large standalone, natural portrait ratio */}
+          <div className="mt-10">
+            <PropertyCard
+              project={featured}
+              variant="featured"
+              onOpen={openProject}
+            />
+          </div>
+
+          {/* Supporting: desktop 2 then 3; tablet 2-col; mobile 1-col */}
+          <div className="mt-12 space-y-10 sm:mt-14 sm:space-y-12">
+            <ul className="grid grid-cols-1 items-start gap-x-8 gap-y-10 sm:grid-cols-2 sm:gap-x-9">
+              {supportingRowA.map((project) => (
+                <li key={project.id} className="min-w-0">
+                  <PropertyCard
+                    project={project}
+                    variant="residential"
+                    onOpen={openProject}
+                  />
+                </li>
+              ))}
+            </ul>
+            <ul className="grid grid-cols-1 items-start gap-x-7 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 lg:gap-x-8">
+              {supportingRowB.map((project) => (
+                <li key={project.id} className="min-w-0">
+                  <PropertyCard
+                    project={project}
+                    variant="residential"
+                    onOpen={openProject}
+                  />
+                </li>
+              ))}
+            </ul>
+          </div>
         </Container>
       </section>
 
@@ -81,20 +108,24 @@ export function PropertyPortfolio({
         className="bg-white text-midnight"
         style={{ paddingBlock: "var(--space-section-y)" }}
       >
-        <Container>
+        <Container width="portfolio">
           <div className="max-w-2xl">
+            <p className="text-[0.7rem] font-semibold uppercase tracking-[0.18em] text-navy-muted sm:text-xs">
+              Commercial Work
+            </p>
             <h2
               id="commercial-properties-heading"
-              className="font-heading text-2xl font-semibold tracking-tight text-midnight sm:text-[1.75rem]"
+              className="font-heading mt-2.5 text-2xl font-semibold tracking-tight text-midnight sm:text-[1.75rem]"
             >
-              Commercial Properties
+              Professional Care for Local Businesses.
             </h2>
             <p className="mt-3 max-w-xl text-base leading-relaxed text-navy-muted">
-              Selected commercial properties we&apos;ve serviced.
+              Clear storefronts and first impressions for businesses across the
+              community.
             </p>
           </div>
 
-          <ul className="mt-10 grid grid-cols-1 gap-x-9 gap-y-10 md:grid-cols-2">
+          <ul className="mt-10 grid grid-cols-1 items-start gap-x-9 gap-y-10 md:grid-cols-2">
             {commercial.map((project) => (
               <li key={project.id} className="min-w-0">
                 <PropertyCard

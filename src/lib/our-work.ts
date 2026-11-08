@@ -1,11 +1,13 @@
 /**
- * Our Work — property portfolio data model (V4).
+ * Our Work — curated property portfolio (V5).
  *
  * Rules:
- * - Authentic photography only — no AI enhance, no artificial privacy blur on facades
+ * - Authentic photography only — no AI, no artificial privacy blur on facades
  * - Do not invent locations, dates, outcomes, or before/after claims
  * - Residential titles are short property-type labels from visible architecture
- * - Commercial names are owner-confirmed jobs only — no endorsement / testimonial implication
+ * - Commercial names are owner-confirmed jobs only — no endorsement implication
+ * - Alternates are lightbox-only for the same property, never separate jobs
+ * - Filenames stay traceable to source IMG_* originals
  */
 
 export const workProjectCategories = ["residential", "commercial"] as const;
@@ -21,17 +23,19 @@ export type WorkMediaItem = {
   /** Public path under /public, e.g. /our-work/projects/….webp */
   src: string;
   alt: string;
-  width?: number;
-  height?: number;
+  width: number;
+  height: number;
   caption?: string;
   poster?: string;
+  /** Owner-supplied original filename for audit / provenance. */
+  sourceFilename?: string;
 };
 
 export type WorkProject = {
   id: string;
   title: string;
   category: WorkProjectCategory;
-  /** Optional short type eyebrow — unused on V4 cards. */
+  /** Optional short type eyebrow — unused on V5 cards. */
   typeLabel?: string;
   /** Cover path for the card thumbnail. */
   thumbnail?: string | null;
@@ -47,157 +51,155 @@ export type WorkProject = {
   status: "draft" | "ready";
 };
 
-const RESIDENTIAL_MEDIA_SIZE = { width: 1600, height: 1200 } as const;
-const COMMERCIAL_MEDIA_SIZE = { width: 1600, height: 1000 } as const;
+const PORTRAIT = { width: 1536, height: 2048 } as const;
+const LANDSCAPE = { width: 2048, height: 1536 } as const;
 
 /**
- * Six distinct residential jobs.
- * Titles are short property-type labels from inspecting originals — not forced variety.
+ * Featured residential lead — IMG_0510 Detached Home.
+ * Displayed large and standalone under the residential intro.
  */
-export const residentialProjects: WorkProject[] = [
+export const featuredResidential: WorkProject = {
+  id: "featured-detached-img-0510",
+  title: "Detached Home",
+  category: "residential",
+  thumbnail: "/our-work/projects/featured-detached-img-0510.webp",
+  media: [
+    {
+      id: "featured-detached-img-0510-1",
+      kind: "image",
+      src: "/our-work/projects/featured-detached-img-0510.webp",
+      alt: "Detached home with light brick facade, arched windows, and double garage",
+      ...PORTRAIT,
+      sourceFilename: "IMG_0510.jpg",
+    },
+  ],
+  status: "ready",
+};
+
+/**
+ * Five supporting residential jobs (distinct properties).
+ * Titles confirmed from visible architecture — no bungalow / semi invented.
+ */
+export const supportingResidential: WorkProject[] = [
   {
-    id: "residential-grey-two-storey",
+    id: "townhouse-img-2194",
     title: "Townhouse",
     category: "residential",
-    thumbnail: "/our-work/projects/residential-grey-two-storey.webp",
+    thumbnail: "/our-work/projects/townhouse-img-2194.webp",
     media: [
       {
-        id: "residential-grey-two-storey-1",
+        id: "townhouse-img-2194-1",
         kind: "image",
-        src: "/our-work/projects/residential-grey-two-storey.webp",
+        src: "/our-work/projects/townhouse-img-2194.webp",
         alt: "Townhouse with grey vertical siding, brick chimney, and clean upper windows",
-        ...RESIDENTIAL_MEDIA_SIZE,
+        ...LANDSCAPE,
+        sourceFilename: "IMG_2194.jpg",
       },
     ],
     status: "ready",
   },
   {
-    id: "residential-large-brick",
-    title: "Detached Home",
+    id: "two-garage-img-0509",
+    title: "Two-Garage Home",
     category: "residential",
-    thumbnail: "/our-work/projects/residential-large-brick.webp",
+    thumbnail: "/our-work/projects/two-garage-img-0509.webp",
     media: [
       {
-        id: "residential-large-brick-1",
+        id: "two-garage-img-0509-1",
         kind: "image",
-        src: "/our-work/projects/residential-large-brick.webp",
-        alt: "Detached home with beige brick facade, arched windows, and two-car garage",
-        ...RESIDENTIAL_MEDIA_SIZE,
+        src: "/our-work/projects/two-garage-img-0509.webp",
+        alt: "Two-garage home with grey brick facade and white-trimmed windows",
+        ...PORTRAIT,
+        sourceFilename: "IMG_0509.jpg",
       },
     ],
     status: "ready",
   },
   {
-    id: "residential-stone-facade",
-    title: "Detached Home",
-    category: "residential",
-    thumbnail: "/our-work/projects/residential-stone-facade.webp",
-    media: [
-      {
-        id: "residential-stone-facade-1",
-        kind: "image",
-        src: "/our-work/projects/residential-stone-facade.webp",
-        alt: "Detached home with stone accents, arched windows, and multi-gable roof",
-        ...RESIDENTIAL_MEDIA_SIZE,
-      },
-    ],
-    status: "ready",
-  },
-  {
-    id: "residential-red-brick-split",
+    id: "split-level-img-0085",
     title: "Split-Level",
     category: "residential",
-    thumbnail: "/our-work/projects/residential-red-brick-split.webp",
+    thumbnail: "/our-work/projects/split-level-img-0085.webp",
     media: [
       {
-        id: "residential-red-brick-split-1",
+        id: "split-level-img-0085-1",
         kind: "image",
-        src: "/our-work/projects/residential-red-brick-split.webp",
-        alt: "Split-level home with red brick facade and white-trimmed windows",
-        ...RESIDENTIAL_MEDIA_SIZE,
-      },
-      {
-        id: "residential-red-brick-split-2",
-        kind: "image",
-        src: "/our-work/projects/residential-red-brick-split-alt.webp",
-        alt: "Alternate view of the same split-level home entry and windows",
-        ...RESIDENTIAL_MEDIA_SIZE,
+        src: "/our-work/projects/split-level-img-0085.webp",
+        alt: "Split-level home with red brick facade, elevated entrance, and single garage",
+        ...PORTRAIT,
+        sourceFilename: "IMG_0085.jpg",
       },
     ],
     status: "ready",
   },
   {
-    id: "residential-brick-siding",
+    id: "two-storey-img-0089",
     title: "Two-Storey",
     category: "residential",
-    thumbnail: "/our-work/projects/residential-brick-siding.webp",
+    thumbnail: "/our-work/projects/two-storey-img-0089.webp",
     media: [
       {
-        id: "residential-brick-siding-1",
+        id: "two-storey-img-0089-1",
         kind: "image",
-        src: "/our-work/projects/residential-brick-siding.webp",
-        alt: "Two-storey home with red brick lower level and light horizontal siding above",
-        ...RESIDENTIAL_MEDIA_SIZE,
+        src: "/our-work/projects/two-storey-img-0089.webp",
+        alt: "Two-storey home with brick lower level and light horizontal siding above",
+        ...PORTRAIT,
+        sourceFilename: "IMG_0089(1).jpg",
       },
     ],
     status: "ready",
   },
   {
-    id: "residential-two-storey-bay",
+    id: "two-storey-img-0155",
     title: "Two-Storey",
     category: "residential",
-    thumbnail: "/our-work/projects/residential-two-storey-bay.webp",
+    thumbnail: "/our-work/projects/two-storey-img-0155.webp",
     media: [
       {
-        id: "residential-two-storey-bay-1",
+        id: "two-storey-img-0155-1",
         kind: "image",
-        src: "/our-work/projects/residential-two-storey-bay.webp",
-        alt: "Two-storey home with bay window being cleaned by a Student Window Cleaning team member",
-        ...RESIDENTIAL_MEDIA_SIZE,
-      },
-      {
-        id: "residential-two-storey-bay-2",
-        kind: "image",
-        src: "/our-work/projects/residential-two-storey-bay-alt.webp",
-        alt: "Upper-storey windows on the same two-storey home",
-        ...RESIDENTIAL_MEDIA_SIZE,
+        src: "/our-work/projects/two-storey-img-0155.webp",
+        alt: "Two-storey home with light siding, bay window, and attached garage",
+        ...PORTRAIT,
+        sourceFilename: "IMG_0155(1).jpg",
       },
     ],
     status: "ready",
   },
 ];
 
+/** All residential projects in display order (featured first). */
+export const residentialProjects: WorkProject[] = [
+  featuredResidential,
+  ...supportingResidential,
+];
+
 /**
  * Commercial projects — owner-confirmed jobs.
- * Names only; no endorsement or testimonial language.
+ * The Brick alt (IMG_0343) is lightbox-only for the same job.
  */
 export const commercialProjects: WorkProject[] = [
   {
     id: "commercial-the-brick",
     title: "The Brick",
     category: "commercial",
-    thumbnail: "/our-work/projects/commercial-the-brick.webp",
+    thumbnail: "/our-work/projects/commercial-the-brick-img-0350.webp",
     media: [
       {
         id: "commercial-the-brick-1",
         kind: "image",
-        src: "/our-work/projects/commercial-the-brick.webp",
-        alt: "The Brick storefront exterior",
-        ...COMMERCIAL_MEDIA_SIZE,
+        src: "/our-work/projects/commercial-the-brick-img-0350.webp",
+        alt: "The Brick storefront exterior with arched glass entrance",
+        ...PORTRAIT,
+        sourceFilename: "IMG_0350 2.jpg",
       },
       {
         id: "commercial-the-brick-2",
         kind: "image",
-        src: "/our-work/projects/commercial-the-brick-alt.webp",
-        alt: "Alternate view of The Brick storefront",
-        ...COMMERCIAL_MEDIA_SIZE,
-      },
-      {
-        id: "commercial-the-brick-3",
-        kind: "image",
-        src: "/our-work/projects/commercial-the-brick-wide.webp",
-        alt: "Wider view of The Brick commercial exterior",
-        ...COMMERCIAL_MEDIA_SIZE,
+        src: "/our-work/projects/commercial-the-brick-img-0343.webp",
+        alt: "Alternate angle of The Brick storefront entrance",
+        ...PORTRAIT,
+        sourceFilename: "IMG_0343 2.jpg",
       },
     ],
     status: "ready",
@@ -206,14 +208,15 @@ export const commercialProjects: WorkProject[] = [
     id: "commercial-montessori-learning-centre",
     title: "Montessori Learning Centre",
     category: "commercial",
-    thumbnail: "/our-work/projects/commercial-montessori.webp",
+    thumbnail: "/our-work/projects/commercial-montessori-img-5402.webp",
     media: [
       {
         id: "commercial-montessori-1",
         kind: "image",
-        src: "/our-work/projects/commercial-montessori.webp",
-        alt: "Montessori Learning Centre storefront exterior",
-        ...COMMERCIAL_MEDIA_SIZE,
+        src: "/our-work/projects/commercial-montessori-img-5402.webp",
+        alt: "Montessori Learning Centre storefront with brick pillars and glass windows",
+        ...LANDSCAPE,
+        sourceFilename: "IMG_5402.png",
       },
     ],
     status: "ready",
