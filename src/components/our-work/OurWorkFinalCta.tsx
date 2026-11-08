@@ -17,8 +17,7 @@ export function OurWorkFinalCta() {
             Ready for a Clearer View?
           </h2>
           <p className="mx-auto mt-3 max-w-lg text-base leading-relaxed text-navy-muted">
-            See what professional window cleaning can do for your property.
-            Request your free virtual quote today.
+            Request a free virtual quote for your home or commercial property.
           </p>
           <div className="mt-7">
             <Link
