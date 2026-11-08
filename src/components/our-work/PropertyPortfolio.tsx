@@ -56,7 +56,7 @@ export function PropertyPortfolio({
         className="bg-white text-midnight pt-16 pb-0 sm:pt-20 lg:pt-[5.25rem]"
       >
         <Container width="portfolio">
-          <div className="max-w-2xl">
+          <div className="max-w-[42.5rem]">
             <p className="text-[0.7rem] font-semibold uppercase tracking-[0.18em] text-navy-muted sm:text-xs">
               Commercial Work
             </p>
@@ -66,7 +66,7 @@ export function PropertyPortfolio({
             >
               Professional Care for Local Businesses.
             </h2>
-            <p className="mt-3 max-w-xl text-base leading-relaxed text-navy-muted">
+            <p className="mt-3 max-w-[42.5rem] text-base leading-relaxed text-navy-muted">
               Clear storefronts and great first impressions for businesses across
               our community.
             </p>
