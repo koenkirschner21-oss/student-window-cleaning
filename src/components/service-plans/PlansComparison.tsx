@@ -93,8 +93,7 @@ export function PlansComparison() {
   return (
     <section
       aria-labelledby="plans-comparison-heading"
-      className="bg-pure text-midnight"
-      style={{ paddingBlock: "var(--space-section-y)" }}
+      className="bg-pure text-midnight pt-10 pb-[var(--space-section-y)] sm:pt-12 lg:pt-14"
     >
       <Container>
         <div className="max-w-2xl">
@@ -102,15 +101,16 @@ export function PlansComparison() {
             id="plans-comparison-heading"
             className="font-heading text-3xl font-semibold tracking-tight text-midnight sm:text-[2.15rem] sm:leading-tight"
           >
-            Choose Your Cleaning Visits
+            Find the Right Cleaning Plan
           </h2>
           <p className="mt-3 text-base leading-relaxed text-navy-muted">
-            Each service plan is defined by visit count. Select the services you
-            need, then request a quote — this is not an online booking.
+            From a one-time refresh to regular seasonal care, choose the plan
+            that fits your home. Every option starts with a free personalized
+            quote.
           </p>
         </div>
 
-        <ul className="mt-10 grid items-stretch gap-5 md:grid-cols-2 lg:mt-12 lg:grid-cols-3 lg:gap-6">
+        <ul className="mt-8 grid items-stretch gap-5 sm:mt-9 md:grid-cols-2 lg:mt-10 lg:grid-cols-3 lg:gap-6">
           {plans.map((plan) => {
             const featured = plan.featured;
             return (
