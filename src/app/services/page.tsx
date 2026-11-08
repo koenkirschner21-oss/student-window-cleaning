@@ -3,6 +3,7 @@ import { PlansPreview } from "@/components/services/PlansPreview";
 import { ServiceDetail } from "@/components/services/ServiceDetail";
 import { ServicesFinalCta } from "@/components/services/ServicesFinalCta";
 import { ServicesHero } from "@/components/services/ServicesHero";
+import { WindowCleaningSection } from "@/components/services/WindowCleaningSection";
 
 export const metadata: Metadata = {
   title: "Window & Gutter Cleaning Services in Whitby",
@@ -23,38 +24,7 @@ export default function ServicesPage() {
   return (
     <main id="main-content" className="flex-1">
       <ServicesHero />
-
-      <ServiceDetail
-        id="exterior-window-cleaning"
-        title="Exterior Window Cleaning"
-        description="A focused exterior clean that brightens the outside of your home without implying interior work. Ideal when you want the curb-facing glass and accessible exterior surfaces refreshed with care."
-        inclusions={[
-          "Exterior window glass",
-          "Exterior-facing frames",
-          "Exterior-facing sills",
-          "Exterior-facing sliding-door glass",
-          "Exterior-facing deck glass",
-          "Exterior-facing garage-door glass",
-        ]}
-        quoteService="exterior"
-        imageSide="left"
-        tone="white"
-      />
-
-      <ServiceDetail
-        id="interior-exterior-window-cleaning"
-        title="Interior & Exterior Window Cleaning"
-        description="A complete inside-and-out clean for windows and applicable glass surfaces. We work carefully around your home so both sides of the glass look clear and well cared for."
-        inclusions={[
-          "Interior and exterior window glass",
-          "Frames",
-          "Sills",
-          "Applicable sliding-door / deck / garage-door glass",
-        ]}
-        quoteService="interior-exterior"
-        imageSide="right"
-        tone="cloud"
-      />
+      <WindowCleaningSection />
 
       <ServiceDetail
         id="gutter-cleaning"
