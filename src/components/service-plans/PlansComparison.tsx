@@ -2,47 +2,67 @@ import Link from "next/link";
 import { Container } from "@/components/ui/Container";
 import { quoteHref, type FrequencyId } from "@/lib/site";
 
-const plans = [
+type PlanCard = {
+  id: string;
+  name: string;
+  frequency: FrequencyId;
+  featured: boolean;
+  recommended: boolean;
+  primary: string;
+  frequencyLabel: string;
+  supporting?: string;
+  savingsSupporting?: string;
+  benefits: readonly string[];
+  pricingLine?: string;
+};
+
+const plans: readonly PlanCard[] = [
   {
     id: "basic",
     name: "Basic",
-    visits: "1 Visit",
-    description: "A professional one-time clean whenever you need it.",
-    inclusions: [
+    frequency: "one-time",
+    featured: false,
+    recommended: false,
+    primary: "1 Visit",
+    frequencyLabel: "One-Time Cleaning",
+    supporting:
+      "Professional window cleaning whenever your home needs a refresh.",
+    benefits: [
       "One cleaning visit",
-      "Choice of cleaning services",
+      "Choose your cleaning services",
       "No ongoing commitment",
     ],
-    frequency: "one-time" as FrequencyId,
-    featured: false,
+    pricingLine: "Personalized Quote",
   },
   {
     id: "best-value",
     name: "Best Value",
-    visits: "2 Visits",
-    description:
-      "Convenient seasonal care to keep your windows looking their best.",
-    inclusions: [
-      "Two cleaning visits",
-      "Choice of cleaning services",
-      "Scheduled repeat care, subject to agreed timing",
-    ],
-    frequency: "two-visit" as FrequencyId,
+    frequency: "two-visit",
     featured: true,
+    recommended: true,
+    primary: "$50 OFF",
+    frequencyLabel: "Twice-Yearly Cleaning",
+    savingsSupporting: "EACH VISIT",
+    benefits: [
+      "Two cleaning visits per year",
+      "$50 off each visit",
+      "Priority scheduling, subject to availability",
+    ],
   },
   {
     id: "premium",
     name: "Premium",
-    visits: "3 Visits",
-    description:
-      "More frequent cleaning for consistently well-maintained windows.",
-    inclusions: [
-      "Three cleaning visits",
-      "Choice of cleaning services",
-      "More frequent ongoing maintenance, subject to agreed timing",
-    ],
-    frequency: "three-visit" as FrequencyId,
+    frequency: "three-visit",
     featured: false,
+    recommended: false,
+    primary: "$100 OFF",
+    frequencyLabel: "Three Times Yearly",
+    savingsSupporting: "EACH VISIT",
+    benefits: [
+      "Three cleaning visits per year",
+      "$100 off each visit",
+      "Priority scheduling, subject to availability",
+    ],
   },
 ] as const;
 
@@ -65,6 +85,10 @@ function CheckIcon({ light }: { light?: boolean }) {
   );
 }
 
+/**
+ * Cleaning Plans comparison cards — Basic / Best Value / Premium.
+ * Content and frequency preselects match quotePlanOptions.
+ */
 export function PlansComparison() {
   return (
     <section
@@ -93,21 +117,23 @@ export function PlansComparison() {
               <li key={plan.id} className="flex min-w-0">
                 <article
                   className={[
-                    "relative flex w-full flex-col rounded-lg border p-6 sm:p-7",
+                    "flex w-full flex-col rounded-[1.125rem] border p-6 sm:p-7",
                     featured
-                      ? "border-midnight bg-midnight text-pure lg:-translate-y-1"
+                      ? "border-midnight bg-midnight text-pure"
                       : "border-border bg-pure text-midnight",
                   ].join(" ")}
                 >
-                  {featured ? (
-                    <p className="mb-3 inline-flex w-fit rounded-md bg-signature px-2.5 py-1 text-[0.65rem] font-semibold uppercase tracking-[0.14em] text-pure">
-                      Recommended
-                    </p>
-                  ) : null}
+                  <div className="min-h-[1.75rem]">
+                    {plan.recommended ? (
+                      <p className="inline-flex rounded-md bg-signature/15 px-2.5 py-1 text-[0.65rem] font-semibold uppercase tracking-[0.14em] text-sky">
+                        Recommended
+                      </p>
+                    ) : null}
+                  </div>
 
                   <p
                     className={[
-                      "text-[0.65rem] font-semibold uppercase tracking-[0.14em]",
+                      "mt-3 text-[0.65rem] font-semibold uppercase tracking-[0.14em]",
                       featured ? "text-sky" : "text-signature",
                     ].join(" ")}
                   >
@@ -116,30 +142,57 @@ export function PlansComparison() {
 
                   <p
                     className={[
-                      "font-heading mt-2 font-extrabold tracking-tight",
-                      featured
-                        ? "text-3xl text-pure sm:text-4xl"
-                        : "text-3xl text-midnight sm:text-4xl",
+                      "font-heading mt-2 text-3xl font-extrabold tracking-tight sm:text-[2.35rem]",
+                      featured ? "text-pure" : "text-midnight",
                     ].join(" ")}
                   >
-                    {plan.visits}
+                    {plan.primary}
                   </p>
+
+                  {plan.savingsSupporting ? (
+                    <p
+                      className={[
+                        "mt-1 text-[0.7rem] font-semibold uppercase tracking-[0.16em]",
+                        featured ? "text-sky" : "text-signature",
+                      ].join(" ")}
+                    >
+                      {plan.savingsSupporting}
+                    </p>
+                  ) : null}
 
                   <p
                     className={[
-                      "mt-3 text-sm leading-relaxed sm:text-[0.95rem]",
-                      featured ? "text-white/75" : "text-navy-muted",
+                      "mt-3 text-sm font-medium tracking-tight",
+                      featured ? "text-white/85" : "text-midnight",
                     ].join(" ")}
                   >
-                    {plan.description}
+                    {plan.frequencyLabel}
                   </p>
 
-                  <ul className="mt-5 space-y-2.5">
-                    {plan.inclusions.map((item) => (
+                  {plan.supporting ? (
+                    <p
+                      className={[
+                        "mt-2 text-sm leading-relaxed",
+                        featured ? "text-white/70" : "text-navy-muted",
+                      ].join(" ")}
+                    >
+                      {plan.supporting}
+                    </p>
+                  ) : null}
+
+                  <div
+                    className={[
+                      "my-5 h-px w-full",
+                      featured ? "bg-white/15" : "bg-border",
+                    ].join(" ")}
+                  />
+
+                  <ul className="space-y-2.5">
+                    {plan.benefits.map((item) => (
                       <li
                         key={item}
                         className={[
-                          "flex items-start gap-2 text-sm leading-snug",
+                          "flex items-start gap-2.5 text-sm leading-snug",
                           featured ? "text-white/85" : "text-navy-muted",
                         ].join(" ")}
                       >
@@ -149,14 +202,27 @@ export function PlansComparison() {
                     ))}
                   </ul>
 
-                  <div className="mt-auto pt-7">
+                  {plan.pricingLine ? (
+                    <p
+                      className={[
+                        "mt-5 text-sm font-semibold tracking-tight",
+                        featured ? "text-sky" : "text-midnight",
+                      ].join(" ")}
+                    >
+                      {plan.pricingLine}
+                    </p>
+                  ) : (
+                    <div className="mt-5 h-5" aria-hidden />
+                  )}
+
+                  <div className="mt-auto pt-6">
                     <Link
                       href={quoteHref({ frequency: plan.frequency })}
                       className={[
-                        "inline-flex min-h-12 w-full items-center justify-center rounded-md px-5 text-sm font-semibold tracking-tight transition-colors duration-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-signature",
+                        "inline-flex min-h-12 w-full items-center justify-center rounded-md px-5 text-sm font-semibold tracking-tight transition-colors duration-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-3",
                         featured
-                          ? "bg-signature text-pure hover:bg-[#0656d6]"
-                          : "border border-signature/40 bg-transparent text-signature hover:border-signature hover:bg-ice",
+                          ? "bg-signature text-pure hover:bg-[#0656d6] focus-visible:outline-sky"
+                          : "border border-signature/40 bg-transparent text-signature hover:border-signature hover:bg-ice focus-visible:outline-signature",
                       ].join(" ")}
                     >
                       Get a Free Quote
