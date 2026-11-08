@@ -1,15 +1,4 @@
-# Our Work photos
+# Legacy placeholder
 
-Add only genuine Student Window Cleaning job photos here.
-
-## Rules
-- No logos, mockups, stock, or AI imagery as finished work
-- Private homes and identifiable people require explicit permission
-- Prefer modern formats (WebP/AVIF) with sensible compression
-- Use descriptive filenames; include a location only when known and approved
-  (example: `exterior-whitby-01.webp`)
-
-## Registering photos
-After adding files, register each photo in `src/lib/our-work.ts` with `src`,
-`alt`, `category`, `width`, `height`, and optional `location` / `caption` /
-`pairId` + `pairRole` for verified before/after pairs.
+V2 gallery assets live in `public/our-work/` and are registered in `src/lib/our-work.ts`.
+Keep this folder for any future non-gallery work references; do not add stock or AI imagery.
