@@ -5,16 +5,16 @@ import { WorkGallery } from "@/components/our-work/WorkGallery";
 import { workPhotos } from "@/lib/our-work";
 
 export const metadata: Metadata = {
-  title: "Our Work | Window & Gutter Cleaning Gallery in Whitby",
+  title: "Our Work | Window Cleaning Projects in Whitby & Durham Region",
   description:
-    "See real Student Window Cleaning work across Whitby and Durham Region — exterior windows, interior & exterior cleans, and gutter care. Request a free quote.",
+    "Browse real Student Window Cleaning projects across Whitby and Durham Region — residential window cleans, on-the-job moments, and gutter care from our student-run team.",
   alternates: {
     canonical: "/our-work",
   },
   openGraph: {
-    title: "Our Work | Student Window Cleaning",
+    title: "Our Work | Window Cleaning Projects in Whitby & Durham Region",
     description:
-      "A gallery of real window and gutter cleaning work from homes and properties across Whitby and Durham Region.",
+      "Real window and gutter cleaning work from homes across Whitby and Durham Region — completed by our student-run team.",
     url: "/our-work",
   },
 };

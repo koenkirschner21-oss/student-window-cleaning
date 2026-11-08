@@ -1,25 +1,52 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useId } from "react";
+import { useEffect, useId, useRef } from "react";
 import type { WorkPhoto } from "@/lib/our-work";
 
 type WorkLightboxProps = {
-  photo: WorkPhoto | null;
+  photos: WorkPhoto[];
+  index: number | null;
   onClose: () => void;
+  onNavigate: (index: number) => void;
 };
 
-export function WorkLightbox({ photo, onClose }: WorkLightboxProps) {
+export function WorkLightbox({
+  photos,
+  index,
+  onClose,
+  onNavigate,
+}: WorkLightboxProps) {
   const titleId = useId();
+  const closeRef = useRef<HTMLButtonElement>(null);
+  const touchStartX = useRef<number | null>(null);
+
+  const photo = index === null ? null : photos[index];
+  const hasPrev = index !== null && index > 0;
+  const hasNext = index !== null && index < photos.length - 1;
 
   useEffect(() => {
-    if (!photo) return;
+    if (index === null) return;
 
     const previous = document.body.style.overflow;
     document.body.style.overflow = "hidden";
+    closeRef.current?.focus();
 
     function onKeyDown(event: globalThis.KeyboardEvent) {
-      if (event.key === "Escape") onClose();
+      if (event.key === "Escape") {
+        onClose();
+        return;
+      }
+      if (event.key === "ArrowLeft" && index !== null && index > 0) {
+        onNavigate(index - 1);
+      }
+      if (
+        event.key === "ArrowRight" &&
+        index !== null &&
+        index < photos.length - 1
+      ) {
+        onNavigate(index + 1);
+      }
     }
 
     window.addEventListener("keydown", onKeyDown);
@@ -27,9 +54,9 @@ export function WorkLightbox({ photo, onClose }: WorkLightboxProps) {
       document.body.style.overflow = previous;
       window.removeEventListener("keydown", onKeyDown);
     };
-  }, [photo, onClose]);
+  }, [index, onClose, onNavigate, photos.length]);
 
-  if (!photo) return null;
+  if (!photo || index === null) return null;
 
   const caption =
     photo.caption ??
@@ -40,35 +67,82 @@ export function WorkLightbox({ photo, onClose }: WorkLightboxProps) {
       role="dialog"
       aria-modal="true"
       aria-labelledby={titleId}
-      className="fixed inset-0 z-50 flex items-center justify-center bg-midnight/80 p-4 sm:p-8"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-midnight/85 p-3 sm:p-8"
       onClick={onClose}
     >
       <div
-        className="relative max-h-full w-full max-w-5xl overflow-auto rounded-md bg-pure"
+        className="relative flex max-h-full w-full max-w-5xl flex-col overflow-hidden rounded-md bg-pure"
         onClick={(event) => event.stopPropagation()}
+        onTouchStart={(event) => {
+          touchStartX.current = event.changedTouches[0]?.clientX ?? null;
+        }}
+        onTouchEnd={(event) => {
+          const start = touchStartX.current;
+          const end = event.changedTouches[0]?.clientX;
+          touchStartX.current = null;
+          if (start == null || end == null) return;
+          const delta = end - start;
+          if (Math.abs(delta) < 56) return;
+          if (delta > 0 && hasPrev) onNavigate(index - 1);
+          if (delta < 0 && hasNext) onNavigate(index + 1);
+        }}
       >
-        <button
-          type="button"
-          onClick={onClose}
-          className="absolute right-3 top-3 z-10 inline-flex min-h-10 min-w-10 items-center justify-center rounded-md bg-pure/95 text-sm font-semibold text-midnight shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-signature"
-        >
-          Close
-          <span className="sr-only"> enlarged photo</span>
-        </button>
+        <div className="flex items-center justify-between gap-3 border-b border-border px-4 py-3">
+          <p className="text-xs font-medium text-navy-muted">
+            {index + 1} / {photos.length}
+          </p>
+          <button
+            ref={closeRef}
+            type="button"
+            onClick={onClose}
+            className="inline-flex min-h-10 min-w-10 items-center justify-center rounded-md bg-cloud px-3 text-sm font-semibold text-midnight transition-colors hover:bg-ice focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-signature"
+          >
+            Close
+            <span className="sr-only"> enlarged photo</span>
+          </button>
+        </div>
 
-        <div className="relative aspect-[4/3] w-full bg-cloud sm:aspect-[16/10]">
-          <Image
-            src={photo.src}
-            alt={photo.alt}
-            fill
-            className="object-contain"
-            sizes="(max-width: 1024px) 100vw, 64rem"
-            priority
-          />
+        <div className="relative flex min-h-0 flex-1 items-center justify-center bg-cloud px-2 py-4 sm:px-10 sm:py-6">
+          {hasPrev ? (
+            <button
+              type="button"
+              onClick={() => onNavigate(index - 1)}
+              className="absolute left-2 top-1/2 z-10 hidden min-h-11 min-w-11 -translate-y-1/2 items-center justify-center rounded-md bg-pure/95 text-lg font-semibold text-midnight shadow-sm sm:inline-flex focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-signature"
+              aria-label="Previous photo"
+            >
+              ‹
+            </button>
+          ) : null}
+
+          <div className="relative mx-auto w-full" style={{ maxHeight: "min(78vh, 52rem)" }}>
+            <Image
+              src={photo.src}
+              alt={photo.alt}
+              width={photo.width}
+              height={photo.height}
+              className="mx-auto h-auto max-h-[min(78vh,52rem)] w-auto max-w-full object-contain"
+              sizes="(max-width: 1024px) 100vw, 64rem"
+              priority
+            />
+          </div>
+
+          {hasNext ? (
+            <button
+              type="button"
+              onClick={() => onNavigate(index + 1)}
+              className="absolute right-2 top-1/2 z-10 hidden min-h-11 min-w-11 -translate-y-1/2 items-center justify-center rounded-md bg-pure/95 text-lg font-semibold text-midnight shadow-sm sm:inline-flex focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-signature"
+              aria-label="Next photo"
+            >
+              ›
+            </button>
+          ) : null}
         </div>
 
         <div className="border-t border-border px-5 py-4">
-          <p id={titleId} className="font-heading text-sm font-semibold text-midnight">
+          <p
+            id={titleId}
+            className="font-heading text-sm font-semibold leading-snug text-midnight"
+          >
             {caption}
           </p>
         </div>
