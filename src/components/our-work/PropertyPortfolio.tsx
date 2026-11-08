@@ -1,54 +1,25 @@
-"use client";
-
-import { useCallback, useState } from "react";
 import { PortfolioCredibility } from "@/components/our-work/PortfolioCredibility";
 import { PropertyCard } from "@/components/our-work/PropertyCard";
-import { WorkLightbox } from "@/components/our-work/WorkLightbox";
 import { Container } from "@/components/ui/Container";
-import type { WorkMediaItem, WorkProject } from "@/lib/our-work";
+import type { WorkProject } from "@/lib/our-work";
 
 type PropertyPortfolioProps = {
-  featured: WorkProject;
-  supporting: WorkProject[];
+  residential: WorkProject[];
   commercial: WorkProject[];
 };
 
-type LightboxState = {
-  media: WorkMediaItem[];
-  index: number;
-} | null;
-
+/**
+ * V6 locked layout: equal 3×2 residential 4:3 grid, compact 60+, equal commercial cards.
+ */
 export function PropertyPortfolio({
-  featured,
-  supporting,
+  residential,
   commercial,
 }: PropertyPortfolioProps) {
-  const [lightbox, setLightbox] = useState<LightboxState>(null);
-
-  const openProject = useCallback((project: WorkProject) => {
-    if (project.media.length < 2) return;
-    setLightbox({ media: project.media, index: 0 });
-  }, []);
-
-  const closeLightbox = useCallback(() => {
-    setLightbox(null);
-  }, []);
-
-  const navigateLightbox = useCallback((index: number) => {
-    setLightbox((current) =>
-      current ? { ...current, index } : current,
-    );
-  }, []);
-
-  const supportingRowA = supporting.slice(0, 2);
-  const supportingRowB = supporting.slice(2, 5);
-
   return (
     <>
       <section
         aria-labelledby="residential-properties-heading"
-        className="bg-white text-midnight"
-        style={{ paddingBlock: "var(--space-section-y)" }}
+        className="bg-white text-midnight pt-[4.5rem] pb-0 sm:pt-20 sm:pb-0 lg:pt-[5.25rem]"
       >
         <Container width="portfolio">
           <div className="max-w-2xl">
@@ -59,45 +30,22 @@ export function PropertyPortfolio({
               Residential Properties
             </h2>
             <p className="mt-3 max-w-xl text-base leading-relaxed text-navy-muted">
-              A look at the homes we&apos;ve worked on across Whitby and Durham
+              A selection of homes we&apos;ve cared for across Whitby and Durham
               Region.
             </p>
           </div>
 
-          {/* Featured lead — large standalone, natural portrait ratio */}
-          <div className="mt-10">
-            <PropertyCard
-              project={featured}
-              variant="featured"
-              onOpen={openProject}
-            />
-          </div>
-
-          {/* Supporting: desktop 2 then 3; tablet 2-col; mobile 1-col */}
-          <div className="mt-12 space-y-10 sm:mt-14 sm:space-y-12">
-            <ul className="grid grid-cols-1 items-start gap-x-8 gap-y-10 sm:grid-cols-2 sm:gap-x-9">
-              {supportingRowA.map((project) => (
-                <li key={project.id} className="min-w-0">
-                  <PropertyCard
-                    project={project}
-                    variant="residential"
-                    onOpen={openProject}
-                  />
-                </li>
-              ))}
-            </ul>
-            <ul className="grid grid-cols-1 items-start gap-x-7 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 lg:gap-x-8">
-              {supportingRowB.map((project) => (
-                <li key={project.id} className="min-w-0">
-                  <PropertyCard
-                    project={project}
-                    variant="residential"
-                    onOpen={openProject}
-                  />
-                </li>
-              ))}
-            </ul>
-          </div>
+          <ul className="mt-8 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-2 sm:gap-y-9 lg:grid-cols-3">
+            {residential.map((project, index) => (
+              <li key={project.id} className="min-w-0">
+                <PropertyCard
+                  project={project}
+                  variant="residential"
+                  priority={index < 3}
+                />
+              </li>
+            ))}
+          </ul>
         </Container>
       </section>
 
@@ -105,8 +53,7 @@ export function PropertyPortfolio({
 
       <section
         aria-labelledby="commercial-properties-heading"
-        className="bg-white text-midnight"
-        style={{ paddingBlock: "var(--space-section-y)" }}
+        className="bg-white text-midnight pt-16 pb-0 sm:pt-20 lg:pt-[5.25rem]"
       >
         <Container width="portfolio">
           <div className="max-w-2xl">
@@ -120,31 +67,20 @@ export function PropertyPortfolio({
               Professional Care for Local Businesses.
             </h2>
             <p className="mt-3 max-w-xl text-base leading-relaxed text-navy-muted">
-              Clear storefronts and first impressions for businesses across the
-              community.
+              Clear storefronts and great first impressions for businesses across
+              our community.
             </p>
           </div>
 
-          <ul className="mt-10 grid grid-cols-1 items-start gap-x-9 gap-y-10 md:grid-cols-2">
+          <ul className="mt-8 grid grid-cols-1 gap-x-7 gap-y-8 md:grid-cols-2 md:gap-x-8">
             {commercial.map((project) => (
               <li key={project.id} className="min-w-0">
-                <PropertyCard
-                  project={project}
-                  variant="commercial"
-                  onOpen={openProject}
-                />
+                <PropertyCard project={project} variant="commercial" />
               </li>
             ))}
           </ul>
         </Container>
       </section>
-
-      <WorkLightbox
-        media={lightbox?.media ?? []}
-        index={lightbox?.index ?? null}
-        onClose={closeLightbox}
-        onNavigate={navigateLightbox}
-      />
     </>
   );
 }

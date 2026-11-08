@@ -11,8 +11,8 @@ const widthClass = {
   default: "max-w-6xl",
   narrow: "max-w-3xl",
   wide: "max-w-7xl",
-  /** Our Work content plane ≈ 1184px */
-  portfolio: "max-w-[74rem]",
+  /** Our Work content plane ≈ 1180px */
+  portfolio: "max-w-[73.75rem]",
 } as const;
 
 export function Container({
