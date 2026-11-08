@@ -8,7 +8,7 @@ export function OurWorkFinalCta() {
   return (
     <section
       aria-labelledby="our-work-final-cta-heading"
-      className="bg-pure text-midnight"
+      className="bg-white text-midnight"
       style={{ paddingBlock: "var(--space-section-y)" }}
     >
       <Container>
@@ -17,10 +17,11 @@ export function OurWorkFinalCta() {
             id="our-work-final-cta-heading"
             className="font-heading text-2xl font-semibold tracking-tight text-pure sm:text-[1.85rem] sm:leading-tight"
           >
-            Your Property Could Be Next.
+            Ready for a Clearer View?
           </h2>
           <p className="mx-auto mt-3 max-w-lg text-base leading-relaxed text-pure/80">
-            Request a free virtual quote for your home or commercial property.
+            Whether it&apos;s your home or business, we&apos;re here to help.
+            Request a free virtual quote to get started.
           </p>
           <div className="mt-7">
             <Link

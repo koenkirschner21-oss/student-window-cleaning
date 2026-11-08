@@ -92,9 +92,15 @@ export function WorkLightbox({
         }}
       >
         <div className="flex items-center justify-between gap-3 border-b border-border px-4 py-3">
-          <p className="text-xs font-medium text-navy-muted">
-            {index + 1} / {media.length}
-          </p>
+          {media.length > 1 ? (
+            <p className="text-xs font-medium text-navy-muted">
+              {index + 1} / {media.length}
+            </p>
+          ) : (
+            <span aria-hidden className="text-xs text-transparent">
+              ·
+            </span>
+          )}
           <button
             ref={closeRef}
             type="button"

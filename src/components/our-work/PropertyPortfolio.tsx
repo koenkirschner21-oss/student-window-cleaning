@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useState } from "react";
+import { PortfolioCredibility } from "@/components/our-work/PortfolioCredibility";
 import { PropertyCard } from "@/components/our-work/PropertyCard";
 import { WorkLightbox } from "@/components/our-work/WorkLightbox";
 import { Container } from "@/components/ui/Container";
@@ -41,9 +42,10 @@ export function PropertyPortfolio({
     <>
       <section
         aria-labelledby="residential-properties-heading"
-        className="bg-pure text-midnight"
+        className="bg-white text-midnight"
         style={{ paddingBlock: "var(--space-section-y)" }}
       >
+        {/* max-w-6xl ≈ 1152px — larger 2×3 residential photos */}
         <Container>
           <div className="max-w-2xl">
             <h2
@@ -53,12 +55,12 @@ export function PropertyPortfolio({
               Residential Properties
             </h2>
             <p className="mt-3 max-w-xl text-base leading-relaxed text-navy-muted">
-              A look at the homes we&apos;ve worked on, from everyday residential
-              properties to larger multi-storey homes.
+              A look at the homes we&apos;ve worked on across Whitby and Durham
+              Region.
             </p>
           </div>
 
-          <ul className="mt-9 grid grid-cols-1 gap-7 sm:grid-cols-2 sm:gap-x-6 sm:gap-y-8 lg:grid-cols-3 lg:gap-x-7 lg:gap-y-9">
+          <ul className="mt-10 grid grid-cols-1 gap-x-8 gap-y-10 sm:grid-cols-2 sm:gap-x-9 sm:gap-y-12">
             {residential.map((project) => (
               <li key={project.id} className="min-w-0">
                 <PropertyCard
@@ -72,26 +74,27 @@ export function PropertyPortfolio({
         </Container>
       </section>
 
+      <PortfolioCredibility />
+
       <section
         aria-labelledby="commercial-properties-heading"
-        className="border-t border-border bg-cloud text-midnight"
+        className="bg-white text-midnight"
         style={{ paddingBlock: "var(--space-section-y)" }}
       >
         <Container>
-          <div className="mx-auto max-w-2xl text-center">
+          <div className="max-w-2xl">
             <h2
               id="commercial-properties-heading"
               className="font-heading text-2xl font-semibold tracking-tight text-midnight sm:text-[1.75rem]"
             >
               Commercial Properties
             </h2>
-            <p className="mx-auto mt-3 max-w-xl text-base leading-relaxed text-navy-muted">
-              Selected commercial properties we&apos;ve serviced, including local
-              businesses and larger storefronts.
+            <p className="mt-3 max-w-xl text-base leading-relaxed text-navy-muted">
+              Selected commercial properties we&apos;ve serviced.
             </p>
           </div>
 
-          <ul className="mx-auto mt-9 grid max-w-3xl grid-cols-1 gap-7 sm:grid-cols-2 sm:gap-x-7 sm:gap-y-8">
+          <ul className="mt-10 grid grid-cols-1 gap-x-9 gap-y-10 md:grid-cols-2">
             {commercial.map((project) => (
               <li key={project.id} className="min-w-0">
                 <PropertyCard
