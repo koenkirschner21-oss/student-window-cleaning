@@ -143,3 +143,97 @@ a {
     animation: none;
   }
 }
+
+/* Homepage hero — one-time soapy glass / squeegee reveal (photo only). */
+@keyframes hero-squeegee-wipe {
+  0%,
+  10% {
+    clip-path: inset(0 0 0 0);
+  }
+  100% {
+    clip-path: inset(0 0 0 100%);
+  }
+}
+
+@keyframes hero-squeegee-blade {
+  0%,
+  10% {
+    left: 0%;
+    opacity: 1;
+  }
+  92% {
+    opacity: 1;
+  }
+  100% {
+    left: 100%;
+    opacity: 0;
+  }
+}
+
+.hero-squeegee-frame {
+  isolation: isolate;
+}
+
+.hero-squeegee-soapy {
+  pointer-events: none;
+  background:
+    radial-gradient(
+      circle at 18% 22%,
+      rgba(255, 255, 255, 0.34) 0 1px,
+      transparent 1.5px
+    ),
+    radial-gradient(
+      circle at 62% 48%,
+      rgba(255, 255, 255, 0.28) 0 1px,
+      transparent 1.5px
+    ),
+    radial-gradient(
+      circle at 40% 78%,
+      rgba(255, 255, 255, 0.22) 0 1px,
+      transparent 1.5px
+    ),
+    linear-gradient(
+      145deg,
+      rgba(243, 247, 251, 0.42) 0%,
+      rgba(57, 153, 234, 0.16) 48%,
+      rgba(255, 255, 255, 0.28) 100%
+    );
+  backdrop-filter: blur(2.5px);
+  -webkit-backdrop-filter: blur(2.5px);
+  background-size:
+    18px 18px,
+    22px 22px,
+    16px 16px,
+    auto;
+  animation: hero-squeegee-wipe 1.4s cubic-bezier(0.4, 0.05, 0.2, 1) forwards;
+}
+
+.hero-squeegee-blade {
+  pointer-events: none;
+  position: absolute;
+  top: -4%;
+  bottom: -4%;
+  width: 0.2rem;
+  margin-left: -0.1rem;
+  border-radius: 999px;
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.15) 0%,
+    rgba(255, 255, 255, 0.92) 18%,
+    rgba(225, 236, 248, 0.95) 50%,
+    rgba(255, 255, 255, 0.9) 82%,
+    rgba(255, 255, 255, 0.12) 100%
+  );
+  box-shadow:
+    0 0 0 1px rgba(6, 26, 56, 0.12),
+    0 0 18px rgba(255, 255, 255, 0.35);
+  animation: hero-squeegee-blade 1.4s cubic-bezier(0.4, 0.05, 0.2, 1) forwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-squeegee-soapy,
+  .hero-squeegee-blade {
+    animation: none;
+    opacity: 0;
+  }
+}
