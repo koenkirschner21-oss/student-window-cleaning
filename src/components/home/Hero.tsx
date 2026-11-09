@@ -1,6 +1,11 @@
+import Image from "next/image";
 import Link from "next/link";
 import { Container } from "@/components/ui/Container";
 
+/**
+ * Homepage hero — copy left, authentic cleaning photo right.
+ * One-time CSS squeegee reveal on the photo only (prefers-reduced-motion skips it).
+ */
 export function Hero() {
   return (
     <section
@@ -12,7 +17,7 @@ export function Hero() {
       }}
     >
       <Container className="grid items-center gap-10 py-12 sm:gap-12 sm:py-14 lg:grid-cols-2 lg:gap-14 lg:py-16">
-        <div className="motion-fade-up max-w-xl">
+        <div className="motion-fade-up relative z-10 max-w-xl">
           <p className="text-[0.7rem] font-semibold uppercase tracking-[0.16em] text-sky sm:text-xs">
             Window Cleaning in Whitby &amp; Durham Region
           </p>
@@ -52,12 +57,18 @@ export function Hero() {
         </div>
 
         <figure className="motion-soft-rise m-0 w-full max-w-lg justify-self-center lg:max-w-none lg:justify-self-stretch">
-          <div
-            className="aspect-[4/5] w-full rounded-md sm:aspect-[5/6] lg:aspect-[4/5]"
-            style={{ backgroundColor: "#0A274F" }}
-            role="img"
-            aria-label="Placeholder for Student Window Cleaning service photography"
-          />
+          <div className="hero-squeegee-frame relative aspect-[4/5] w-full overflow-hidden rounded-md bg-[#0A274F] sm:aspect-[5/6] lg:aspect-[4/5]">
+            <Image
+              src="/our-work/cleaning-action-squeegee.webp"
+              alt="Student Window Cleaning team member squeegeeing a residential window"
+              fill
+              priority
+              sizes="(max-width: 1024px) min(100vw, 32rem), 40vw"
+              className="object-cover object-[center_30%]"
+            />
+            <div className="hero-squeegee-soapy absolute inset-0" aria-hidden />
+            <div className="hero-squeegee-blade" aria-hidden />
+          </div>
         </figure>
       </Container>
     </section>
