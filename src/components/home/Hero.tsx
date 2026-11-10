@@ -11,13 +11,13 @@ export function Hero() {
   return (
     <section
       aria-labelledby="hero-heading"
-      className="relative bg-midnight text-pure"
+      className="relative text-pure"
       style={{
         background:
-          "linear-gradient(180deg, #061A38 0%, #071F42 55%, #061A38 100%)",
+          "linear-gradient(110deg, #061A38 0%, #082246 55%, #0D315C 100%)",
       }}
     >
-      <Container className="grid items-center gap-10 py-12 sm:gap-12 sm:py-14 lg:grid-cols-2 lg:gap-14 lg:py-16">
+      <Container className="grid items-center gap-9 py-14 sm:gap-11 sm:py-16 lg:grid-cols-[52fr_48fr] lg:gap-[4.5rem] lg:py-[5.25rem]">
         <div className="motion-fade-up relative z-10 max-w-xl">
           <p className="text-[0.7rem] font-semibold uppercase tracking-[0.16em] text-sky sm:text-xs">
             Window Cleaning in Whitby &amp; Durham Region
@@ -35,7 +35,7 @@ export function Hero() {
             </span>
           </h1>
 
-          <p className="mt-5 max-w-md text-[0.95rem] leading-relaxed text-white/70 sm:text-base">
+          <p className="mt-5 max-w-[28.5rem] text-[0.95rem] leading-relaxed text-white/70 sm:text-base">
             Professional window and gutter cleaning for homeowners across Whitby
             and Durham Region. Local students delivering quality you can count
             on.
@@ -57,8 +57,14 @@ export function Hero() {
           </div>
         </div>
 
-        <figure className="m-0 w-full max-w-lg justify-self-center lg:max-w-none lg:justify-self-stretch">
-          <div className="hero-squeegee-frame relative aspect-[4/5] w-full overflow-hidden rounded-md bg-[#0A274F] sm:aspect-[5/6] lg:aspect-[4/5]">
+        <figure className="m-0 w-full max-w-[28rem] justify-self-center sm:max-w-[30rem] lg:max-w-[29.375rem] lg:justify-self-end">
+          {/*
+            Source photo is 1200×1600 (3:4). Desktop 5:4 (~470×376) keeps the
+            diagonal action with object-position near upper-center so student +
+            squeegee stay in frame; lower torso and extreme top glass crop.
+            Mobile keeps a taller frame so the action is not squeezed.
+          */}
+          <div className="hero-squeegee-frame relative aspect-[4/5] w-full overflow-hidden rounded-[14px] bg-[#0A274F] sm:aspect-[5/6] lg:aspect-[5/4]">
             {/*
               unoptimized serves /public directly so the hero never depends on
               /_next/image to paint. CSS cover rules beat global img height:auto.
@@ -69,8 +75,8 @@ export function Hero() {
               fill
               priority
               unoptimized
-              sizes="(max-width: 1024px) min(100vw, 32rem), 40vw"
-              className="hero-squeegee-photo object-cover object-[center_30%]"
+              sizes="(max-width: 1024px) min(100vw, 30rem), 29.375rem"
+              className="hero-squeegee-photo object-cover object-[center_36%]"
             />
 
             <div className="hero-squeegee-soapy" aria-hidden="true">
