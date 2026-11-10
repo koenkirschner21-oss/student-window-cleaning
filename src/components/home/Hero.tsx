@@ -4,8 +4,7 @@ import { Container } from "@/components/ui/Container";
 
 /**
  * Homepage hero — copy left, authentic cleaning photo right.
- * One-time CSS squeegee reveal on the photo only (prefers-reduced-motion skips it).
- * Photo stays fully opaque; only the soapy overlay wipes away.
+ * Static photo from load; no reveal or overlay effects.
  */
 export function Hero() {
   return (
@@ -17,7 +16,7 @@ export function Hero() {
           "linear-gradient(110deg, #061A38 0%, #082246 55%, #0D315C 100%)",
       }}
     >
-      <Container className="grid items-center gap-9 py-14 sm:gap-11 sm:py-16 lg:grid-cols-[52fr_48fr] lg:gap-[4.5rem] lg:py-[5.25rem]">
+      <Container className="grid items-center gap-9 py-14 sm:gap-11 sm:py-16 lg:grid-cols-[52fr_48fr] lg:gap-[4.5rem] lg:py-[7.75rem]">
         <div className="motion-fade-up relative z-10 max-w-xl">
           <p className="text-[0.7rem] font-semibold uppercase tracking-[0.16em] text-sky sm:text-xs">
             Window Cleaning in Whitby &amp; Durham Region
@@ -64,10 +63,10 @@ export function Hero() {
             squeegee stay in frame; lower torso and extreme top glass crop.
             Mobile keeps a taller frame so the action is not squeezed.
           */}
-          <div className="hero-squeegee-frame relative aspect-[4/5] w-full overflow-hidden rounded-[14px] bg-[#0A274F] sm:aspect-[5/6] lg:aspect-[5/4]">
+          <div className="relative aspect-[4/5] w-full overflow-hidden rounded-[14px] bg-[#0A274F] sm:aspect-[5/6] lg:aspect-[5/4]">
             {/*
               unoptimized serves /public directly so the hero never depends on
-              /_next/image to paint. CSS cover rules beat global img height:auto.
+              /_next/image to paint. Cover utilities beat global img height:auto.
             */}
             <Image
               src="/our-work/cleaning-action-squeegee.webp"
@@ -76,89 +75,8 @@ export function Hero() {
               priority
               unoptimized
               sizes="(max-width: 1024px) min(100vw, 30rem), 29.375rem"
-              className="hero-squeegee-photo object-cover object-[center_36%]"
+              className="!h-full !w-full !max-w-none object-cover object-[center_36%]"
             />
-
-            <div className="hero-squeegee-soapy" aria-hidden="true">
-              <svg
-                className="hero-squeegee-soap-svg"
-                xmlns="http://www.w3.org/2000/svg"
-                aria-hidden="true"
-                focusable="false"
-              >
-                <defs>
-                  <filter
-                    id="hero-soap-frost"
-                    x="-20%"
-                    y="-20%"
-                    width="140%"
-                    height="140%"
-                  >
-                    <feTurbulence
-                      type="fractalNoise"
-                      baseFrequency="0.85 1.15"
-                      numOctaves="3"
-                      seed="7"
-                      result="noise"
-                    />
-                    <feColorMatrix
-                      in="noise"
-                      type="matrix"
-                      values="0 0 0 0 0.92
-                              0 0 0 0 0.96
-                              0 0 0 0 1
-                              0 0 0 0.55 0"
-                      result="soapGrain"
-                    />
-                    <feGaussianBlur in="soapGrain" stdDeviation="0.45" />
-                  </filter>
-                  <pattern
-                    id="hero-soap-bubbles"
-                    width="56"
-                    height="56"
-                    patternUnits="userSpaceOnUse"
-                  >
-                    <circle cx="8" cy="12" r="1.2" fill="rgba(255,255,255,0.55)" />
-                    <circle cx="24" cy="6" r="0.7" fill="rgba(255,255,255,0.4)" />
-                    <circle cx="40" cy="18" r="1.6" fill="rgba(255,255,255,0.48)" />
-                    <circle cx="14" cy="34" r="0.9" fill="rgba(255,255,255,0.35)" />
-                    <circle cx="32" cy="40" r="1.1" fill="rgba(255,255,255,0.5)" />
-                    <circle cx="48" cy="30" r="0.6" fill="rgba(255,255,255,0.32)" />
-                    <circle cx="6" cy="48" r="1.4" fill="rgba(255,255,255,0.42)" />
-                    <circle
-                      cx="22"
-                      cy="22"
-                      r="2.1"
-                      fill="none"
-                      stroke="rgba(255,255,255,0.45)"
-                      strokeWidth="0.6"
-                    />
-                    <circle
-                      cx="44"
-                      cy="46"
-                      r="1.7"
-                      fill="none"
-                      stroke="rgba(255,255,255,0.38)"
-                      strokeWidth="0.5"
-                    />
-                  </pattern>
-                </defs>
-                <rect
-                  width="100%"
-                  height="100%"
-                  filter="url(#hero-soap-frost)"
-                  opacity="0.85"
-                />
-                <rect
-                  width="100%"
-                  height="100%"
-                  fill="url(#hero-soap-bubbles)"
-                  opacity="0.9"
-                />
-              </svg>
-            </div>
-
-            <div className="hero-squeegee-blade" aria-hidden="true" />
           </div>
         </figure>
       </Container>
