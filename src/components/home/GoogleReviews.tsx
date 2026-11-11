@@ -26,7 +26,14 @@ export const GOOGLE_REVIEWS_URL = googleBusiness.leaveReviewUrl;
 const GOOGLE_REVIEWS_LISTING_URL = googleBusiness.reviewsListingUrl;
 
 const DESKTOP_PAGE_SIZE = 4;
+/** Compact quote preview — longer authentic text expands in-card or opens on Google. */
+const QUOTE_PREVIEW_CHARS = 145;
 const reviews = googleReviews;
+
+function reviewNeedsPreview(text: string) {
+  const normalized = text.replace(/\s+/g, " ").trim();
+  return normalized.length > QUOTE_PREVIEW_CHARS || text.split("\n").length > 3;
+}
 
 function initialsFor(name: string) {
   const parts = name.trim().split(/\s+/).filter(Boolean);
@@ -121,34 +128,8 @@ function Avatar({ review }: { review: GoogleReview }) {
   );
 }
 
-function ReviewCardBody({ review }: { review: GoogleReview }) {
-  return (
-    <>
-      <GoldStars rating={review.rating} size="md" />
-      <blockquote className="mt-3 flex-1">
-        <p className="whitespace-pre-line text-sm leading-relaxed text-navy-muted sm:text-[0.95rem]">
-          {review.text}
-        </p>
-      </blockquote>
-      <footer className="mt-5 flex items-center gap-3">
-        <Avatar review={review} />
-        <div className="min-w-0">
-          <p className="font-heading text-sm font-semibold text-midnight">
-            {review.name}
-          </p>
-          <p className="mt-0.5 flex items-center gap-1.5 text-sm text-navy-muted">
-            <GoogleMark compact />
-            <span aria-hidden>·</span>
-            <span>Review</span>
-          </p>
-        </div>
-      </footer>
-    </>
-  );
-}
-
 const cardShellClass =
-  "flex h-full flex-col rounded-[15px] border border-[color-mix(in_srgb,var(--color-signature-blue)_14%,var(--color-border))] bg-[color-mix(in_srgb,var(--color-signature-blue)_5%,white)] px-5 py-5 text-left no-underline shadow-none transition-[border-color,transform,box-shadow] duration-200 ease-out sm:px-6 sm:py-6 motion-safe:hover:-translate-y-[2px] hover:border-[color-mix(in_srgb,var(--color-signature-blue)_28%,var(--color-border))] motion-safe:hover:shadow-[0_8px_22px_color-mix(in_srgb,var(--color-midnight-navy)_8%,transparent)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-signature";
+  "relative flex h-full flex-col rounded-[15px] border border-[color-mix(in_srgb,var(--color-signature-blue)_14%,var(--color-border))] bg-[color-mix(in_srgb,var(--color-signature-blue)_5%,white)] px-5 py-5 text-left shadow-none transition-[border-color,transform,box-shadow] duration-200 ease-out sm:px-6 sm:py-6 motion-safe:hover:-translate-y-[2px] hover:border-[color-mix(in_srgb,var(--color-signature-blue)_28%,var(--color-border))] motion-safe:hover:shadow-[0_8px_22px_color-mix(in_srgb,var(--color-midnight-navy)_8%,transparent)]";
 
 function reviewCardHref(review: GoogleReview) {
   return review.directReviewUrl || GOOGLE_REVIEWS_LISTING_URL || null;
@@ -156,24 +137,79 @@ function reviewCardHref(review: GoogleReview) {
 
 function ReviewCard({ review }: { review: GoogleReview }) {
   const href = reviewCardHref(review);
-
-  if (href) {
-    return (
-      <a
-        href={href}
-        target="_blank"
-        rel="noopener noreferrer"
-        className={cardShellClass}
-        aria-label={`Read Google reviews — review from ${review.name}`}
-      >
-        <ReviewCardBody review={review} />
-      </a>
-    );
-  }
+  const needsPreview = reviewNeedsPreview(review.text);
+  const [expanded, setExpanded] = useState(false);
+  const showPreview = needsPreview && !expanded;
 
   return (
     <article className={cardShellClass}>
-      <ReviewCardBody review={review} />
+      {href ? (
+        <a
+          href={href}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="absolute inset-0 z-0 rounded-[15px] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-signature"
+          aria-label={`Read Google reviews — review from ${review.name}`}
+        />
+      ) : null}
+
+      <div className="relative z-[1] flex h-full flex-col">
+        <div className="pointer-events-none">
+          <GoldStars rating={review.rating} size="md" />
+        </div>
+
+        <blockquote className="pointer-events-none mt-3 flex min-h-[6.75rem] flex-1 flex-col">
+          <div
+            className={
+              expanded
+                ? "min-h-0 max-h-[6.75rem] flex-1 overflow-y-auto overscroll-contain"
+                : undefined
+            }
+          >
+            <p
+              className={[
+                "whitespace-pre-line text-sm leading-relaxed text-navy-muted sm:text-[0.95rem]",
+                showPreview ? "line-clamp-4" : undefined,
+              ]
+                .filter(Boolean)
+                .join(" ")}
+            >
+              {review.text}
+            </p>
+          </div>
+        </blockquote>
+
+        {needsPreview ? (
+          <button
+            type="button"
+            className="relative z-10 mt-2 self-start text-sm font-medium text-signature transition-colors hover:text-[#0656d6] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-signature"
+            aria-expanded={expanded}
+            onClick={(event) => {
+              event.preventDefault();
+              event.stopPropagation();
+              setExpanded((value) => !value);
+            }}
+          >
+            {expanded ? "Show less" : "Full review"}
+          </button>
+        ) : (
+          <span className="mt-2 block h-5" aria-hidden />
+        )}
+
+        <footer className="pointer-events-none mt-4 flex items-center gap-3">
+          <Avatar review={review} />
+          <div className="min-w-0">
+            <p className="font-heading text-sm font-semibold text-midnight">
+              {review.name}
+            </p>
+            <p className="mt-0.5 flex items-center gap-1.5 text-sm text-navy-muted">
+              <GoogleMark compact />
+              <span aria-hidden>·</span>
+              <span>Review</span>
+            </p>
+          </div>
+        </footer>
+      </div>
     </article>
   );
 }
@@ -333,9 +369,11 @@ function ReviewGrid({
         : "grid-cols-1";
 
   return (
-    <ul className={`grid list-none items-stretch gap-5 p-0 sm:gap-6 ${columns}`}>
+    <ul
+      className={`grid list-none items-stretch gap-5 p-0 sm:auto-rows-fr sm:gap-6 ${columns}`}
+    >
       {items.map((review) => (
-        <li key={review.id} className="min-w-0">
+        <li key={review.id} className="min-w-0 sm:h-full">
           <ReviewCard review={review} />
         </li>
       ))}
@@ -360,11 +398,15 @@ function DesktopReviews() {
       onTouchEnd={onTouchEnd}
     >
       <div
-        className={
+        className={[
+          // Stable 2×2 frame so page changes don’t jump (compact ~ page-2 depth).
+          "min-h-[28.5rem]",
           reduceMotion
             ? undefined
-            : "motion-safe:transition-opacity motion-safe:duration-200"
-        }
+            : "motion-safe:transition-opacity motion-safe:duration-200",
+        ]
+          .filter(Boolean)
+          .join(" ")}
       >
         <ReviewGrid items={visible} twoByTwo={twoByTwo} />
       </div>
@@ -428,7 +470,11 @@ function GoogleSummaryBadge() {
     googleBusiness.aggregateRating != null
       ? googleBusiness.aggregateRating.toFixed(1)
       : null;
-  const count = googleBusiness.reviewCount;
+  const countLabel =
+    googleBusiness.reviewCountLabel ??
+    (googleBusiness.reviewCount != null
+      ? String(googleBusiness.reviewCount)
+      : null);
 
   const content = (
     <>
@@ -439,10 +485,8 @@ function GoogleSummaryBadge() {
         </span>
       ) : null}
       <GoldStars rating={googleBusiness.aggregateRating ?? 5} size="sm" />
-      {count != null ? (
-        <span className="text-sm text-navy-muted">
-          · {count} reviews
-        </span>
+      {countLabel ? (
+        <span className="text-sm text-navy-muted">· {countLabel} reviews</span>
       ) : null}
     </>
   );
@@ -458,8 +502,8 @@ function GoogleSummaryBadge() {
         rel="noopener noreferrer"
         className={`${className} no-underline transition-colors hover:border-signature focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-signature`}
         aria-label={
-          rating && count != null
-            ? `Google ${rating} out of 5 from ${count} reviews`
+          rating && countLabel
+            ? `Google ${rating} out of 5 · ${countLabel} reviews`
             : "Read Google reviews"
         }
       >
