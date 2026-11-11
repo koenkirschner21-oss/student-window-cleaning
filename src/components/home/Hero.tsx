@@ -98,10 +98,10 @@ export function Hero() {
 
         <figure className="m-0 w-full max-w-[28rem] justify-self-center sm:max-w-[30rem] lg:max-w-[29.375rem] lg:justify-self-end">
           {/*
-            Source photo is 1200×1600 (3:4). Desktop 5:4 (~470×376) keeps the
-            diagonal action with object-position near upper-center so student +
-            squeegee stay in frame; lower torso and extreme top glass crop.
-            Mobile keeps a taller frame so the action is not squeezed.
+            Source photo is 1200×1600 (3:4) branded scrub-from-behind. Desktop
+            5:4 (~470×376) uses object-position near upper-center so scrubber +
+            student + shirt logo stay in frame; lower jeans and extreme top
+            glass crop. Mobile keeps a taller frame so the action is not squeezed.
           */}
           <div className="relative aspect-[4/5] w-full overflow-hidden rounded-[14px] bg-[#0A274F] sm:aspect-[5/6] lg:aspect-[5/4]">
             {/*
@@ -109,13 +109,13 @@ export function Hero() {
               /_next/image to paint. Cover utilities beat global img height:auto.
             */}
             <Image
-              src="/our-work/cleaning-action-squeegee.webp"
-              alt="Student Window Cleaning team member squeegeeing a residential window"
+              src="/our-work/hero-branded-scrub-back.webp"
+              alt="Student Window Cleaning team member scrubbing a residential window, branded shirt visible from behind"
               fill
               priority
               unoptimized
               sizes="(max-width: 1024px) min(100vw, 30rem), 29.375rem"
-              className="!h-full !w-full !max-w-none object-cover object-[center_36%]"
+              className="!h-full !w-full !max-w-none object-cover object-[center_34%]"
             />
           </div>
         </figure>
