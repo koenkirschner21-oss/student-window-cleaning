@@ -140,6 +140,11 @@ export const googleBusiness = {
   aggregateRating: 5.0 as number | null,
   /** Manually verified total Google review count snapshot. */
   reviewCount: 21 as number | null,
+  /**
+   * Homepage badge count wording (intentional “20+”).
+   * Verified total remains `reviewCount` (21).
+   */
+  reviewCountLabel: "20+" as string | null,
 } as const;
 
 /**

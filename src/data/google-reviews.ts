@@ -86,4 +86,10 @@ export const googleReviews: readonly GoogleReview[] = [
     rating: 5,
     text: "Fair prices and great customer service!",
   },
+  {
+    id: "vivien-tyers",
+    name: "Vivien Tyers",
+    rating: 5,
+    text: "Koen was extremely professional, personable and right on schedule. He did an amazing job cleaning all of our windows thoroughly and in a timely manner. He was really very friendly and courteous and made sure we were completely happy with his work. Highly recommend this service!",
+  },
 ] as const;
