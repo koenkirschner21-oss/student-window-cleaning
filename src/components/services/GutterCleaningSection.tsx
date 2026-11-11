@@ -209,7 +209,7 @@ export function GutterCleaningSection() {
         {/* 5) Gutter Guards add-on — unchanged card, balanced spacing */}
         <aside
           id="gutter-guards"
-          className="mt-9 overflow-hidden rounded-[15px] sm:mt-10"
+          className="mt-9 scroll-mt-28 overflow-hidden rounded-[15px] sm:mt-10"
           aria-labelledby="gutter-guards-heading"
         >
           <div className="grid min-h-[13.75rem] sm:min-h-[14.5rem] md:grid-cols-[minmax(0,0.42fr)_minmax(0,0.58fr)] lg:min-h-[15.5rem] lg:grid-cols-[minmax(0,0.44fr)_minmax(0,0.56fr)]">

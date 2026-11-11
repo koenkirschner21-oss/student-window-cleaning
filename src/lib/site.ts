@@ -49,6 +49,30 @@ export const navLinks = [
   { href: "/our-work", label: "Our Work" },
 ] as const;
 
+/** Header Services dropdown destinations — anchors on `/services`. */
+export const serviceNavItems = [
+  {
+    href: "/services#exterior-window-cleaning",
+    label: "Exterior Window Cleaning",
+    icon: "exterior",
+  },
+  {
+    href: "/services#interior-window-cleaning",
+    label: "Interior Window Cleaning",
+    icon: "interior",
+  },
+  {
+    href: "/services#gutter-cleaning",
+    label: "Gutter Cleaning",
+    icon: "gutter",
+  },
+  {
+    href: "/services#gutter-guards",
+    label: "Gutter Guards",
+    icon: "guards",
+  },
+] as const;
+
 export const exploreLinks = [
   { href: "/", label: "Home" },
   ...navLinks,
