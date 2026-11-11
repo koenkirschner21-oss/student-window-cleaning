@@ -90,8 +90,8 @@ export function PlansBenefits() {
           <figure className="m-0 w-full">
             <div className="relative aspect-[4/3] w-full overflow-hidden rounded-lg bg-cloud">
               <Image
-                src="/our-work/cleaning-action-branded-scrub.webp"
-                alt="Student Window Cleaning team member in a branded shirt scrubbing a residential window"
+                src="/our-work/residential-tan-brick-two-garage.webp"
+                alt="Well-maintained tan brick two-garage home with clean white-trimmed windows"
                 fill
                 sizes="(max-width: 1024px) 100vw, 48vw"
                 className="object-cover object-[center_28%]"
