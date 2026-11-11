@@ -127,12 +127,12 @@ export function OurServices() {
                   />
                 </div>
 
-                <div className="flex flex-1 flex-col px-5 pb-5 pt-5 sm:px-6 sm:pb-6 sm:pt-6">
-                  <h3 className="font-heading text-lg font-semibold leading-snug tracking-tight text-midnight sm:text-xl sm:leading-snug">
+                <div className="grid flex-1 grid-rows-[auto_1fr_auto] px-5 pb-5 pt-5 sm:px-6 sm:pb-6 sm:pt-6">
+                  <h3 className="font-heading min-h-[2lh] text-lg font-semibold leading-snug tracking-tight text-midnight sm:text-xl sm:leading-snug">
                     {service.title}
                   </h3>
 
-                  <ul className="mt-3.5 list-none p-0 sm:mt-4">
+                  <ul className="mt-3.5 grid list-none grid-rows-3 p-0 sm:mt-4">
                     {service.inclusions.map((item, index) => (
                       <li
                         key={item}
@@ -151,7 +151,7 @@ export function OurServices() {
                     ))}
                   </ul>
 
-                  <p className="mt-auto flex items-center gap-1.5 pt-5 text-sm font-medium text-midnight">
+                  <p className="flex items-center gap-1.5 pt-5 text-sm font-medium text-midnight">
                     View Service Details
                     <span
                       aria-hidden
