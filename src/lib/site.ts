@@ -180,13 +180,13 @@ export const quoteTrustPhoto: {
 };
 
 /**
- * Homepage final-quote panel photo (authentic property — natural colours).
- * Portrait source framed with object-cover; not the homepage hero image.
+ * Homepage quote-section photo — branded team member cleaning a residential window.
+ * Natural colours; not the homepage hero image.
  */
 export const homepageQuotePhoto = {
   src: "/home/quote-panel-worker.webp",
-  alt: "Two-storey brick home with clean white-framed windows, gutters, and landscaped front yard under a clear blue sky",
-  objectPosition: "center 42%",
+  alt: "Student Window Cleaning team member in a branded white shirt scrubbing a residential window on a brick home",
+  objectPosition: "center 28%",
 } as const;
 
 export type ServiceId = (typeof serviceOptions)[number]["id"];

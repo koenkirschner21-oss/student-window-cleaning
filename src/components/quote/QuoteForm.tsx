@@ -210,6 +210,8 @@ export function QuoteForm({
   const [attemptedSubmit, setAttemptedSubmit] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [submitBlocked, setSubmitBlocked] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
+  const [submitSuccess, setSubmitSuccess] = useState(false);
   const headingId = useId();
   const planGroupName = useId();
   const propertyGroupName = useId();
@@ -294,9 +296,12 @@ export function QuoteForm({
     });
   }
 
-  function onSubmit(event: FormEvent<HTMLFormElement>) {
+  async function onSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setAttemptedSubmit(true);
+    setSubmitBlocked(false);
+    setSubmitError(null);
+    setSubmitSuccess(false);
 
     const phoneOk = isValidNaPhone(form.phone);
     const emailOk = isValidEmail(form.email);
@@ -304,16 +309,56 @@ export function QuoteForm({
       !form.streetAddress.trim() ||
       !form.name.trim() ||
       !phoneOk ||
-      !emailOk
+      !emailOk ||
+      !form.propertyType
     ) {
       return;
     }
 
     setSubmitting(true);
-    window.setTimeout(() => {
-      setSubmitting(false);
+    try {
+      const response = await fetch("/api/quote", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          source: "quote-page",
+          services: form.services,
+          propertyType: form.propertyType,
+          name: form.name.trim(),
+          phone: form.phone.trim(),
+          email: form.email.trim() || undefined,
+          address: form.streetAddress.trim(),
+          notes: form.notes.trim() || undefined,
+          frequency: form.frequency || undefined,
+        }),
+      });
+
+      const payload = (await response.json().catch(() => null)) as {
+        error?: string;
+      } | null;
+
+      if (!response.ok) {
+        setSubmitBlocked(true);
+        setSubmitError(
+          payload?.error ||
+            "We couldn’t send your quote request. Please try again.",
+        );
+        return;
+      }
+
+      setSubmitSuccess(true);
+      setStepError(null);
+      setAttemptedSubmit(false);
+      setForm({ ...initialState });
+      setStep(1);
+    } catch {
       setSubmitBlocked(true);
-    }, 400);
+      setSubmitError(
+        "Network error — your details are still here. Please try again.",
+      );
+    } finally {
+      setSubmitting(false);
+    }
   }
 
   const streetInvalid = attemptedSubmit && !form.streetAddress.trim();
@@ -689,18 +734,28 @@ export function QuoteForm({
                 </p>
               ) : null}
 
+              {submitSuccess ? (
+                <div
+                  className="rounded-md border border-emerald-300 bg-emerald-50 px-4 py-3 text-sm text-emerald-950"
+                  role="status"
+                >
+                  <p className="font-semibold">Quote request received.</p>
+                  <p className="mt-1">
+                    Thanks — we&apos;ll follow up with a personalized estimate.
+                    This is a quote request, not a booking.
+                  </p>
+                </div>
+              ) : null}
+
               {submitBlocked ? (
                 <div
                   className="rounded-md border border-amber-300 bg-amber-50 px-4 py-3 text-sm text-amber-950"
-                  role="status"
+                  role="alert"
                 >
-                  <p className="font-semibold">
-                    Quote requests are not submitting yet.
-                  </p>
+                  <p className="font-semibold">Couldn&apos;t send your request.</p>
                   <p className="mt-1">
-                    A submission endpoint has not been connected. Nothing was
-                    sent, and your answers stay in this browser session. This is
-                    a quote request — not a booking.
+                    {submitError ||
+                      "Nothing was lost — your answers are still in this form. Try again or call us."}
                   </p>
                 </div>
               ) : null}

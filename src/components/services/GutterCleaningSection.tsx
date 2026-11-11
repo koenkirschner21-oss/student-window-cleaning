@@ -108,6 +108,60 @@ export function GutterCleaningSection() {
           </ul>
         </div>
 
+        <div className="mt-10 border-t border-white/10 pt-10 sm:mt-12 sm:pt-12">
+          <header className="max-w-2xl">
+            <p className="text-[0.7rem] font-semibold uppercase tracking-[0.18em] text-sky sm:text-xs">
+              Real Results
+            </p>
+            <h3 className="font-heading mt-2.5 text-[clamp(1.55rem,2.8vw,1.95rem)] font-semibold tracking-tight text-pure">
+              See the Difference a Clean Gutter Makes.
+            </h3>
+            <p className="mt-3 text-sm leading-relaxed text-white/72 sm:text-base">
+              Clearing accumulated leaves and debris helps restore water flow
+              and keep gutters functioning as intended.
+            </p>
+          </header>
+
+          <div className="mt-7 grid gap-4 sm:mt-8 sm:grid-cols-2 sm:gap-5">
+            {(
+              [
+                {
+                  src: "/before-after/gutters/before.webp",
+                  alt: "Residential gutter channel filled with leaves and debris before cleaning",
+                  label: "Before — Debris Buildup",
+                  objectPosition: "center",
+                },
+                {
+                  src: "/before-after/gutters/after.webp",
+                  alt: "Cleared residential gutter channel after debris removal",
+                  label: "After — Cleared Gutter",
+                  objectPosition: "center",
+                },
+              ] as const
+            ).map((item) => (
+              <figure key={item.label} className="m-0 min-w-0">
+                <div className="relative aspect-[4/5] overflow-hidden rounded-[14px] border border-white/10 bg-[#0A274F] sm:aspect-[5/6]">
+                  <Image
+                    src={item.src}
+                    alt={item.alt}
+                    fill
+                    sizes="(max-width: 640px) 100vw, 42vw"
+                    className="object-cover"
+                    style={{ objectPosition: item.objectPosition }}
+                  />
+                  <span className="absolute left-3 top-3 rounded-md bg-pure/95 px-2.5 py-1 text-[0.65rem] font-semibold uppercase tracking-[0.12em] text-midnight">
+                    {item.label}
+                  </span>
+                </div>
+              </figure>
+            ))}
+          </div>
+          <p className="mt-3 text-xs leading-relaxed text-white/50">
+            Photos show the same gutter style from slightly different angles —
+            presented side-by-side to preserve authentic results.
+          </p>
+        </div>
+
         <div className="mt-10 max-w-xl sm:mt-12">
           <h3 className="font-heading text-xl font-semibold tracking-tight text-pure sm:text-[1.35rem]">
             Keep Your Gutters Flowing Properly.

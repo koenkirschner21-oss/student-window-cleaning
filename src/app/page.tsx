@@ -3,6 +3,7 @@ import { FinalCta } from "@/components/home/FinalCta";
 import { GoogleReviews } from "@/components/home/GoogleReviews";
 import { Hero } from "@/components/home/Hero";
 import { OurServices } from "@/components/home/OurServices";
+import { WindowBeforeAfter } from "@/components/home/WindowBeforeAfter";
 
 export default function HomePage() {
   return (
@@ -10,6 +11,7 @@ export default function HomePage() {
       <Hero />
       <OurServices />
       <CleaningPlans />
+      <WindowBeforeAfter />
       <GoogleReviews />
       <FinalCta />
     </main>
