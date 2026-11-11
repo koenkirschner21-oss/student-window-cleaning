@@ -7,35 +7,58 @@ const inclusions = [
   {
     title: "Gutter Debris Removal",
     description:
-      "Clear accessible leaves and debris from gutter channels to help restore proper water flow.",
+      "Removal of accumulated leaves and debris from gutter channels to help restore proper water flow.",
+    icon: "leaf" as const,
   },
   {
-    title: "Accessible Downspout Clearing",
+    title: "Downspout Clearing",
     description:
-      "Address accessible downspout blockages so rainwater can drain away from your home.",
+      "Clearing reachable downspout blockages to support proper drainage where access allows.",
+    icon: "droplets" as const,
   },
   {
-    title: "Careful Work Around Your Property",
+    title: "Care for Your Property",
     description:
-      "Work carefully around landscaping and exterior finishes, with responsible debris handling.",
+      "Careful work around landscaping and exterior finishes, with responsible debris handling.",
+    icon: "home" as const,
   },
 ] as const;
 
-function CheckIcon() {
+function InclusionIcon({ kind }: { kind: "leaf" | "droplets" | "home" }) {
+  const common = {
+    viewBox: "0 0 24 24",
+    fill: "none",
+    "aria-hidden": true as const,
+    className: "size-7 text-sky",
+    stroke: "currentColor",
+    strokeWidth: 1.75,
+    strokeLinecap: "round" as const,
+    strokeLinejoin: "round" as const,
+  };
+
+  if (kind === "leaf") {
+    return (
+      <svg {...common}>
+        <path d="M5 18c4-1 7-4 9-8 2-4 3-7 5-8-1 4-2 8-5 11-3 3-6 4-9 5Z" />
+        <path d="M8 14c2-1 4-3 6-6" />
+      </svg>
+    );
+  }
+
+  if (kind === "droplets") {
+    return (
+      <svg {...common}>
+        <path d="M8.5 14.5c0 1.9-1.3 3.5-3 3.5s-3-1.6-3-3.5C2.5 11.8 5.5 8 5.5 8s3 3.8 3 6.5Z" />
+        <path d="M19.5 16.5c0 2.5-1.8 4.5-4 4.5s-4-2-4-4.5C11.5 13 15.5 8 15.5 8s4 5 4 8.5Z" />
+      </svg>
+    );
+  }
+
   return (
-    <svg
-      viewBox="0 0 16 16"
-      fill="none"
-      aria-hidden
-      className="mt-0.5 size-3.5 shrink-0 text-sky"
-    >
-      <path
-        d="M3.2 8.2 6.4 11.3 12.8 4.7"
-        stroke="currentColor"
-        strokeWidth="1.75"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
+    <svg {...common}>
+      <path d="M4 10.5 12 4l8 6.5" />
+      <path d="M6.5 9.5V19h11V9.5" />
+      <path d="M10 19v-5h4v5" />
     </svg>
   );
 }
@@ -52,23 +75,23 @@ export function GutterCleaningSection() {
       className="scroll-mt-28 text-pure"
       style={{
         backgroundColor: "#061A38",
-        paddingBlock: "clamp(3.75rem, 6.5vw, 5.25rem)",
+        paddingBlock: "clamp(3.25rem, 5.5vw, 4.75rem)",
       }}
     >
       <Container width="portfolio">
-        {/* 1) Intro — text left / photo right */}
-        <div className="grid items-center gap-8 lg:grid-cols-[minmax(0,1.08fr)_minmax(0,0.92fr)] lg:gap-12 xl:gap-14">
+        {/* 1) Intro — tighter vertical rhythm, stronger heading */}
+        <div className="grid items-center gap-6 lg:grid-cols-[minmax(0,1.08fr)_minmax(0,0.92fr)] lg:gap-10 xl:gap-12">
           <div className="max-w-xl">
             <p className="text-[0.7rem] font-semibold uppercase tracking-[0.18em] text-sky sm:text-xs">
               Professional Gutter Care
             </p>
             <h2
               id="gutter-cleaning-heading"
-              className="font-heading mt-2.5 text-[clamp(1.85rem,3.2vw,2.25rem)] font-semibold tracking-tight text-pure sm:mt-3 sm:leading-tight"
+              className="font-heading mt-2 text-[clamp(2rem,3.4vw,2.45rem)] font-semibold tracking-tight text-pure sm:mt-2.5 sm:leading-tight"
             >
               Gutter Cleaning
             </h2>
-            <p className="mt-4 text-base leading-relaxed text-white/72 sm:text-[1.05rem]">
+            <p className="mt-3.5 text-base leading-relaxed text-white/72 sm:text-[1.05rem]">
               Leaves and debris can block gutters and cause overflow during
               rain. Our student-run team clears accessible buildup so water can
               drain properly and your home stays better protected.
@@ -76,50 +99,40 @@ export function GutterCleaningSection() {
           </div>
 
           <figure className="m-0 w-full justify-self-center lg:justify-self-end">
-            <div className="relative aspect-[4/5] w-full max-w-[25rem] overflow-hidden rounded-[14px] border border-white/10 bg-[#0A274F] sm:aspect-[5/6] lg:ml-auto lg:h-[26rem] lg:w-[23.5rem] lg:max-w-none lg:aspect-auto">
+            <div className="relative aspect-[4/5] w-full max-w-[24rem] overflow-hidden rounded-[14px] border border-white/10 bg-[#0A274F] sm:aspect-[5/6] lg:ml-auto lg:h-[24.5rem] lg:w-[22.5rem] lg:max-w-none lg:aspect-auto">
               <Image
                 src="/services/gutter-cleaning-hose.webp"
                 alt="Team member on a ladder flushing a residential roof gutter with a hose nozzle"
                 fill
-                sizes="(max-width: 1024px) min(100vw, 25rem), 23.5rem"
+                sizes="(max-width: 1024px) min(100vw, 24rem), 22.5rem"
                 className="object-cover object-[center_35%]"
               />
             </div>
           </figure>
         </div>
 
-        {/* 2) What's Included */}
-        <div className="mt-11 border-t border-white/10 pt-9 sm:mt-12 sm:pt-10">
+        {/* 2) What's Included — open 3-column with icons above */}
+        <div className="mt-9 border-t border-white/10 pt-8 sm:mt-10 sm:pt-9">
           <h3 className="font-heading text-xl font-semibold tracking-tight text-pure sm:text-[1.35rem]">
             What&apos;s Included
           </h3>
-          <ul className="mt-7 grid gap-8 sm:grid-cols-3 sm:gap-x-8 lg:gap-x-10">
-            {inclusions.map((item, index) => (
-              <li
-                key={item.title}
-                className={[
-                  "flex gap-3",
-                  index > 0
-                    ? "border-t border-white/10 pt-7 sm:border-l sm:border-t-0 sm:pl-8 sm:pt-0 lg:pl-10"
-                    : "",
-                ].join(" ")}
-              >
-                <CheckIcon />
-                <div className="min-w-0">
-                  <p className="text-[0.95rem] font-semibold tracking-tight text-pure sm:text-base">
-                    {item.title}
-                  </p>
-                  <p className="mt-2 text-sm leading-relaxed text-white/65">
-                    {item.description}
-                  </p>
-                </div>
+          <ul className="mt-7 grid gap-8 sm:grid-cols-3 sm:gap-8 lg:gap-10">
+            {inclusions.map((item) => (
+              <li key={item.title} className="min-w-0 text-left">
+                <InclusionIcon kind={item.icon} />
+                <p className="font-heading mt-3.5 text-[1.05rem] font-semibold tracking-tight text-pure sm:text-lg">
+                  {item.title}
+                </p>
+                <p className="mt-2 text-sm leading-relaxed text-white/65">
+                  {item.description}
+                </p>
               </li>
             ))}
           </ul>
         </div>
 
-        {/* 3) Real Results — contained comparison module */}
-        <div className="mt-11 border-t border-white/10 pt-10 sm:mt-12 sm:pt-11">
+        {/* 3) Real Results — subtle navy-on-navy container, no angle caption */}
+        <div className="mt-10 border-t border-white/10 pt-9 sm:mt-11 sm:pt-10">
           <header className="mx-auto max-w-2xl text-center">
             <p className="text-[0.7rem] font-semibold uppercase tracking-[0.18em] text-sky sm:text-xs">
               Real Results
@@ -133,7 +146,10 @@ export function GutterCleaningSection() {
             </p>
           </header>
 
-          <div className="mx-auto mt-7 max-w-[46rem] rounded-[16px] border border-white/10 bg-[#0A274F]/40 p-3 sm:mt-8 sm:p-4">
+          <div
+            className="mx-auto mt-7 max-w-[46rem] rounded-[16px] border border-white/[0.08] p-3 sm:mt-8 sm:p-4"
+            style={{ backgroundColor: "rgba(10, 39, 79, 0.55)" }}
+          >
             <div className="grid grid-cols-2 gap-2.5 sm:gap-3.5">
               {(
                 [
@@ -171,33 +187,29 @@ export function GutterCleaningSection() {
               ))}
             </div>
           </div>
-          <p className="mx-auto mt-3 max-w-[46rem] text-center text-xs leading-relaxed text-white/45">
-            Authentic before-and-after photos from slightly different angles —
-            the after image is orientation-aligned for a clearer comparison.
-          </p>
         </div>
 
-        {/* 4) Gutter Cleaning CTA */}
-        <div className="mt-10 flex flex-col items-center border-t border-white/10 pt-10 text-center sm:mt-11 sm:pt-11">
+        {/* 4) Quote CTA — closer to results */}
+        <div className="mt-8 flex flex-col items-center text-center sm:mt-9">
           <h3 className="font-heading text-[clamp(1.35rem,2.4vw,1.65rem)] font-semibold tracking-tight text-pure">
             Keep Your Gutters Flowing Properly.
           </h3>
-          <p className="mt-3 max-w-lg text-sm leading-relaxed text-white/70 sm:text-base">
+          <p className="mt-2.5 max-w-lg text-sm leading-relaxed text-white/70 sm:text-base">
             Tell us about your property and we&apos;ll prepare a free,
             personalized quote for professional gutter cleaning.
           </p>
           <Link
             href={quoteHref({ service: "gutter-cleaning" })}
-            className="mt-6 inline-flex min-h-12 items-center justify-center rounded-md bg-signature px-7 text-sm font-semibold tracking-tight text-pure transition-colors duration-200 hover:bg-[#0656d6] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-sky"
+            className="mt-5 inline-flex min-h-12 items-center justify-center rounded-md bg-signature px-7 text-sm font-semibold tracking-tight text-pure transition-colors duration-200 hover:bg-[#0656d6] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-sky"
           >
             Get a Free Quote
           </Link>
         </div>
 
-        {/* 5) Gutter Guards add-on — photo + content, mirrors Screen Cleaning */}
+        {/* 5) Gutter Guards add-on — unchanged card, balanced spacing */}
         <aside
           id="gutter-guards"
-          className="mt-10 overflow-hidden rounded-[15px] sm:mt-11"
+          className="mt-9 overflow-hidden rounded-[15px] sm:mt-10"
           aria-labelledby="gutter-guards-heading"
         >
           <div className="grid min-h-[13.75rem] sm:min-h-[14.5rem] md:grid-cols-[minmax(0,0.42fr)_minmax(0,0.58fr)] lg:min-h-[15.5rem] lg:grid-cols-[minmax(0,0.44fr)_minmax(0,0.56fr)]">
