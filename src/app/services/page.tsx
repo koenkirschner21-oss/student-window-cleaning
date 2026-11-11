@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { CleaningProcessSection } from "@/components/services/CleaningProcessSection";
 import { GutterCleaningSection } from "@/components/services/GutterCleaningSection";
 import { PlansPreview } from "@/components/services/PlansPreview";
 import { ResidentialCommercialSection } from "@/components/services/ResidentialCommercialSection";
@@ -28,6 +29,7 @@ export default function ServicesPage() {
       <WindowCleaningSection />
       <GutterCleaningSection />
       <ResidentialCommercialSection />
+      <CleaningProcessSection />
       <PlansPreview />
       <ServicesFinalCta />
     </main>
