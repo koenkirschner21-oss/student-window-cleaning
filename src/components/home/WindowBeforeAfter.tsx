@@ -19,69 +19,75 @@ const images = [
 ] as const;
 
 /**
- * Compact homepage proof module — side-by-side because the source frames
- * were captured from slightly different viewpoints.
+ * Compact homepage proof module — signature-blue card on a white section.
+ * Side-by-side because source frames were captured from different viewpoints.
  */
 export function WindowBeforeAfter() {
   return (
     <section
       id="window-results"
       aria-labelledby="window-results-heading"
-      className="bg-pure text-midnight"
+      className="bg-pure"
       style={{
         backgroundColor: "#FFFFFF",
-        paddingBlock: "clamp(1.75rem, 3.5vw, 2.5rem)",
+        paddingBlock: "clamp(1.75rem, 3.5vw, 2.75rem)",
       }}
     >
       <Container>
-        <div className="mx-auto max-w-3xl rounded-[14px] border border-border bg-pure px-4 py-6 sm:px-6 sm:py-7">
-          <header className="mx-auto max-w-md text-center">
-            <p className="text-[0.65rem] font-semibold uppercase tracking-[0.16em] text-signature sm:text-[0.7rem]">
+        {/* ~12% wider than prior max-w-3xl (48rem → 54rem), still under site max-w-6xl */}
+        <div
+          className="mx-auto max-w-[54rem] rounded-[14px] px-4 py-6 text-pure sm:px-7 sm:py-7 md:px-8"
+          style={{ backgroundColor: "#0865F8" }}
+        >
+          <header className="mx-auto max-w-lg text-center">
+            <p className="text-[0.65rem] font-semibold uppercase tracking-[0.16em] text-white/80 sm:text-[0.7rem]">
               See the Difference
             </p>
             <h2
               id="window-results-heading"
-              className="font-heading mt-1.5 text-[clamp(1.35rem,2.4vw,1.65rem)] font-semibold tracking-tight text-midnight"
+              className="font-heading mt-1.5 text-[clamp(1.4rem,2.5vw,1.75rem)] font-semibold tracking-tight text-pure"
             >
-              Before &amp; After Results
+              Results You Can See.
             </h2>
-            <p className="mt-1.5 text-sm leading-relaxed text-navy-muted">
-              Real results from our window cleaning work.
+            <p className="mt-1.5 text-sm leading-relaxed text-white/80">
+              Real window cleaning results from our team.
             </p>
           </header>
 
-          <div className="mt-5 grid grid-cols-2 gap-2.5 sm:mt-6 sm:gap-3.5">
+          <div className="mt-5 grid grid-cols-1 gap-4 sm:mt-6 sm:grid-cols-2 sm:gap-4 md:gap-5">
             {images.map((item) => (
               <figure key={item.label} className="m-0 min-w-0">
-                <div className="relative aspect-[4/5] overflow-hidden rounded-[10px] border border-border bg-cloud sm:rounded-[12px]">
+                <div className="relative aspect-[4/5] overflow-hidden rounded-[12px] bg-[#0656d6]">
                   <Image
                     src={item.src}
                     alt={item.alt}
                     fill
-                    sizes="(max-width: 768px) 45vw, 280px"
+                    sizes="(max-width: 640px) 92vw, (max-width: 1024px) 42vw, 400px"
                     className="object-cover"
                     style={{ objectPosition: item.objectPosition }}
                   />
-                  <span className="absolute left-2 top-2 rounded-md bg-midnight/90 px-2 py-0.5 text-[0.6rem] font-semibold uppercase tracking-[0.12em] text-pure sm:left-2.5 sm:top-2.5 sm:px-2.5 sm:text-[0.65rem]">
+                </div>
+                <figcaption className="mt-2.5 flex justify-center">
+                  <span className="inline-flex min-h-8 w-full max-w-[9.5rem] items-center justify-center rounded-md bg-pure px-3 text-[0.7rem] font-semibold uppercase tracking-[0.14em] text-midnight sm:text-xs">
                     {item.label}
                   </span>
-                </div>
+                </figcaption>
               </figure>
             ))}
           </div>
 
-          <div className="mt-5 flex flex-wrap items-center justify-center gap-x-5 gap-y-2.5 sm:mt-6">
+          <div className="mt-6 flex flex-col items-center justify-center gap-3 sm:mt-7 sm:flex-row sm:gap-x-6">
             <Link
               href={quoteHref()}
-              className="inline-flex min-h-10 items-center justify-center rounded-md bg-signature px-4 text-sm font-semibold tracking-tight text-pure transition-colors duration-150 hover:bg-[#0656d6] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-signature"
+              className="inline-flex min-h-11 items-center justify-center rounded-md bg-pure px-5 text-sm font-semibold tracking-tight text-midnight transition-colors duration-150 hover:bg-cloud focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-pure"
             >
               Get a Free Quote
             </Link>
             <Link
               href="/our-work"
-              className="inline-flex min-h-10 items-center justify-center text-sm font-semibold tracking-tight text-navy-muted transition-colors duration-150 hover:text-signature focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-signature"
+              className="inline-flex min-h-11 items-center justify-center text-sm font-semibold tracking-tight text-pure/90 transition-colors duration-150 hover:text-pure focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-pure"
             >
-              View Our Work
+              View Our Work →
             </Link>
           </div>
         </div>
