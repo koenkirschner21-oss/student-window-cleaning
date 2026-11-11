@@ -19,7 +19,7 @@ const images = [
 ] as const;
 
 /**
- * Compact homepage proof module — signature-blue card on a white section.
+ * Compact homepage proof module — midnight-navy card on a white section.
  * Side-by-side because source frames were captured from different viewpoints.
  */
 export function WindowBeforeAfter() {
@@ -37,7 +37,7 @@ export function WindowBeforeAfter() {
         {/* ~12% wider than prior max-w-3xl (48rem → 54rem), still under site max-w-6xl */}
         <div
           className="mx-auto max-w-[54rem] rounded-[14px] px-4 py-6 text-pure sm:px-7 sm:py-7 md:px-8"
-          style={{ backgroundColor: "#0865F8" }}
+          style={{ backgroundColor: "#061A38" }}
         >
           <header className="mx-auto max-w-lg text-center">
             <p className="text-[0.65rem] font-semibold uppercase tracking-[0.16em] text-white/80 sm:text-[0.7rem]">
@@ -57,7 +57,7 @@ export function WindowBeforeAfter() {
           <div className="mt-5 grid grid-cols-1 gap-4 sm:mt-6 sm:grid-cols-2 sm:gap-4 md:gap-5">
             {images.map((item) => (
               <figure key={item.label} className="m-0 min-w-0">
-                <div className="relative aspect-[4/5] overflow-hidden rounded-[12px] bg-[#0656d6]">
+                <div className="relative aspect-[4/5] overflow-hidden rounded-[12px] bg-[#0A274F]">
                   <Image
                     src={item.src}
                     alt={item.alt}
@@ -68,7 +68,10 @@ export function WindowBeforeAfter() {
                   />
                 </div>
                 <figcaption className="mt-2.5 flex justify-center">
-                  <span className="inline-flex min-h-8 w-full max-w-[9.5rem] items-center justify-center rounded-md bg-pure px-3 text-[0.7rem] font-semibold uppercase tracking-[0.14em] text-midnight sm:text-xs">
+                  <span
+                    className="inline-flex h-8 w-[6.75rem] items-center justify-center rounded-md bg-pure text-[0.7rem] font-semibold uppercase tracking-[0.14em] text-midnight sm:w-[7.25rem] sm:text-xs"
+                    style={{ color: "#061A38" }}
+                  >
                     {item.label}
                   </span>
                 </figcaption>
@@ -79,13 +82,14 @@ export function WindowBeforeAfter() {
           <div className="mt-6 flex flex-col items-center justify-center gap-3 sm:mt-7 sm:flex-row sm:gap-x-6">
             <Link
               href={quoteHref()}
-              className="inline-flex min-h-11 items-center justify-center rounded-md bg-pure px-5 text-sm font-semibold tracking-tight text-midnight transition-colors duration-150 hover:bg-cloud focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-pure"
+              className="inline-flex min-h-11 items-center justify-center rounded-md bg-signature px-5 text-sm font-semibold tracking-tight text-pure transition-colors duration-150 hover:bg-[#0656d6] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky"
+              style={{ backgroundColor: "#0865F8" }}
             >
               Get a Free Quote
             </Link>
             <Link
               href="/our-work"
-              className="inline-flex min-h-11 items-center justify-center text-sm font-semibold tracking-tight text-pure/90 transition-colors duration-150 hover:text-pure focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-pure"
+              className="inline-flex min-h-11 items-center justify-center text-sm font-semibold tracking-tight text-pure underline-offset-4 transition-colors duration-150 hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky"
             >
               View Our Work →
             </Link>
