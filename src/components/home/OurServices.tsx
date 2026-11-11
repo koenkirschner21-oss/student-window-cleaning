@@ -5,7 +5,7 @@ import { Container } from "@/components/ui/Container";
 const services = [
   {
     id: "exterior-window-cleaning",
-    title: "Exterior",
+    title: "Exterior Window Cleaning",
     href: "/services#exterior-window-cleaning",
     image: {
       src: "/our-work/exterior-squeegee-soapy.webp",
@@ -20,7 +20,7 @@ const services = [
   },
   {
     id: "interior-exterior-window-cleaning",
-    title: "Interior & Exterior",
+    title: "Interior & Exterior Window Cleaning",
     href: "/services#interior-exterior-window-cleaning",
     image: {
       src: "/our-work/interior-exterior-pole.webp",
@@ -35,7 +35,7 @@ const services = [
   },
   {
     id: "gutter-cleaning",
-    title: "Gutter",
+    title: "Gutter Cleaning",
     href: "/services#gutter-cleaning",
     image: {
       src: "/our-work/gutter-cleaning-hose.webp",
@@ -113,7 +113,7 @@ export function OurServices() {
             <li key={service.id} className="min-w-0">
               <Link
                 href={service.href}
-                className="group flex h-full flex-col overflow-hidden rounded-[15px] border border-[color-mix(in_srgb,var(--color-midnight-navy)_10%,transparent)] bg-pure no-underline transition-[border-color,transform,box-shadow] duration-200 ease-out motion-safe:hover:-translate-y-[2px] hover:border-[color-mix(in_srgb,var(--color-midnight-navy)_22%,transparent)] motion-safe:hover:shadow-[0_8px_24px_color-mix(in_srgb,var(--color-midnight-navy)_8%,transparent)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-signature"
+                className="group flex h-full flex-col overflow-hidden rounded-[15px] border border-[#8D9AAF] bg-pure no-underline shadow-none transition-[border-color,transform,box-shadow] duration-200 ease-out motion-safe:hover:-translate-y-[2px] hover:border-[#6B7A94] motion-safe:hover:shadow-[0_8px_22px_color-mix(in_srgb,var(--color-midnight-navy)_10%,transparent)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-signature"
               >
                 <div className="relative aspect-[3/4] w-full overflow-hidden bg-cloud">
                   <Image
@@ -126,12 +126,12 @@ export function OurServices() {
                   />
                 </div>
 
-                <div className="flex flex-1 flex-col px-5 py-5 sm:px-6 sm:py-6">
-                  <h3 className="font-heading text-lg font-semibold tracking-tight text-midnight sm:text-xl">
+                <div className="flex flex-1 flex-col px-5 pb-5 pt-5 sm:px-6 sm:pb-6 sm:pt-6">
+                  <h3 className="font-heading text-lg font-semibold leading-snug tracking-tight text-midnight sm:text-xl sm:leading-snug">
                     {service.title}
                   </h3>
 
-                  <ul className="mt-3 list-none p-0">
+                  <ul className="mt-3.5 list-none p-0 sm:mt-4">
                     {service.inclusions.map((item, index) => (
                       <li
                         key={item}
@@ -187,8 +187,8 @@ export function OurServices() {
                 Screen Cleaning Also Available
               </h3>
               <p className="mt-2.5 max-w-md text-sm leading-relaxed text-white/75 sm:text-[0.95rem]">
-                Give your screens a thorough clean as an optional add-on — not
-                included automatically with our core services.
+                Give your screens a thorough clean for an even clearer finish.
+                Ask about adding screen cleaning to your personalized quote.
               </p>
               <p className="mt-5">
                 <Link
