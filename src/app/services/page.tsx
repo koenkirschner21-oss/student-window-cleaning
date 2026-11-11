@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { GutterCleaningSection } from "@/components/services/GutterCleaningSection";
 import { PlansPreview } from "@/components/services/PlansPreview";
+import { ResidentialCommercialSection } from "@/components/services/ResidentialCommercialSection";
 import { ServicesFinalCta } from "@/components/services/ServicesFinalCta";
 import { ServicesHero } from "@/components/services/ServicesHero";
 import { WindowCleaningSection } from "@/components/services/WindowCleaningSection";
@@ -26,6 +27,7 @@ export default function ServicesPage() {
       <ServicesHero />
       <WindowCleaningSection />
       <GutterCleaningSection />
+      <ResidentialCommercialSection />
       <PlansPreview />
       <ServicesFinalCta />
     </main>
