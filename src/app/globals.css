@@ -23,7 +23,7 @@
   --radius-lg: 1.25rem;
 
   --shadow-soft: 0 12px 40px color-mix(in srgb, var(--color-midnight-navy) 8%, transparent);
-  --header-height: 4.75rem;
+  --header-height: 5.75rem;
 
   --background: var(--color-pure-white);
   --foreground: var(--color-midnight-navy);

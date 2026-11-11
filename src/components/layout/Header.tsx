@@ -9,9 +9,9 @@ import { navLinks, site } from "@/lib/site";
 
 function navLinkClass(active: boolean) {
   return [
-    "font-heading relative inline-flex min-h-11 items-center px-2.5 text-[0.9375rem] font-semibold tracking-tight text-midnight",
+    "font-heading relative inline-flex min-h-11 items-center text-base font-medium tracking-[0.01em] text-midnight",
     "transition-colors duration-150",
-    "after:absolute after:inset-x-2.5 after:bottom-2 after:h-px after:origin-left after:bg-signature after:transition-transform after:duration-150 after:ease-out",
+    "after:absolute after:inset-x-0 after:bottom-1.5 after:h-px after:origin-left after:bg-signature after:transition-transform after:duration-150 after:ease-out",
     active
       ? "after:scale-x-100"
       : "after:scale-x-0 hover:text-signature hover:after:scale-x-100",
@@ -21,7 +21,7 @@ function navLinkClass(active: boolean) {
 
 function mobileNavLinkClass(active: boolean) {
   return [
-    "font-heading relative flex min-h-12 items-center px-1 text-base font-semibold tracking-tight text-midnight",
+    "font-heading relative flex min-h-12 items-center px-1 text-base font-medium tracking-[0.01em] text-midnight",
     "transition-colors duration-150",
     "after:absolute after:bottom-2 after:left-1 after:right-1 after:h-px after:origin-left after:bg-signature after:transition-transform after:duration-150",
     active ? "after:scale-x-100" : "after:scale-x-0",
@@ -77,13 +77,13 @@ export function Header() {
             width={2172}
             height={724}
             priority
-            className="h-12 w-auto sm:h-[3.25rem]"
+            className="h-14 w-auto sm:h-16"
           />
         </Link>
 
         <nav
           aria-label="Primary"
-          className="hidden items-center justify-center gap-1 lg:flex"
+          className="hidden items-center justify-center gap-8 lg:flex"
         >
           {navLinks.map((link) => {
             const active = pathname === link.href;
