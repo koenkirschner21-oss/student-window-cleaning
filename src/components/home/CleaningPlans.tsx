@@ -125,57 +125,68 @@ export function CleaningPlans() {
           </p>
         </header>
 
-        <ul className="mt-10 grid list-none items-stretch gap-6 p-0 md:grid-cols-2 lg:mt-11 lg:grid-cols-3 lg:gap-6">
+        {/*
+          Desktop: CSS subgrid shares 9 content zones across the three cards
+          (name → primary → frequency → description → 4 benefits → CTA).
+          Mobile/tablet: each card uses its own auto rows — no forced blank space.
+        */}
+        <ul className="mt-10 grid list-none gap-6 p-0 md:grid-cols-2 lg:mt-11 lg:grid-cols-3 lg:gap-6">
           {plans.map((plan) => {
             const featured = plan.featured;
             const planKey = plan.id as "basic" | "best-value" | "premium";
 
             return (
-              <li key={plan.id} className="flex min-w-0">
+              <li
+                key={plan.id}
+                className="min-w-0 lg:row-span-9 lg:grid lg:grid-rows-subgrid"
+              >
                 <article
                   className={[
-                    "relative flex w-full flex-col rounded-[15px] p-6 sm:p-7",
+                    "grid h-full w-full grid-rows-[auto_auto_auto_1fr_auto_auto_auto_auto_auto] rounded-[15px] p-6 sm:p-7 lg:row-span-9 lg:grid-rows-subgrid",
                     featured
                       ? "border border-signature bg-signature text-pure shadow-[0_10px_28px_color-mix(in_srgb,var(--color-signature-blue)_28%,transparent)]"
                       : "border border-white/15 bg-pure text-midnight",
                   ].join(" ")}
                 >
-                  {"badge" in plan && plan.badge ? (
-                    <p className="mb-3 inline-flex w-fit rounded-md bg-pure px-2.5 py-1 text-[0.65rem] font-semibold uppercase tracking-[0.14em] text-signature">
-                      {plan.badge}
-                    </p>
-                  ) : "eyebrow" in plan && plan.eyebrow ? (
-                    <p className="text-[0.65rem] font-semibold uppercase tracking-[0.14em] text-signature">
-                      {plan.eyebrow}
-                    </p>
-                  ) : null}
+                  {/* Zone 1 — plan name / badge */}
+                  <div className="flex min-h-[2rem] items-start">
+                    {"badge" in plan && plan.badge ? (
+                      <p className="inline-flex w-fit rounded-md bg-pure px-2.5 py-1 text-[0.65rem] font-semibold uppercase tracking-[0.14em] text-signature">
+                        {plan.badge}
+                      </p>
+                    ) : "eyebrow" in plan && plan.eyebrow ? (
+                      <p className="pt-1 text-[0.65rem] font-semibold uppercase tracking-[0.14em] text-signature">
+                        {plan.eyebrow}
+                      </p>
+                    ) : null}
+                  </div>
 
-                  <p
-                    className={[
-                      "font-heading font-extrabold tracking-tight",
-                      featured || !("eyebrow" in plan && plan.eyebrow)
-                        ? "mt-0"
-                        : "mt-2",
-                      plan.primaryIsSavings
-                        ? "text-4xl sm:text-[2.65rem]"
-                        : "text-3xl sm:text-4xl",
-                      featured ? "text-pure" : "text-midnight",
-                    ].join(" ")}
-                  >
-                    {plan.primary}
-                  </p>
-
-                  {"eachVisit" in plan && plan.eachVisit ? (
+                  {/* Zone 2 — main headline / savings (+ EACH VISIT) */}
+                  <div className="mt-2">
                     <p
                       className={[
-                        "mt-1.5 text-[0.65rem] font-semibold uppercase tracking-[0.16em]",
-                        featured ? "text-pure/80" : "text-signature",
+                        "font-heading font-extrabold tracking-tight",
+                        plan.primaryIsSavings
+                          ? "text-4xl sm:text-[2.65rem]"
+                          : "text-3xl sm:text-4xl",
+                        featured ? "text-pure" : "text-midnight",
                       ].join(" ")}
                     >
-                      Each Visit
+                      {plan.primary}
                     </p>
-                  ) : null}
+                    {"eachVisit" in plan && plan.eachVisit ? (
+                      <p
+                        className={[
+                          "mt-1.5 text-[0.65rem] font-semibold uppercase tracking-[0.16em]",
+                          featured ? "text-pure/80" : "text-signature",
+                        ].join(" ")}
+                      >
+                        Each Visit
+                      </p>
+                    ) : null}
+                  </div>
 
+                  {/* Zone 3 — visit-frequency supporting label */}
                   <p
                     className={[
                       "mt-2 text-sm font-semibold tracking-tight sm:text-[0.95rem]",
@@ -185,6 +196,7 @@ export function CleaningPlans() {
                     {plan.label}
                   </p>
 
+                  {/* Zone 4 — description (flexes; keeps benefits aligned) */}
                   <p
                     className={[
                       "mt-3 text-sm leading-relaxed sm:text-[0.95rem]",
@@ -194,48 +206,48 @@ export function CleaningPlans() {
                     {plan.description}
                   </p>
 
-                  <ul className="mt-5 list-none p-0" aria-label={`${plan.id} benefits`}>
-                    {benefits.map((benefit, index) => {
-                      const included = benefit.values[planKey] === "yes";
-                      return (
-                        <li
-                          key={benefit.label}
-                          className={[
-                            "flex items-start gap-2.5 py-2.5 text-sm leading-snug",
-                            index > 0
-                              ? featured
-                                ? "border-t border-white/15"
-                                : "border-t border-[color-mix(in_srgb,var(--color-midnight-navy)_8%,transparent)]"
-                              : "",
-                            featured
-                              ? included
-                                ? "text-white/90"
-                                : "text-white/45"
-                              : included
-                                ? "text-navy-muted"
-                                : "text-[#8D9AAF]",
-                          ]
-                            .filter(Boolean)
-                            .join(" ")}
-                        >
-                          {included ? (
-                            <CheckIcon light={featured} />
-                          ) : (
-                            <CrossIcon light={featured} />
-                          )}
-                          <span>{benefit.label}</span>
-                        </li>
-                      );
-                    })}
-                  </ul>
+                  {/* Zones 5–8 — benefit rows (each a shared subgrid row on desktop) */}
+                  {benefits.map((benefit, index) => {
+                    const included = benefit.values[planKey] === "yes";
+                    return (
+                      <div
+                        key={benefit.label}
+                        className={[
+                          "flex items-start gap-2.5 py-2.5 text-sm leading-snug",
+                          index === 0
+                            ? featured
+                              ? "mt-5 border-t border-white/15"
+                              : "mt-5 border-t border-[color-mix(in_srgb,var(--color-midnight-navy)_8%,transparent)]"
+                            : featured
+                              ? "border-t border-white/15"
+                              : "border-t border-[color-mix(in_srgb,var(--color-midnight-navy)_8%,transparent)]",
+                          featured
+                            ? included
+                              ? "text-white/90"
+                              : "text-white/45"
+                            : included
+                              ? "text-navy-muted"
+                              : "text-[#8D9AAF]",
+                        ].join(" ")}
+                      >
+                        {included ? (
+                          <CheckIcon light={featured} />
+                        ) : (
+                          <CrossIcon light={featured} />
+                        )}
+                        <span>{benefit.label}</span>
+                      </div>
+                    );
+                  })}
 
-                  <div className="mt-auto pt-7">
+                  {/* Zone 9 — CTA */}
+                  <div className="pt-7">
                     <Link
                       href={quoteHref({ frequency: plan.frequency })}
                       className={[
                         "inline-flex min-h-12 w-full items-center justify-center rounded-md px-5 text-sm font-semibold tracking-tight transition-colors duration-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-3",
                         featured
-                          ? "bg-pure text-signature hover:bg-ice focus-visible:outline-pure"
+                          ? "bg-midnight text-pure hover:bg-[#0a2548] focus-visible:outline-pure"
                           : "border border-signature/45 bg-transparent text-signature hover:border-signature hover:bg-ice focus-visible:outline-signature",
                       ].join(" ")}
                     >
