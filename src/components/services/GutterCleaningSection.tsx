@@ -42,7 +42,7 @@ function CheckIcon() {
 
 /**
  * Gutter Cleaning service section — full-bleed Midnight Navy.
- * Photo left / intro right; genuine gutter-detail photo reused from Our Work.
+ * Photo left / intro right; hose-flush action photo from services assets.
  */
 export function GutterCleaningSection() {
   return (
@@ -60,8 +60,8 @@ export function GutterCleaningSection() {
           <figure className="m-0 order-2 w-full justify-self-center lg:order-1 lg:justify-self-start">
             <div className="relative aspect-[7/8] w-full max-w-[26rem] overflow-hidden rounded-lg bg-[#0A274F] lg:h-[28.5rem] lg:w-[26rem] lg:max-w-none lg:aspect-auto">
               <Image
-                src="/our-work/gutter-detail-debris.webp"
-                alt="Close-up of a residential gutter holding leaf debris along a shingle roofline"
+                src="/services/gutter-cleaning-hose.webp"
+                alt="Team member on a ladder flushing a residential roof gutter with a hose nozzle"
                 fill
                 sizes="(max-width: 1024px) min(100vw, 26rem), 26rem"
                 className="object-cover object-center"
