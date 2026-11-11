@@ -8,9 +8,9 @@ const services = [
     title: "Exterior",
     href: "/services#exterior-window-cleaning",
     image: {
-      src: "/our-work/cleaning-action-bay-window.webp",
-      alt: "Student Window Cleaning team member washing the exterior glass of a residential bay window",
-      objectPosition: "center 42%",
+      src: "/our-work/exterior-squeegee-soapy.webp",
+      alt: "Student Window Cleaning team member squeegeeing soapy exterior window glass",
+      objectPosition: "55% 50%",
     },
     inclusions: [
       "Exterior glass",
@@ -23,9 +23,9 @@ const services = [
     title: "Interior & Exterior",
     href: "/services#interior-exterior-window-cleaning",
     image: {
-      src: "/our-work/cleaning-action-branded-scrub.webp",
-      alt: "Student Window Cleaning team member scrubbing a residential window with a branded microfiber tool",
-      objectPosition: "center 28%",
+      src: "/our-work/interior-exterior-pole.webp",
+      alt: "Student Window Cleaning team member cleaning a window with a telescopic pole",
+      objectPosition: "40% 50%",
     },
     inclusions: [
       "Inside & outside glass",
@@ -38,9 +38,9 @@ const services = [
     title: "Gutter",
     href: "/services#gutter-cleaning",
     image: {
-      src: "/our-work/gutter-detail-debris.webp",
-      alt: "Close-up of a residential gutter holding leaf debris along a shingle roofline",
-      objectPosition: "center center",
+      src: "/our-work/gutter-cleaning-hose.webp",
+      alt: "Student Window Cleaning team member flushing a residential gutter with a hose from a ladder",
+      objectPosition: "center 45%",
     },
     inclusions: [
       "Leaves & debris removal",
@@ -69,28 +69,17 @@ function CheckIcon() {
   );
 }
 
-function ScreenCleaningPhotoPlaceholder() {
+function ScreenCleaningPhoto() {
   return (
-    <div
-      className="relative h-full min-h-[11.5rem] w-full overflow-hidden bg-cloud sm:min-h-0"
-      style={{
-        background:
-          "linear-gradient(165deg, #F3F7FB 0%, #E9F3FC 55%, #DCEAF7 100%)",
-      }}
-      role="img"
-      aria-label="Screen cleaning photography placeholder — authentic Student Window Cleaning screen photo pending"
-    >
-      <div
-        aria-hidden
-        className="absolute inset-0 opacity-45"
-        style={{
-          background:
-            "radial-gradient(80% 60% at 50% 35%, color-mix(in srgb, var(--color-clear-sky) 18%, transparent), transparent 70%)",
-        }}
+    <div className="relative h-full min-h-[11.5rem] w-full overflow-hidden bg-cloud sm:min-h-0">
+      <Image
+        src="/our-work/screen-cleaning-action.webp"
+        alt="Student Window Cleaning team member scrubbing a residential window screen outdoors"
+        fill
+        sizes="(max-width: 768px) 100vw, 42vw"
+        className="object-cover"
+        style={{ objectPosition: "center 40%" }}
       />
-      <p className="absolute inset-x-0 bottom-0 px-4 pb-4 text-[0.7rem] font-medium tracking-wide text-navy-muted/80">
-        Photo coming soon
-      </p>
     </div>
   );
 }
@@ -182,7 +171,7 @@ export function OurServices() {
         >
           <div className="grid min-h-[13.75rem] sm:min-h-[14.5rem] md:grid-cols-[minmax(0,0.42fr)_minmax(0,0.58fr)] lg:min-h-[15.5rem] lg:grid-cols-[minmax(0,0.44fr)_minmax(0,0.56fr)]">
             <div className="min-h-[11.5rem] md:min-h-0">
-              <ScreenCleaningPhotoPlaceholder />
+              <ScreenCleaningPhoto />
             </div>
             <div
               className="flex flex-col justify-center px-5 py-6 text-pure sm:px-7 sm:py-7 lg:px-8"
