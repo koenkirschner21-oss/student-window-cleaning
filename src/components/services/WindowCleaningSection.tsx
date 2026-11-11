@@ -7,6 +7,7 @@ const offers = [
   {
     id: "exterior-window-cleaning",
     title: "Exterior Window Cleaning",
+    href: quoteHref({ service: "exterior" }),
     description:
       "Refresh your home's exterior with professionally cleaned windows that leave your property looking brighter and well cared for.",
     checks: [
@@ -23,6 +24,8 @@ const offers = [
   {
     id: "interior-window-cleaning",
     title: "Interior Window Cleaning",
+    // Quote form offers Interior & Exterior (not interior-only) — no preselection.
+    href: quoteHref(),
     description:
       "Enjoy cleaner glass and clearer views from inside your home, with careful attention to the details around every window.",
     checks: [
@@ -106,13 +109,15 @@ export function WindowCleaningSection() {
           </div>
         </div>
 
-        {/* Exterior / Interior cards — title → photo → description → checks */}
+        {/* Exterior / Interior cards — whole card links to quote */}
         <div className="mt-9 grid items-stretch gap-6 sm:mt-10 md:grid-cols-2 md:gap-7">
           {offers.map((offer) => (
-            <article
+            <Link
               key={offer.id}
               id={offer.id}
-              className="scroll-mt-28 flex h-full flex-col overflow-hidden rounded-[14px] border border-border bg-pure transition-colors duration-150 hover:border-border-strong"
+              href={offer.href}
+              aria-label={`Get a free quote for ${offer.title}`}
+              className="scroll-mt-28 flex h-full flex-col overflow-hidden rounded-[14px] border border-border bg-pure shadow-none transition-[border-color,box-shadow,transform] duration-200 ease-out hover:-translate-y-[2px] hover:border-signature hover:shadow-[0_10px_28px_-18px_rgba(8,101,248,0.55)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-signature motion-reduce:transition-colors motion-reduce:hover:translate-y-0 motion-reduce:hover:shadow-none"
             >
               <div className="px-5 pt-5 sm:px-6 sm:pt-6">
                 <h3 className="font-heading text-[1.35rem] font-semibold tracking-tight text-midnight sm:text-[1.5rem]">
@@ -147,7 +152,7 @@ export function WindowCleaningSection() {
                   ))}
                 </ul>
               </div>
-            </article>
+            </Link>
           ))}
         </div>
 
