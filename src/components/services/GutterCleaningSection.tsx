@@ -7,17 +7,17 @@ const inclusions = [
   {
     title: "Gutter Debris Removal",
     description:
-      "Removal of accessible leaves and debris from gutter channels to help restore proper water flow.",
+      "Clear accessible leaves and debris from gutter channels to help restore proper water flow.",
   },
   {
     title: "Accessible Downspout Clearing",
     description:
-      "Clearing accessible downspout blockages as part of the gutter-cleaning service.",
+      "Address accessible downspout blockages so rainwater can drain away from your home.",
   },
   {
     title: "Careful Work Around Your Property",
     description:
-      "Careful work around the home's exterior and responsible handling of removed debris.",
+      "Work carefully around landscaping and exterior finishes, with responsible debris handling.",
   },
 ] as const;
 
@@ -27,7 +27,7 @@ function CheckIcon() {
       viewBox="0 0 16 16"
       fill="none"
       aria-hidden
-      className="mt-0.5 size-3.5 shrink-0 text-signature"
+      className="mt-0.5 size-3.5 shrink-0 text-sky"
     >
       <path
         d="M3.2 8.2 6.4 11.3 12.8 4.7"
@@ -42,7 +42,7 @@ function CheckIcon() {
 
 /**
  * Gutter Cleaning service section — full-bleed Midnight Navy.
- * Photo left / intro right; hose-flush action photo from services assets.
+ * Intro: text left / photo right (alternates from Screen Cleaning above).
  */
 export function GutterCleaningSection() {
   return (
@@ -52,54 +52,64 @@ export function GutterCleaningSection() {
       className="scroll-mt-28 text-pure"
       style={{
         backgroundColor: "#061A38",
-        paddingBlock: "clamp(3.5rem, 6vw, 5rem)",
+        paddingBlock: "clamp(3.75rem, 6.5vw, 5.25rem)",
       }}
     >
       <Container width="portfolio">
-        <div className="grid items-center gap-8 lg:grid-cols-[1fr_1.22fr] lg:gap-12">
-          <figure className="m-0 order-2 w-full justify-self-center lg:order-1 lg:justify-self-start">
-            <div className="relative aspect-[7/8] w-full max-w-[26rem] overflow-hidden rounded-lg bg-[#0A274F] lg:h-[28.5rem] lg:w-[26rem] lg:max-w-none lg:aspect-auto">
-              <Image
-                src="/services/gutter-cleaning-hose.webp"
-                alt="Team member on a ladder flushing a residential roof gutter with a hose nozzle"
-                fill
-                sizes="(max-width: 1024px) min(100vw, 26rem), 26rem"
-                className="object-cover object-center"
-              />
-            </div>
-          </figure>
-
-          <div className="order-1 max-w-xl lg:order-2">
-            <p className="text-[0.7rem] font-semibold uppercase tracking-[0.18em] text-[#3999EA] sm:text-xs">
+        {/* Intro — text left, photo right; mobile stacks text then photo */}
+        <div className="grid items-center gap-8 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)] lg:gap-12 xl:gap-14">
+          <div className="max-w-xl">
+            <p className="text-[0.7rem] font-semibold uppercase tracking-[0.18em] text-sky sm:text-xs">
               Professional Gutter Care
             </p>
             <h2
               id="gutter-cleaning-heading"
-              className="font-heading mt-2.5 text-3xl font-semibold tracking-tight text-pure sm:mt-3 sm:text-[2.15rem] sm:leading-tight"
+              className="font-heading mt-2.5 text-[clamp(1.85rem,3.2vw,2.25rem)] font-semibold tracking-tight text-pure sm:mt-3 sm:leading-tight"
             >
               Gutter Cleaning
             </h2>
-            <p className="mt-4 text-base leading-relaxed text-white/70">
-              Leaves and debris can prevent rainwater from draining properly.
-              Our student-run team helps keep your gutters clear and your
-              home&apos;s drainage working as intended.
+            <p className="mt-4 text-base leading-relaxed text-white/72 sm:text-[1.05rem]">
+              Leaves and debris can block gutters and cause overflow during
+              rain. Our student-run team clears accessible buildup so water can
+              drain properly and your home stays better protected.
             </p>
           </div>
+
+          <figure className="m-0 w-full justify-self-center lg:justify-self-end">
+            <div className="relative aspect-[4/5] w-full max-w-[26rem] overflow-hidden rounded-[14px] bg-[#0A274F] sm:aspect-[5/6] lg:ml-auto lg:h-[27rem] lg:w-[24.5rem] lg:max-w-none lg:aspect-auto">
+              <Image
+                src="/services/gutter-cleaning-hose.webp"
+                alt="Team member on a ladder flushing a residential roof gutter with a hose nozzle"
+                fill
+                sizes="(max-width: 1024px) min(100vw, 26rem), 24.5rem"
+                className="object-cover object-[center_35%]"
+              />
+            </div>
+          </figure>
         </div>
 
-        <div className="mt-8 border-t border-white/10 pt-8 sm:mt-10 sm:pt-10">
+        {/* What's Included — minimal 3-column on navy */}
+        <div className="mt-11 border-t border-white/10 pt-9 sm:mt-12 sm:pt-10">
           <h3 className="font-heading text-xl font-semibold tracking-tight text-pure sm:text-[1.35rem]">
             What&apos;s Included
           </h3>
-          <ul className="mt-6 grid gap-6 sm:grid-cols-3 sm:gap-8">
-            {inclusions.map((item) => (
-              <li key={item.title} className="flex gap-2.5">
+          <ul className="mt-7 grid gap-8 sm:grid-cols-3 sm:gap-x-8 sm:gap-y-0 lg:gap-x-10">
+            {inclusions.map((item, index) => (
+              <li
+                key={item.title}
+                className={[
+                  "flex gap-3",
+                  index > 0
+                    ? "border-t border-white/10 pt-7 sm:border-l sm:border-t-0 sm:pl-8 sm:pt-0 lg:pl-10"
+                    : "",
+                ].join(" ")}
+              >
                 <CheckIcon />
-                <div>
-                  <p className="text-sm font-semibold tracking-tight text-pure">
+                <div className="min-w-0">
+                  <p className="text-[0.95rem] font-semibold tracking-tight text-pure sm:text-base">
                     {item.title}
                   </p>
-                  <p className="mt-1.5 text-sm leading-relaxed text-white/65">
+                  <p className="mt-2 text-sm leading-relaxed text-white/65">
                     {item.description}
                   </p>
                 </div>
@@ -108,7 +118,8 @@ export function GutterCleaningSection() {
           </ul>
         </div>
 
-        <div className="mt-10 border-t border-white/10 pt-10 sm:mt-12 sm:pt-12">
+        {/* Real Results — preserved; spacing only */}
+        <div className="mt-11 border-t border-white/10 pt-10 sm:mt-12 sm:pt-11">
           <header className="max-w-2xl">
             <p className="text-[0.7rem] font-semibold uppercase tracking-[0.18em] text-sky sm:text-xs">
               Real Results
@@ -162,7 +173,7 @@ export function GutterCleaningSection() {
           </p>
         </div>
 
-        <div className="mt-10 max-w-xl sm:mt-12">
+        <div className="mt-11 max-w-xl sm:mt-12">
           <h3 className="font-heading text-xl font-semibold tracking-tight text-pure sm:text-[1.35rem]">
             Keep Your Gutters Flowing Properly.
           </h3>
