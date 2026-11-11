@@ -126,20 +126,20 @@ export const propertyTypeOptions = [
 ] as const;
 
 /**
- * Verified Google Business Profile destinations (from prior Wix / GBP shortlink).
+ * Verified Google Business Profile destinations + manual rating snapshot.
  * Keep write vs listing separate so testimonial cards never open the review form.
+ * Rating / count are a curated snapshot (Student Window Cleaning Whitby) — not a live API.
  */
 export const googleBusiness = {
+  displayName: "Student Window Cleaning Whitby",
   /** Public profile / reviews listing (read testimonials). */
   reviewsListingUrl: "https://g.page/r/CXc6CEBOnm4MEBM" as string | null,
   /** Write-a-review form only — use for “Leave a Google Review”. */
   leaveReviewUrl: "https://g.page/r/CXc6CEBOnm4MEBM/review" as string | null,
-  /**
-   * Aggregate numerical rating / review count — leave null until verified in project data.
-   * Do not invent a 5.0 figure from marketing copy alone.
-   */
-  aggregateRating: null as number | null,
-  reviewCount: null as number | null,
+  /** Manually verified aggregate rating snapshot. */
+  aggregateRating: 5.0 as number | null,
+  /** Manually verified total Google review count snapshot. */
+  reviewCount: 21 as number | null,
 } as const;
 
 /**
