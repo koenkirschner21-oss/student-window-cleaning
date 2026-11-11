@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import { CopyrightYear } from "@/components/layout/CopyrightYear";
 import { Container } from "@/components/ui/Container";
@@ -37,13 +38,25 @@ export function Footer() {
 
   return (
     <footer className="border-t border-white/10 bg-midnight text-pure">
-      <Container className="grid gap-10 py-12 sm:grid-cols-2 sm:gap-x-8 sm:gap-y-10 lg:grid-cols-[1.05fr_0.8fr_0.8fr_1.4fr] lg:gap-6 lg:py-14 xl:gap-8">
-        <div className="max-w-xs space-y-4 lg:max-w-none">
+      <Container className="grid items-start gap-10 py-12 sm:grid-cols-2 sm:gap-x-10 sm:gap-y-10 lg:grid-cols-4 lg:gap-x-10 lg:gap-y-0 lg:py-14 xl:gap-x-12">
+        <div className="space-y-4">
           <div>
-            <p className="font-heading text-lg font-semibold tracking-tight text-pure sm:text-xl">
-              {site.name.toUpperCase()}
-            </p>
-            <p className="mt-2 text-sm leading-relaxed text-white/60">
+            <div className="flex items-center gap-3 sm:gap-3.5">
+              <Image
+                src="/brand/logos/worker-symbol-white.png"
+                alt=""
+                width={393}
+                height={512}
+                className="h-12 w-auto shrink-0 sm:h-14"
+                sizes="56px"
+                priority={false}
+              />
+              <p className="font-heading text-[0.95rem] font-semibold leading-[1.15] tracking-tight text-pure sm:text-lg">
+                <span className="block">STUDENT WINDOW</span>
+                <span className="block">CLEANING</span>
+              </p>
+            </div>
+            <p className="mt-3 text-sm leading-relaxed text-white/60">
               {site.tagline}
             </p>
           </div>
@@ -90,7 +103,7 @@ export function Footer() {
             <li>
               <a
                 href={contact.emailHref}
-                className={`${footerLinkClass} break-all lg:break-normal lg:whitespace-nowrap`}
+                className={`${footerLinkClass} break-all lg:break-words`}
               >
                 {contact.email}
               </a>
