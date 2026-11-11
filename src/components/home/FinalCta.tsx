@@ -1,73 +1,66 @@
-import { QuoteForm } from "@/components/quote/QuoteForm";
+import Image from "next/image";
+import { HomepageQuoteStarter } from "@/components/home/HomepageQuoteStarter";
 import { Container } from "@/components/ui/Container";
-import { site } from "@/lib/site";
-
-function GraduationCapIcon() {
-  return (
-    <svg
-      viewBox="0 0 20 20"
-      fill="none"
-      aria-hidden
-      className="size-4 shrink-0 text-sky"
-    >
-      <path
-        d="M1.5 8.2 10 3.5l8.5 4.7L10 12.9 1.5 8.2Z"
-        stroke="currentColor"
-        strokeWidth="1.4"
-        strokeLinejoin="round"
-      />
-      <path
-        d="M5.2 10.1v3.2c0 .4.9 1.7 4.8 1.7s4.8-1.3 4.8-1.7v-3.2"
-        stroke="currentColor"
-        strokeWidth="1.4"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-      <path
-        d="M18.5 8.4v4.2"
-        stroke="currentColor"
-        strokeWidth="1.4"
-        strokeLinecap="round"
-      />
-    </svg>
-  );
-}
+import { homepageQuotePhoto } from "@/lib/site";
 
 export function FinalCta() {
   return (
     <section
       id="quote"
       aria-labelledby="quote-section-heading"
-      className="relative overflow-hidden bg-midnight text-pure"
-      style={{
-        background:
-          "linear-gradient(165deg, #061A38 0%, #0A274F 48%, #061A38 100%)",
-        paddingBlock: "var(--space-section-y)",
-      }}
+      className="bg-pure text-midnight"
+      style={{ paddingBlock: "clamp(2.75rem, 6vw, 4.5rem)" }}
     >
-      <Container width="wide">
-        <div className="grid items-center gap-10 lg:grid-cols-[minmax(0,0.95fr)_minmax(0,1.05fr)] lg:gap-12 xl:gap-16">
-          <div className="max-w-xl lg:py-2">
+      <Container>
+        <div
+          className="overflow-hidden rounded-[18px] px-5 py-7 sm:px-7 sm:py-8 lg:px-9 lg:py-9"
+          style={{ backgroundColor: "#061A38" }}
+        >
+          <header className="mx-auto max-w-2xl text-center">
             <p className="text-[0.7rem] font-semibold uppercase tracking-[0.18em] text-sky sm:text-xs">
               Let&apos;s Get Started
             </p>
             <h2
               id="quote-section-heading"
-              className="font-heading mt-3 text-[clamp(1.85rem,3.4vw,2.75rem)] font-semibold tracking-tight text-pure"
+              className="font-heading mt-2.5 text-[clamp(1.75rem,3.2vw,2.45rem)] font-semibold tracking-tight text-pure"
             >
               Ready for a Clearer View?
             </h2>
-            <p className="mt-4 max-w-md text-[0.95rem] leading-relaxed text-white/72 sm:text-base">
-              Tell us what your home needs, and we&apos;ll help you find the
-              right cleaning option. No obligation, just a personalized quote.
+            <p className="mx-auto mt-3 max-w-xl text-sm leading-relaxed text-white/75 sm:text-base">
+              Tell us a little about your property and the services you need.
+              We&apos;ll help you get started with a free, personalized quote.
             </p>
-            <p className="mt-6 inline-flex items-center gap-2 text-sm font-medium text-white/55">
-              <GraduationCapIcon />
-              <span>{site.tagline}</span>
-            </p>
+          </header>
+
+          <div className="mt-7 grid items-start gap-6 lg:mt-8 lg:grid-cols-[minmax(0,0.95fr)_minmax(0,1.05fr)] lg:gap-8 xl:gap-10">
+            <div className="relative hidden overflow-hidden rounded-[14px] bg-[color-mix(in_srgb,#3999EA_12%,#061A38)] lg:block lg:aspect-[4/5] lg:max-h-[28rem] xl:max-h-[30rem]">
+              <Image
+                src={homepageQuotePhoto.src}
+                alt={homepageQuotePhoto.alt}
+                fill
+                sizes="(max-width: 1024px) 0px, 42vw"
+                className="object-cover"
+                style={{ objectPosition: homepageQuotePhoto.objectPosition }}
+                priority={false}
+              />
+            </div>
+
+            <div className="min-w-0">
+              <HomepageQuoteStarter />
+            </div>
           </div>
 
-          <QuoteForm className="w-full" />
+          {/* Mobile: photo under form only when space allows — compact landscape crop. */}
+          <div className="relative mt-6 aspect-[16/10] overflow-hidden rounded-[14px] bg-[color-mix(in_srgb,#3999EA_12%,#061A38)] sm:aspect-[16/9] lg:hidden">
+            <Image
+              src={homepageQuotePhoto.src}
+              alt={homepageQuotePhoto.alt}
+              fill
+              sizes="(max-width: 1024px) 92vw, 0px"
+              className="object-cover"
+              style={{ objectPosition: homepageQuotePhoto.objectPosition }}
+            />
+          </div>
         </div>
       </Container>
     </section>

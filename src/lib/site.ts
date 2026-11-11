@@ -179,6 +179,16 @@ export const quoteTrustPhoto: {
   alt: "Landscape view of a modern two-story home with white-trimmed windows, garage, and driveway",
 };
 
+/**
+ * Homepage final-quote panel photo (authentic property — natural colours).
+ * Portrait source framed with object-cover; not the homepage hero image.
+ */
+export const homepageQuotePhoto = {
+  src: "/home/quote-panel-worker.webp",
+  alt: "Two-storey brick home with clean white-framed windows, gutters, and landscaped front yard under a clear blue sky",
+  objectPosition: "center 42%",
+} as const;
+
 export type ServiceId = (typeof serviceOptions)[number]["id"];
 export type FrequencyId = (typeof frequencyOptions)[number]["id"];
 export type PropertyTypeId = (typeof propertyTypeOptions)[number]["id"];
@@ -202,14 +212,36 @@ export function isServiceId(
   return !!value && serviceOptions.some((option) => option.id === value);
 }
 
-/** Build a quote URL with optional service / frequency preselection. */
+export function isPropertyTypeId(
+  value: string | undefined | null,
+): value is PropertyTypeId {
+  return !!value && propertyTypeOptions.some((option) => option.id === value);
+}
+
+/** Build a quote URL with optional service / plan / property preselection. */
 export function quoteHref(options?: {
-  service?: ServiceId;
+  service?: ServiceId | ServiceId[];
+  services?: ServiceId[];
   frequency?: FrequencyId;
+  propertyType?: PropertyTypeId;
 }) {
   const params = new URLSearchParams();
-  if (options?.service) params.set("service", options.service);
+  const services = [
+    ...(options?.services ?? []),
+    ...(options?.service
+      ? Array.isArray(options.service)
+        ? options.service
+        : [options.service]
+      : []),
+  ];
+  const uniqueServices = Array.from(new Set(services));
+  if (uniqueServices.length === 1) {
+    params.set("service", uniqueServices[0]);
+  } else if (uniqueServices.length > 1) {
+    params.set("service", uniqueServices.join(","));
+  }
   if (options?.frequency) params.set("frequency", options.frequency);
+  if (options?.propertyType) params.set("propertyType", options.propertyType);
   const query = params.toString();
   return query ? `/quote?${query}` : "/quote";
 }
