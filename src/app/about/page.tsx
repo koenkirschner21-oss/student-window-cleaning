@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { AboutFinalCta } from "@/components/about/AboutFinalCta";
 import { AboutHero } from "@/components/about/AboutHero";
 import { AboutSocial } from "@/components/about/AboutSocial";
 import { BehindTheBusiness } from "@/components/about/BehindTheBusiness";
@@ -29,7 +28,6 @@ export default function AboutPage() {
       <OurStandards />
       <BehindTheBusiness />
       <AboutSocial />
-      <AboutFinalCta />
     </main>
   );
 }
