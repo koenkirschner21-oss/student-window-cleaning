@@ -10,16 +10,21 @@ import {
   type TouchEvent,
 } from "react";
 import { Container } from "@/components/ui/Container";
+import { googleBusiness } from "@/lib/site";
 
 /**
- * Official Google Business Profile reviews / write-a-review URL.
- * Leave null until verified — do not invent a public link.
+ * Write-a-review destination (CTA only).
+ * Prefer `googleBusiness.leaveReviewUrl` in `@/lib/site`.
  */
-export const GOOGLE_REVIEWS_URL: string | null = null;
+export const GOOGLE_REVIEWS_URL = googleBusiness.leaveReviewUrl;
+
+/** Public Google reviews listing — cards / badge. Never the write form. */
+const GOOGLE_REVIEWS_LISTING_URL = googleBusiness.reviewsListingUrl;
 
 /**
  * Verified Google review copy only. Do not invent quotes, names, photos,
- * dates, aggregate ratings, or review counts.
+ * dates, aggregate ratings, or review counts. A fourth card requires original
+ * wording + attribution in project data.
  */
 const reviews = [
   {
@@ -145,17 +150,17 @@ function ReviewCardBody({ review }: { review: Review }) {
 }
 
 const cardShellClass =
-  "flex h-full flex-col rounded-[15px] border border-border bg-cloud px-5 py-5 text-left no-underline shadow-none transition-[border-color,transform,box-shadow] duration-200 ease-out sm:px-6 sm:py-6 motion-safe:hover:-translate-y-[2px] hover:border-[color-mix(in_srgb,var(--color-signature-blue)_28%,var(--color-border))] motion-safe:hover:shadow-[0_8px_22px_color-mix(in_srgb,var(--color-midnight-navy)_8%,transparent)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-signature";
+  "flex h-full flex-col rounded-[15px] border border-[color-mix(in_srgb,var(--color-signature-blue)_14%,var(--color-border))] bg-[color-mix(in_srgb,var(--color-signature-blue)_5%,white)] px-5 py-5 text-left no-underline shadow-none transition-[border-color,transform,box-shadow] duration-200 ease-out sm:px-6 sm:py-6 motion-safe:hover:-translate-y-[2px] hover:border-[color-mix(in_srgb,var(--color-signature-blue)_28%,var(--color-border))] motion-safe:hover:shadow-[0_8px_22px_color-mix(in_srgb,var(--color-midnight-navy)_8%,transparent)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-signature";
 
 function ReviewCard({ review }: { review: Review }) {
-  if (GOOGLE_REVIEWS_URL) {
+  if (GOOGLE_REVIEWS_LISTING_URL) {
     return (
       <a
-        href={GOOGLE_REVIEWS_URL}
+        href={GOOGLE_REVIEWS_LISTING_URL}
         target="_blank"
         rel="noopener noreferrer"
         className={cardShellClass}
-        aria-label={`Google review from ${review.name}`}
+        aria-label={`Read Google reviews — review from ${review.name}`}
       >
         <ReviewCardBody review={review} />
       </a>
@@ -309,6 +314,7 @@ function useCarousel(pageCount: number) {
 
 function ReviewGrid({ items }: { items: readonly Review[] }) {
   const count = items.length;
+  // ≥4 → balanced 2×2; 3 → equal three-across on large screens (no fabricated fourth).
   const columns =
     count >= 4
       ? "sm:grid-cols-2"
@@ -409,21 +415,31 @@ function MobileReviews() {
 }
 
 function GoogleSummaryBadge() {
+  const numericRating =
+    googleBusiness.aggregateRating != null &&
+    googleBusiness.aggregateRating === 5
+      ? googleBusiness.aggregateRating.toFixed(1)
+      : null;
+
   const content = (
     <>
       <GoogleMark />
+      {numericRating ? (
+        <span className="text-sm font-semibold tabular-nums text-midnight">
+          {numericRating}
+        </span>
+      ) : null}
       <FiveGoldStars size="sm" />
-      {/* Numerical rating / review count omitted — not present as verified config data. */}
     </>
   );
 
   const className =
     "inline-flex items-center gap-2.5 rounded-md border border-border bg-cloud px-3.5 py-2.5";
 
-  if (GOOGLE_REVIEWS_URL) {
+  if (GOOGLE_REVIEWS_LISTING_URL) {
     return (
       <a
-        href={GOOGLE_REVIEWS_URL}
+        href={GOOGLE_REVIEWS_LISTING_URL}
         target="_blank"
         rel="noopener noreferrer"
         className={`${className} no-underline transition-colors hover:border-signature focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-signature`}
@@ -445,7 +461,7 @@ function LeaveReviewButton() {
       href={GOOGLE_REVIEWS_URL}
       target="_blank"
       rel="noopener noreferrer"
-      className="inline-flex min-h-12 shrink-0 items-center justify-center rounded-md bg-signature px-6 text-sm font-semibold tracking-tight text-pure transition-colors duration-200 hover:bg-[#0656d6] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-sky"
+      className="inline-flex min-h-12 shrink-0 items-center justify-center self-start rounded-md bg-signature px-6 text-sm font-semibold tracking-tight text-pure transition-colors duration-200 hover:bg-[#0656d6] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-sky lg:self-center"
     >
       Leave a Google Review
     </a>
