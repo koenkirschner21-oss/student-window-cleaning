@@ -128,17 +128,17 @@ export function Hero() {
         <Container className="py-8 sm:py-9">
           <ul className="grid grid-cols-1 gap-6 sm:grid-cols-3 sm:gap-0 sm:divide-x sm:divide-white/[0.1]">
             <li className="flex min-w-0 flex-col items-center justify-center gap-2.5 text-center sm:px-6 lg:px-8">
-              <span className="inline-flex shrink-0 text-signature">
+              <span className="inline-flex shrink-0 text-pure">
                 <GraduationCapIcon />
               </span>
-              <p className="font-heading text-[0.95rem] font-semibold leading-snug tracking-tight text-pure sm:text-base">
+              <p className="font-heading text-[0.84rem] font-semibold leading-snug tracking-tight text-white/75 sm:text-[0.9rem]">
                 Proudly Student-Run
               </p>
             </li>
 
             <li className="flex min-w-0 flex-col items-center justify-center gap-1.5 text-center sm:px-6 lg:px-8">
               <p
-                className="font-heading text-[1.7rem] font-extrabold leading-none tracking-tight text-pure sm:text-[1.85rem]"
+                className="font-heading text-[1.45rem] font-extrabold leading-none tracking-tight text-pure sm:text-[1.55rem]"
                 aria-hidden
               >
                 20+
@@ -151,7 +151,7 @@ export function Hero() {
 
             <li className="flex min-w-0 flex-col items-center justify-center gap-1.5 text-center sm:px-6 lg:px-8">
               <p
-                className="font-heading text-[1.7rem] font-extrabold leading-none tracking-tight text-pure sm:text-[1.85rem]"
+                className="font-heading text-[1.45rem] font-extrabold leading-none tracking-tight text-pure sm:text-[1.55rem]"
                 aria-hidden
               >
                 4+
