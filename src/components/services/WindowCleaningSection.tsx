@@ -35,7 +35,7 @@ function CheckIcon() {
 
 /**
  * Window Cleaning service section — photography-led options.
- * Intro split preserved; 4:3 option photos reuse genuine Our Work assets.
+ * Intro split preserved; 4:3 option photos use dedicated services assets.
  */
 export function WindowCleaningSection() {
   return (
@@ -85,11 +85,11 @@ export function WindowCleaningSection() {
             <figure className="m-0">
               <div className="relative aspect-[4/3] w-full overflow-hidden rounded-lg bg-cloud">
                 <Image
-                  src="/our-work/cleaning-action-bay-window.webp"
-                  alt="Student Window Cleaning team member washing the exterior glass of a residential bay window"
+                  src="/services/exterior-squeegee-soapy.webp"
+                  alt="Student Window Cleaning team member squeegeeing soapy exterior window glass"
                   fill
                   sizes="(max-width: 768px) 100vw, 36rem"
-                  className="object-cover object-[center_40%]"
+                  className="object-cover object-[55%_50%]"
                 />
               </div>
             </figure>
@@ -120,11 +120,11 @@ export function WindowCleaningSection() {
             <figure className="m-0">
               <div className="relative aspect-[4/3] w-full overflow-hidden rounded-lg bg-cloud">
                 <Image
-                  src="/our-work/cleaning-action-squeegee.webp"
-                  alt="Close-up of a Student Window Cleaning team member squeegeeing residential window glass"
+                  src="/services/interior-exterior-pole.webp"
+                  alt="Student Window Cleaning team member cleaning a window with a telescopic pole"
                   fill
                   sizes="(max-width: 768px) 100vw, 36rem"
-                  className="object-cover object-[center_35%]"
+                  className="object-cover object-[40%_50%]"
                 />
               </div>
             </figure>
