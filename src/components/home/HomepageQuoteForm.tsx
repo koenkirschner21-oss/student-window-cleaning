@@ -15,6 +15,7 @@ import {
 } from "@/lib/site";
 
 type WindowChoice = "exterior" | "interior-exterior" | null;
+type FormStep = 1 | 2;
 
 const windowChoices: { id: Exclude<WindowChoice, null>; label: string }[] = [
   { id: "exterior", label: "Exterior Window Cleaning" },
@@ -68,8 +69,12 @@ function choiceClass(selected: boolean) {
 const fieldClass =
   "mt-2 w-full rounded-md border border-border bg-pure px-3.5 py-3 text-sm text-midnight transition-colors placeholder:text-navy-muted/70 focus:border-signature focus:outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-signature";
 
+const primaryButtonClass =
+  "inline-flex min-h-12 w-full items-center justify-center rounded-md bg-signature px-6 text-sm font-semibold tracking-tight text-pure transition-colors duration-150 hover:bg-[#0656d6] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-signature disabled:cursor-not-allowed disabled:opacity-60 sm:text-base";
+
 export function HomepageQuoteForm() {
   const headingId = useId();
+  const [step, setStep] = useState<FormStep>(1);
   const [windowChoice, setWindowChoice] = useState<WindowChoice>(null);
   const [gutter, setGutter] = useState(false);
   const [propertyType, setPropertyType] = useState<PropertyTypeId | "">("");
@@ -78,7 +83,8 @@ export function HomepageQuoteForm() {
   const [email, setEmail] = useState("");
   const [address, setAddress] = useState("");
   const [notes, setNotes] = useState("");
-  const [attempted, setAttempted] = useState(false);
+  const [attemptedStep1, setAttemptedStep1] = useState(false);
+  const [attemptedStep2, setAttemptedStep2] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [successId, setSuccessId] = useState<string | null>(null);
@@ -88,16 +94,30 @@ export function HomepageQuoteForm() {
     ...(gutter ? (["gutter-cleaning"] as ServiceId[]) : []),
   ]);
 
-  const nameInvalid = attempted && !name.trim();
-  const phoneInvalid = attempted && !isValidNaPhone(phone);
-  const emailInvalid = attempted && !isValidOptionalEmail(email);
-  const addressInvalid = attempted && !address.trim();
-  const servicesInvalid = attempted && services.length === 0;
-  const propertyInvalid = attempted && !propertyType;
+  const servicesInvalid = attemptedStep1 && services.length === 0;
+  const propertyInvalid = attemptedStep1 && !propertyType;
+  const nameInvalid = attemptedStep2 && !name.trim();
+  const phoneInvalid = attemptedStep2 && !isValidNaPhone(phone);
+  const emailInvalid = attemptedStep2 && !isValidOptionalEmail(email);
+  const addressInvalid = attemptedStep2 && !address.trim();
+
+  function goToStep2() {
+    setAttemptedStep1(true);
+    setError(null);
+    if (services.length === 0 || !propertyType) return;
+    setStep(2);
+  }
+
+  function goToStep1() {
+    setError(null);
+    setStep(1);
+  }
 
   async function onSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    setAttempted(true);
+    if (step !== 2) return;
+
+    setAttemptedStep2(true);
     setError(null);
 
     if (
@@ -108,6 +128,10 @@ export function HomepageQuoteForm() {
       !isValidOptionalEmail(email) ||
       !address.trim()
     ) {
+      if (services.length === 0 || !propertyType) {
+        setStep(1);
+        setAttemptedStep1(true);
+      }
       return;
     }
 
@@ -180,235 +204,277 @@ export function HomepageQuoteForm() {
   return (
     <div className="rounded-[14px] border border-border bg-pure p-5 text-midnight sm:p-6">
       <div className="border-b border-border pb-3.5">
+        <p className="text-[0.7rem] font-semibold uppercase tracking-[0.16em] text-signature sm:text-xs">
+          Step {step} of 2
+        </p>
         <h3
           id={headingId}
-          className="font-heading text-xl font-semibold tracking-tight text-midnight sm:text-[1.35rem]"
+          className="font-heading mt-1.5 text-xl font-semibold tracking-tight text-midnight sm:text-[1.35rem]"
         >
-          Start Your Free Quote
+          {step === 1 ? "Your Cleaning Details" : "Your Contact Details"}
         </h3>
         <p className="mt-1.5 text-sm leading-relaxed text-navy-muted">
-          Share a few details and we&apos;ll prepare a personalized estimate.
+          {step === 1
+            ? "Tell us what you need cleaned to get started."
+            : "Where can we reach you about your free quote?"}
         </p>
       </div>
 
       <form
         aria-labelledby={headingId}
         onSubmit={onSubmit}
-        className="mt-4 space-y-4"
+        className="mt-4"
         noValidate
       >
-        <fieldset>
-          <legend className="text-sm font-semibold text-midnight">
-            1. What would you like cleaned?
-          </legend>
-          <div className="mt-2.5 grid grid-cols-1 gap-2">
-            <div
-              className="grid grid-cols-1 gap-2"
-              role="radiogroup"
-              aria-label="Window cleaning option"
-            >
-              {windowChoices.map((choice) => {
-                const selected = windowChoice === choice.id;
-                return (
-                  <button
-                    key={choice.id}
-                    type="button"
-                    role="radio"
-                    aria-checked={selected}
-                    onClick={() =>
-                      setWindowChoice((current) =>
-                        current === choice.id ? null : choice.id,
-                      )
-                    }
-                    className={choiceClass(selected)}
+        <div key={step} className="motion-safe:transition-opacity motion-safe:duration-200">
+          {step === 1 ? (
+            <div className="space-y-4">
+              <fieldset>
+                <legend className="text-sm font-semibold text-midnight">
+                  What would you like cleaned?
+                </legend>
+                <div className="mt-2.5 grid grid-cols-1 gap-2">
+                  <div
+                    className="grid grid-cols-1 gap-2"
+                    role="radiogroup"
+                    aria-label="Window cleaning option"
                   >
-                    <SelectionIndicator selected={selected} shape="circle" />
-                    <span>{choice.label}</span>
+                    {windowChoices.map((choice) => {
+                      const selected = windowChoice === choice.id;
+                      return (
+                        <button
+                          key={choice.id}
+                          type="button"
+                          role="radio"
+                          aria-checked={selected}
+                          onClick={() =>
+                            setWindowChoice((current) =>
+                              current === choice.id ? null : choice.id,
+                            )
+                          }
+                          className={choiceClass(selected)}
+                        >
+                          <SelectionIndicator
+                            selected={selected}
+                            shape="circle"
+                          />
+                          <span>{choice.label}</span>
+                        </button>
+                      );
+                    })}
+                  </div>
+                  <button
+                    type="button"
+                    role="checkbox"
+                    aria-checked={gutter}
+                    onClick={() => setGutter((current) => !current)}
+                    className={choiceClass(gutter)}
+                  >
+                    <SelectionIndicator selected={gutter} shape="square" />
+                    <span>Gutter Cleaning</span>
                   </button>
-                );
-              })}
-            </div>
-            <button
-              type="button"
-              role="checkbox"
-              aria-checked={gutter}
-              onClick={() => setGutter((current) => !current)}
-              className={choiceClass(gutter)}
-            >
-              <SelectionIndicator selected={gutter} shape="square" />
-              <span>Gutter Cleaning</span>
-            </button>
-          </div>
-          {servicesInvalid ? (
-            <p className="mt-2 text-sm font-medium text-red-700" role="alert">
-              Select a window option, gutter cleaning, or both.
-            </p>
-          ) : null}
-        </fieldset>
+                </div>
+                {servicesInvalid ? (
+                  <p
+                    className="mt-2 text-sm font-medium text-red-700"
+                    role="alert"
+                  >
+                    Select a window option, gutter cleaning, or both.
+                  </p>
+                ) : null}
+              </fieldset>
 
-        <fieldset>
-          <legend className="text-sm font-semibold text-midnight">
-            2. What type of property?
-          </legend>
-          <div
-            className="mt-2.5 grid grid-cols-1 gap-2 sm:grid-cols-2"
-            role="radiogroup"
-            aria-label="Property type"
-          >
-            {propertyTypeOptions.map((choice) => {
-              const selected = propertyType === choice.id;
-              const label =
-                choice.id === "detached-semi"
-                  ? "Detached / Semi-Detached"
-                  : choice.label;
-              return (
-                <button
-                  key={choice.id}
-                  type="button"
-                  role="radio"
-                  aria-checked={selected}
-                  onClick={() => setPropertyType(choice.id)}
-                  className={choiceClass(selected)}
+              <fieldset>
+                <legend className="text-sm font-semibold text-midnight">
+                  What type of property?
+                </legend>
+                <div
+                  className="mt-2.5 grid grid-cols-1 gap-2 sm:grid-cols-2"
+                  role="radiogroup"
+                  aria-label="Property type"
                 >
-                  <SelectionIndicator selected={selected} shape="circle" />
-                  <span>{label}</span>
+                  {propertyTypeOptions.map((choice) => {
+                    const selected = propertyType === choice.id;
+                    const label =
+                      choice.id === "detached-semi"
+                        ? "Detached / Semi-Detached"
+                        : choice.label;
+                    return (
+                      <button
+                        key={choice.id}
+                        type="button"
+                        role="radio"
+                        aria-checked={selected}
+                        onClick={() => setPropertyType(choice.id)}
+                        className={choiceClass(selected)}
+                      >
+                        <SelectionIndicator
+                          selected={selected}
+                          shape="circle"
+                        />
+                        <span>{label}</span>
+                      </button>
+                    );
+                  })}
+                </div>
+                {propertyInvalid ? (
+                  <p
+                    className="mt-2 text-sm font-medium text-red-700"
+                    role="alert"
+                  >
+                    Choose a property type.
+                  </p>
+                ) : null}
+              </fieldset>
+
+              <div className="pt-1">
+                <button
+                  type="button"
+                  onClick={goToStep2}
+                  className={primaryButtonClass}
+                >
+                  Continue →
                 </button>
-              );
-            })}
-          </div>
-          {propertyInvalid ? (
-            <p className="mt-2 text-sm font-medium text-red-700" role="alert">
-              Choose a property type.
-            </p>
-          ) : null}
-        </fieldset>
+                <a
+                  href={contact.phoneHref}
+                  className="mt-3 inline-flex w-full items-center justify-center gap-2 text-sm font-medium text-navy-muted transition-colors hover:text-signature focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-signature"
+                >
+                  Prefer to call? {contact.phoneDisplay}
+                </a>
+              </div>
+            </div>
+          ) : (
+            <div className="space-y-3.5">
+              <label className="block">
+                <span className="text-sm font-semibold text-midnight">
+                  Full Name
+                </span>
+                <input
+                  type="text"
+                  name="name"
+                  autoComplete="name"
+                  value={name}
+                  onChange={(event) => setName(event.target.value)}
+                  className={[
+                    fieldClass,
+                    nameInvalid ? "border-red-500" : "",
+                  ].join(" ")}
+                  aria-invalid={nameInvalid}
+                  required
+                />
+              </label>
 
-        <fieldset className="space-y-3.5">
-          <legend className="text-sm font-semibold text-midnight">
-            3. Your details
-          </legend>
+              <label className="block">
+                <span className="text-sm font-semibold text-midnight">
+                  Phone Number
+                </span>
+                <input
+                  type="tel"
+                  name="phone"
+                  autoComplete="tel"
+                  inputMode="tel"
+                  value={phone}
+                  onChange={(event) => setPhone(event.target.value)}
+                  className={[
+                    fieldClass,
+                    phoneInvalid ? "border-red-500" : "",
+                  ].join(" ")}
+                  aria-invalid={phoneInvalid}
+                  required
+                />
+              </label>
 
-          <label className="block">
-            <span className="text-sm font-semibold text-midnight">
-              Full Name
-            </span>
-            <input
-              type="text"
-              name="name"
-              autoComplete="name"
-              value={name}
-              onChange={(event) => setName(event.target.value)}
-              className={[
-                fieldClass,
-                nameInvalid ? "border-red-500" : "",
-              ].join(" ")}
-              aria-invalid={nameInvalid}
-              required
-            />
-          </label>
+              <label className="block">
+                <span className="text-sm font-semibold text-midnight">
+                  Email Address{" "}
+                  <span className="font-normal text-navy-muted">(optional)</span>
+                </span>
+                <input
+                  type="email"
+                  name="email"
+                  autoComplete="email"
+                  value={email}
+                  onChange={(event) => setEmail(event.target.value)}
+                  className={[
+                    fieldClass,
+                    emailInvalid ? "border-red-500" : "",
+                  ].join(" ")}
+                  aria-invalid={emailInvalid}
+                />
+              </label>
 
-          <label className="block">
-            <span className="text-sm font-semibold text-midnight">
-              Phone Number
-            </span>
-            <input
-              type="tel"
-              name="phone"
-              autoComplete="tel"
-              inputMode="tel"
-              value={phone}
-              onChange={(event) => setPhone(event.target.value)}
-              className={[
-                fieldClass,
-                phoneInvalid ? "border-red-500" : "",
-              ].join(" ")}
-              aria-invalid={phoneInvalid}
-              required
-            />
-          </label>
+              <div>
+                <span className="text-sm font-semibold text-midnight">
+                  Property Address
+                </span>
+                <AddressField
+                  value={address}
+                  onChange={setAddress}
+                  invalid={addressInvalid}
+                  className={fieldClass}
+                />
+              </div>
 
-          <label className="block">
-            <span className="text-sm font-semibold text-midnight">
-              Email Address{" "}
-              <span className="font-normal text-navy-muted">(optional)</span>
-            </span>
-            <input
-              type="email"
-              name="email"
-              autoComplete="email"
-              value={email}
-              onChange={(event) => setEmail(event.target.value)}
-              className={[
-                fieldClass,
-                emailInvalid ? "border-red-500" : "",
-              ].join(" ")}
-              aria-invalid={emailInvalid}
-            />
-          </label>
+              <label className="block">
+                <span className="text-sm font-semibold text-midnight">
+                  Additional Details{" "}
+                  <span className="font-normal text-navy-muted">(optional)</span>
+                </span>
+                <textarea
+                  name="notes"
+                  rows={3}
+                  value={notes}
+                  onChange={(event) => setNotes(event.target.value)}
+                  className={`${fieldClass} resize-y`}
+                />
+              </label>
 
-          <div>
-            <span className="text-sm font-semibold text-midnight">
-              Property Address
-            </span>
-            <AddressField
-              value={address}
-              onChange={setAddress}
-              invalid={addressInvalid}
-              className={fieldClass}
-            />
-          </div>
+              {error ? (
+                <p className="text-sm font-medium text-red-700" role="alert">
+                  {error}
+                </p>
+              ) : null}
 
-          <label className="block">
-            <span className="text-sm font-semibold text-midnight">
-              Additional Details{" "}
-              <span className="font-normal text-navy-muted">(optional)</span>
-            </span>
-            <textarea
-              name="notes"
-              rows={3}
-              value={notes}
-              onChange={(event) => setNotes(event.target.value)}
-              className={`${fieldClass} resize-y`}
-            />
-          </label>
-        </fieldset>
-
-        {error ? (
-          <p className="text-sm font-medium text-red-700" role="alert">
-            {error}
-          </p>
-        ) : null}
-
-        <div className="pt-1">
-          <button
-            type="submit"
-            disabled={submitting}
-            className="inline-flex min-h-12 w-full items-center justify-center rounded-md bg-signature px-6 text-sm font-semibold tracking-tight text-pure transition-colors duration-150 hover:bg-[#0656d6] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-signature disabled:cursor-not-allowed disabled:opacity-60 sm:text-base"
-          >
-            {submitting ? "Sending…" : "Get My Free Quote"}
-          </button>
-          <p className="mt-2.5 text-center text-sm text-navy-muted">
-            Free personalized quote. No obligation.
-          </p>
-          <a
-            href={contact.phoneHref}
-            className="mt-3 inline-flex w-full items-center justify-center gap-2 text-sm font-medium text-navy-muted transition-colors hover:text-signature focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-signature"
-          >
-            <svg
-              viewBox="0 0 20 20"
-              fill="none"
-              aria-hidden
-              className="size-4 text-signature"
-            >
-              <path
-                d="M3.2 4.4c.4-1 1.4-1.5 2.4-1.3l1.7.4c.9.2 1.5 1 1.5 1.9v1.5c0 .8-.5 1.5-1.2 1.8l-.8.3c.8 1.7 2.2 3.1 3.9 3.9l.3-.8c.3-.7 1-.1.2 1.2h1.5c.9 0 1.7.6 1.9 1.5l.4 1.7c.2 1-.3 2-1.3 2.4-1.2.5-2.6.3-3.8-.2C7.5 16.2 3.8 12.5 2.3 8.2c-.5-1.2-.7-2.6-.2-3.8Z"
-                stroke="currentColor"
-                strokeWidth="1.4"
-                strokeLinejoin="round"
-              />
-            </svg>
-            Prefer to call? {contact.phoneDisplay}
-          </a>
+              <div className="grid gap-2.5 pt-1 sm:grid-cols-[auto_1fr]">
+                <button
+                  type="button"
+                  onClick={goToStep1}
+                  className="inline-flex min-h-12 items-center justify-center rounded-md border border-border-strong bg-pure px-5 text-sm font-semibold tracking-tight text-midnight transition-colors duration-150 hover:border-signature hover:text-signature focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-signature"
+                >
+                  ← Back
+                </button>
+                <button
+                  type="submit"
+                  disabled={submitting}
+                  className={primaryButtonClass}
+                >
+                  {submitting ? "Sending…" : "Get My Free Quote"}
+                </button>
+              </div>
+              <p className="text-center text-sm text-navy-muted">
+                Free personalized quote. No obligation.
+              </p>
+              <a
+                href={contact.phoneHref}
+                className="inline-flex w-full items-center justify-center gap-2 text-sm font-medium text-navy-muted transition-colors hover:text-signature focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-signature"
+              >
+                <svg
+                  viewBox="0 0 20 20"
+                  fill="none"
+                  aria-hidden
+                  className="size-4 text-signature"
+                >
+                  <path
+                    d="M3.2 4.4c.4-1 1.4-1.5 2.4-1.3l1.7.4c.9.2 1.5 1 1.5 1.9v1.5c0 .8-.5 1.5-1.2 1.8l-.8.3c.8 1.7 2.2 3.1 3.9 3.9l.3-.8c.3-.7 1-.1.2 1.2h1.5c.9 0 1.7.6 1.9 1.5l.4 1.7c.2 1-.3 2-1.3 2.4-1.2.5-2.6.3-3.8-.2C7.5 16.2 3.8 12.5 2.3 8.2c-.5-1.2-.7-2.6-.2-3.8Z"
+                    stroke="currentColor"
+                    strokeWidth="1.4"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+                Prefer to call? {contact.phoneDisplay}
+              </a>
+            </div>
+          )}
         </div>
       </form>
     </div>
