@@ -13,8 +13,8 @@ const services = [
       objectPosition: "55% 50%",
     },
     inclusions: [
-      "Exterior glass",
-      "Frames & sills",
+      "Exterior window glass",
+      "Frames, sills & tracks",
       "Sliding doors & deck glass",
     ],
   },
@@ -28,9 +28,9 @@ const services = [
       objectPosition: "40% 50%",
     },
     inclusions: [
-      "Inside & outside glass",
-      "Interior & exterior frames",
-      "Sills & applicable glass surfaces",
+      "Interior & exterior window glass",
+      "Interior & exterior frames, sills & tracks",
+      "Sliding doors & deck glass",
     ],
   },
   {
@@ -44,8 +44,8 @@ const services = [
     },
     inclusions: [
       "Leaves & debris removal",
-      "Accessible gutter clearing",
-      "Seasonal maintenance",
+      "Thorough gutter clearing",
+      "Downspout blockage clearing",
     ],
   },
 ] as const;
@@ -93,7 +93,7 @@ export function OurServices() {
       style={{ paddingBlock: "var(--space-section-y)" }}
     >
       <Container>
-        <header className="max-w-2xl text-left">
+        <header className="mx-auto max-w-[42rem] text-center">
           <p className="text-[0.7rem] font-semibold uppercase tracking-[0.18em] text-signature sm:text-xs">
             What We Do
           </p>
@@ -103,19 +103,20 @@ export function OurServices() {
           >
             Our Services
           </h2>
-          <p className="mt-3 text-base leading-relaxed text-navy-muted sm:text-lg">
-            Professional window and gutter cleaning tailored to your property.
+          <p className="mx-auto mt-3 max-w-[42rem] text-base leading-relaxed text-navy-muted sm:text-lg">
+            From sparkling windows to clear gutters, discover professional
+            cleaning services tailored to your home.
           </p>
         </header>
 
-        <ul className="mt-9 grid list-none justify-items-stretch gap-6 p-0 sm:mt-10 md:grid-cols-[repeat(3,minmax(0,19.6875rem))] md:justify-start md:gap-6 lg:mt-11 lg:gap-7">
+        <ul className="mt-9 grid list-none justify-items-stretch gap-6 p-0 sm:mt-10 md:grid-cols-[repeat(3,minmax(0,19.6875rem))] md:justify-center md:gap-6 lg:mt-11 lg:gap-7">
           {services.map((service) => (
             <li key={service.id} className="min-w-0">
               <Link
                 href={service.href}
                 className="group flex h-full flex-col overflow-hidden rounded-[15px] border border-[#8D9AAF] bg-pure no-underline shadow-none transition-[border-color,transform,box-shadow] duration-200 ease-out motion-safe:hover:-translate-y-[2px] hover:border-[#6B7A94] motion-safe:hover:shadow-[0_8px_22px_color-mix(in_srgb,var(--color-midnight-navy)_10%,transparent)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-signature"
               >
-                <div className="relative aspect-[3/4] w-full overflow-hidden bg-cloud">
+                <div className="relative aspect-[4/5] w-full overflow-hidden bg-cloud">
                   <Image
                     src={service.image.src}
                     alt={service.image.alt}
@@ -190,17 +191,14 @@ export function OurServices() {
                 Give your screens a thorough clean for an even clearer finish.
                 Ask about adding screen cleaning to your personalized quote.
               </p>
-              <p className="mt-5">
+              <div className="mt-5">
                 <Link
                   href="/quote"
-                  className="inline-flex items-center gap-1.5 text-sm font-semibold text-pure transition-colors hover:text-sky focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-sky"
+                  className="inline-flex min-h-11 items-center justify-center rounded-md bg-signature px-5 text-sm font-semibold tracking-tight text-pure transition-colors duration-200 hover:bg-[#0656d6] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-sky"
                 >
                   Get a Free Quote
-                  <span aria-hidden className="translate-y-px text-base leading-none">
-                    →
-                  </span>
                 </Link>
-              </p>
+              </div>
             </div>
           </div>
         </aside>
