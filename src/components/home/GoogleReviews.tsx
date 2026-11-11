@@ -10,6 +10,10 @@ import {
   type TouchEvent,
 } from "react";
 import { Container } from "@/components/ui/Container";
+import {
+  googleReviews,
+  type GoogleReview,
+} from "@/data/google-reviews";
 import { googleBusiness } from "@/lib/site";
 
 /**
@@ -18,38 +22,11 @@ import { googleBusiness } from "@/lib/site";
  */
 export const GOOGLE_REVIEWS_URL = googleBusiness.leaveReviewUrl;
 
-/** Public Google reviews listing — cards / badge. Never the write form. */
+/** Public Google reviews listing — cards / badge fallback. Never the write form. */
 const GOOGLE_REVIEWS_LISTING_URL = googleBusiness.reviewsListingUrl;
 
-/**
- * Verified Google review copy only. Do not invent quotes, names, photos,
- * dates, aggregate ratings, or review counts. A fourth card requires original
- * wording + attribution in project data.
- */
-const reviews = [
-  {
-    id: "lindsey",
-    name: "Lindsey",
-    quote:
-      "Excellent window cleaning! Easy to work with, showed up when scheduled, and did a really solid job. Everything looked bright and streak-free afterward. Highly recommend.",
-  },
-  {
-    id: "michelle-dsouza",
-    name: "Michelle D'Souza",
-    quote:
-      "FANTASTIC job and best price in town!!!! I don't think I have EVER had my windows sooooo clean!! Great job guys!! I will definitely have you back again!",
-  },
-  {
-    id: "gavin-fregona",
-    name: "Gavin Fregona",
-    quote:
-      "Reliable and enthusiastic worker. He did a great job and my windows are sparkling clean. Highly recommend!!",
-  },
-] as const;
-
-type Review = (typeof reviews)[number];
-
 const DESKTOP_PAGE_SIZE = 4;
+const reviews = googleReviews;
 
 function initialsFor(name: string) {
   const parts = name.trim().split(/\s+/).filter(Boolean);
@@ -58,20 +35,28 @@ function initialsFor(name: string) {
   return `${parts[0].slice(0, 1)}${parts[parts.length - 1].slice(0, 1)}`.toUpperCase();
 }
 
-function FiveGoldStars({ size = "md" }: { size?: "md" | "sm" }) {
+function GoldStars({
+  rating,
+  size = "md",
+}: {
+  rating: number;
+  size?: "md" | "sm";
+}) {
+  const filled = Math.max(0, Math.min(5, Math.round(rating)));
   return (
     <span
       className="inline-flex items-center gap-[3px]"
       style={{ color: "#E9AC16" }}
-      aria-label="5 out of 5 stars"
+      aria-label={`${filled} out of 5 stars`}
     >
       {Array.from({ length: 5 }, (_, index) => (
         <svg
           key={index}
           viewBox="0 0 20 20"
-          className={
-            size === "md" ? "size-4 fill-current" : "size-3.5 fill-current"
-          }
+          className={[
+            size === "md" ? "size-4" : "size-3.5",
+            index < filled ? "fill-current" : "fill-transparent stroke-current",
+          ].join(" ")}
           aria-hidden
         >
           <path d="M10 1.8 12.4 7l5.6.8-4 3.9.9 5.6L10 14.6 5.1 17.3l.9-5.6-4-3.9L7.6 7 10 1.8Z" />
@@ -112,28 +97,41 @@ function GoogleMark({ compact = false }: { compact?: boolean }) {
   );
 }
 
-function Avatar({ name }: { name: string }) {
+function Avatar({ review }: { review: GoogleReview }) {
+  if (review.imageSrc) {
+    return (
+      // eslint-disable-next-line @next/next/no-img-element -- curated local public asset only
+      <img
+        src={review.imageSrc}
+        alt=""
+        className="size-9 shrink-0 rounded-full object-cover"
+        width={36}
+        height={36}
+      />
+    );
+  }
+
   return (
     <span
       className="inline-flex size-9 shrink-0 items-center justify-center rounded-full bg-[color-mix(in_srgb,var(--color-signature-blue)_12%,white)] text-xs font-semibold tracking-wide text-midnight"
       aria-hidden
     >
-      {initialsFor(name)}
+      {initialsFor(review.name)}
     </span>
   );
 }
 
-function ReviewCardBody({ review }: { review: Review }) {
+function ReviewCardBody({ review }: { review: GoogleReview }) {
   return (
     <>
-      <FiveGoldStars size="md" />
+      <GoldStars rating={review.rating} size="md" />
       <blockquote className="mt-3 flex-1">
-        <p className="text-sm leading-relaxed text-navy-muted sm:text-[0.95rem]">
-          {review.quote}
+        <p className="whitespace-pre-line text-sm leading-relaxed text-navy-muted sm:text-[0.95rem]">
+          {review.text}
         </p>
       </blockquote>
       <footer className="mt-5 flex items-center gap-3">
-        <Avatar name={review.name} />
+        <Avatar review={review} />
         <div className="min-w-0">
           <p className="font-heading text-sm font-semibold text-midnight">
             {review.name}
@@ -152,11 +150,17 @@ function ReviewCardBody({ review }: { review: Review }) {
 const cardShellClass =
   "flex h-full flex-col rounded-[15px] border border-[color-mix(in_srgb,var(--color-signature-blue)_14%,var(--color-border))] bg-[color-mix(in_srgb,var(--color-signature-blue)_5%,white)] px-5 py-5 text-left no-underline shadow-none transition-[border-color,transform,box-shadow] duration-200 ease-out sm:px-6 sm:py-6 motion-safe:hover:-translate-y-[2px] hover:border-[color-mix(in_srgb,var(--color-signature-blue)_28%,var(--color-border))] motion-safe:hover:shadow-[0_8px_22px_color-mix(in_srgb,var(--color-midnight-navy)_8%,transparent)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-signature";
 
-function ReviewCard({ review }: { review: Review }) {
-  if (GOOGLE_REVIEWS_LISTING_URL) {
+function reviewCardHref(review: GoogleReview) {
+  return review.directReviewUrl || GOOGLE_REVIEWS_LISTING_URL || null;
+}
+
+function ReviewCard({ review }: { review: GoogleReview }) {
+  const href = reviewCardHref(review);
+
+  if (href) {
     return (
       <a
-        href={GOOGLE_REVIEWS_LISTING_URL}
+        href={href}
         target="_blank"
         rel="noopener noreferrer"
         className={cardShellClass}
@@ -272,7 +276,7 @@ function useCarousel(pageCount: number) {
   const goTo = useCallback(
     (next: number) => {
       if (pageCount <= 1) return;
-      setPage(((next % pageCount) + pageCount) % pageCount);
+      setPage(Math.max(0, Math.min(pageCount - 1, next)));
     },
     [pageCount],
   );
@@ -312,17 +316,21 @@ function useCarousel(pageCount: number) {
   };
 }
 
-function ReviewGrid({ items }: { items: readonly Review[] }) {
+function ReviewGrid({
+  items,
+  twoByTwo,
+}: {
+  items: readonly GoogleReview[];
+  twoByTwo: boolean;
+}) {
   const count = items.length;
-  // ≥4 → balanced 2×2; 3 → equal three-across on large screens (no fabricated fourth).
-  const columns =
-    count >= 4
-      ? "sm:grid-cols-2"
-      : count === 3
-        ? "sm:grid-cols-2 lg:grid-cols-3"
-        : count === 2
-          ? "sm:grid-cols-2"
-          : "grid-cols-1";
+  const columns = twoByTwo
+    ? "sm:grid-cols-2"
+    : count === 3
+      ? "sm:grid-cols-2 lg:grid-cols-3"
+      : count === 2
+        ? "sm:grid-cols-2"
+        : "grid-cols-1";
 
   return (
     <ul className={`grid list-none items-stretch gap-5 p-0 sm:gap-6 ${columns}`}>
@@ -337,6 +345,7 @@ function ReviewGrid({ items }: { items: readonly Review[] }) {
 
 function DesktopReviews() {
   const pageCount = Math.max(1, Math.ceil(reviews.length / DESKTOP_PAGE_SIZE));
+  const twoByTwo = reviews.length >= 4;
   const { activePage, reduceMotion, goTo, onKeyDown, onTouchStart, onTouchEnd } =
     useCarousel(pageCount);
   const sliceStart = activePage * DESKTOP_PAGE_SIZE;
@@ -357,7 +366,7 @@ function DesktopReviews() {
             : "motion-safe:transition-opacity motion-safe:duration-200"
         }
       >
-        <ReviewGrid items={visible} />
+        <ReviewGrid items={visible} twoByTwo={twoByTwo} />
       </div>
       <CarouselControls
         pageCount={pageCount}
@@ -415,26 +424,31 @@ function MobileReviews() {
 }
 
 function GoogleSummaryBadge() {
-  const numericRating =
-    googleBusiness.aggregateRating != null &&
-    googleBusiness.aggregateRating === 5
+  const rating =
+    googleBusiness.aggregateRating != null
       ? googleBusiness.aggregateRating.toFixed(1)
       : null;
+  const count = googleBusiness.reviewCount;
 
   const content = (
     <>
       <GoogleMark />
-      {numericRating ? (
+      {rating ? (
         <span className="text-sm font-semibold tabular-nums text-midnight">
-          {numericRating}
+          {rating}
         </span>
       ) : null}
-      <FiveGoldStars size="sm" />
+      <GoldStars rating={googleBusiness.aggregateRating ?? 5} size="sm" />
+      {count != null ? (
+        <span className="text-sm text-navy-muted">
+          · {count} reviews
+        </span>
+      ) : null}
     </>
   );
 
   const className =
-    "inline-flex items-center gap-2.5 rounded-md border border-border bg-cloud px-3.5 py-2.5";
+    "inline-flex flex-wrap items-center gap-x-2.5 gap-y-1 rounded-md border border-border bg-cloud px-3.5 py-2.5";
 
   if (GOOGLE_REVIEWS_LISTING_URL) {
     return (
@@ -443,7 +457,11 @@ function GoogleSummaryBadge() {
         target="_blank"
         rel="noopener noreferrer"
         className={`${className} no-underline transition-colors hover:border-signature focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-signature`}
-        aria-label="Read Google reviews"
+        aria-label={
+          rating && count != null
+            ? `Google ${rating} out of 5 from ${count} reviews`
+            : "Read Google reviews"
+        }
       >
         {content}
       </a>
