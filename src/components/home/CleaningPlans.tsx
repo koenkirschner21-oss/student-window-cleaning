@@ -33,7 +33,6 @@ const plans = [
     featured: false,
     eyebrow: "Basic",
     primary: "1 Visit",
-    primaryIsSavings: false,
     label: "One-Time Cleaning",
     description:
       "A professional one-time clean whenever your home needs a refresh.",
@@ -44,7 +43,6 @@ const plans = [
     featured: true,
     badge: "Best Value",
     primary: "$50 OFF",
-    primaryIsSavings: true,
     eachVisit: true,
     label: "2 Cleaning Visits",
     description:
@@ -56,7 +54,6 @@ const plans = [
     featured: false,
     eyebrow: "Premium",
     primary: "$100 OFF",
-    primaryIsSavings: true,
     eachVisit: true,
     label: "3 Cleaning Visits",
     description:
@@ -126,11 +123,11 @@ export function CleaningPlans() {
         </header>
 
         {/*
-          Desktop: CSS subgrid shares 9 content zones across the three cards
-          (name → primary → frequency → description → 4 benefits → CTA).
-          Mobile/tablet: each card uses its own auto rows — no forced blank space.
+          Compact content-aware subgrid (6 zones). Longest content in a zone
+          sets that zone’s height — no fixed card heights or spacer rows.
+          Mobile: per-card auto rows (no desktop blank space).
         */}
-        <ul className="mt-10 grid list-none gap-6 p-0 md:grid-cols-2 lg:mt-11 lg:grid-cols-3 lg:gap-6">
+        <ul className="mt-10 grid list-none gap-x-6 gap-y-6 p-0 md:grid-cols-2 lg:mt-11 lg:grid-cols-3 lg:gap-x-6 lg:gap-y-0">
           {plans.map((plan) => {
             const featured = plan.featured;
             const planKey = plan.id as "basic" | "best-value" | "premium";
@@ -138,65 +135,63 @@ export function CleaningPlans() {
             return (
               <li
                 key={plan.id}
-                className="min-w-0 lg:row-span-9 lg:grid lg:grid-rows-subgrid"
+                className="min-w-0 lg:row-span-6 lg:grid lg:grid-rows-subgrid"
               >
                 <article
                   className={[
-                    "grid h-full w-full grid-rows-[auto_auto_auto_1fr_auto_auto_auto_auto_auto] rounded-[15px] p-6 sm:p-7 lg:row-span-9 lg:grid-rows-subgrid",
+                    "grid h-full w-full grid-rows-[repeat(6,auto)] rounded-[15px] p-6 sm:p-7 lg:row-span-6 lg:grid-rows-subgrid",
                     featured
                       ? "border border-signature bg-signature text-pure shadow-[0_10px_28px_color-mix(in_srgb,var(--color-signature-blue)_28%,transparent)]"
                       : "border border-white/15 bg-pure text-midnight",
                   ].join(" ")}
                 >
-                  {/* Zone 1 — plan name / badge */}
-                  <div className="flex min-h-[2rem] items-start">
+                  {/* Zone 1 — plan name / badge (content-sized) */}
+                  <div className="flex items-start">
                     {"badge" in plan && plan.badge ? (
                       <p className="inline-flex w-fit rounded-md bg-pure px-2.5 py-1 text-[0.65rem] font-semibold uppercase tracking-[0.14em] text-signature">
                         {plan.badge}
                       </p>
                     ) : "eyebrow" in plan && plan.eyebrow ? (
-                      <p className="pt-1 text-[0.65rem] font-semibold uppercase tracking-[0.14em] text-signature">
+                      <p className="py-1 text-[0.65rem] font-semibold uppercase tracking-[0.14em] text-signature">
                         {plan.eyebrow}
                       </p>
                     ) : null}
                   </div>
 
-                  {/* Zone 2 — main headline / savings (+ EACH VISIT) */}
-                  <div className="mt-2">
-                    <p
-                      className={[
-                        "font-heading font-extrabold tracking-tight",
-                        plan.primaryIsSavings
-                          ? "text-4xl sm:text-[2.65rem]"
-                          : "text-3xl sm:text-4xl",
-                        featured ? "text-pure" : "text-midnight",
-                      ].join(" ")}
-                    >
-                      {plan.primary}
-                    </p>
+                  {/* Zone 2 — primary offer (shared type size so lines match) */}
+                  <p
+                    className={[
+                      "font-heading mt-2 text-4xl font-extrabold tracking-tight sm:text-[2.65rem]",
+                      featured ? "text-pure" : "text-midnight",
+                    ].join(" ")}
+                  >
+                    {plan.primary}
+                  </p>
+
+                  {/* Zone 3 — supporting visit info (EACH VISIT + frequency; labels bottom-align) */}
+                  <div className="mt-1.5 flex flex-col justify-end">
                     {"eachVisit" in plan && plan.eachVisit ? (
                       <p
                         className={[
-                          "mt-1.5 text-[0.65rem] font-semibold uppercase tracking-[0.16em]",
+                          "text-[0.65rem] font-semibold uppercase tracking-[0.16em]",
                           featured ? "text-pure/80" : "text-signature",
                         ].join(" ")}
                       >
                         Each Visit
                       </p>
                     ) : null}
+                    <p
+                      className={[
+                        "text-sm font-semibold tracking-tight sm:text-[0.95rem]",
+                        "eachVisit" in plan && plan.eachVisit ? "mt-1.5" : "",
+                        featured ? "text-pure" : "text-midnight",
+                      ].join(" ")}
+                    >
+                      {plan.label}
+                    </p>
                   </div>
 
-                  {/* Zone 3 — visit-frequency supporting label */}
-                  <p
-                    className={[
-                      "mt-2 text-sm font-semibold tracking-tight sm:text-[0.95rem]",
-                      featured ? "text-pure" : "text-midnight",
-                    ].join(" ")}
-                  >
-                    {plan.label}
-                  </p>
-
-                  {/* Zone 4 — description (flexes; keeps benefits aligned) */}
+                  {/* Zone 4 — description */}
                   <p
                     className={[
                       "mt-3 text-sm leading-relaxed sm:text-[0.95rem]",
@@ -206,42 +201,52 @@ export function CleaningPlans() {
                     {plan.description}
                   </p>
 
-                  {/* Zones 5–8 — benefit rows (each a shared subgrid row on desktop) */}
-                  {benefits.map((benefit, index) => {
-                    const included = benefit.values[planKey] === "yes";
-                    return (
-                      <div
-                        key={benefit.label}
-                        className={[
-                          "flex items-start gap-2.5 py-2.5 text-sm leading-snug",
-                          index === 0
-                            ? featured
-                              ? "mt-5 border-t border-white/15"
-                              : "mt-5 border-t border-[color-mix(in_srgb,var(--color-midnight-navy)_8%,transparent)]"
-                            : featured
-                              ? "border-t border-white/15"
-                              : "border-t border-[color-mix(in_srgb,var(--color-midnight-navy)_8%,transparent)]",
-                          featured
-                            ? included
-                              ? "text-white/90"
-                              : "text-white/45"
-                            : included
-                              ? "text-navy-muted"
-                              : "text-[#8D9AAF]",
-                        ].join(" ")}
-                      >
-                        {included ? (
-                          <CheckIcon light={featured} />
-                        ) : (
-                          <CrossIcon light={featured} />
-                        )}
-                        <span>{benefit.label}</span>
-                      </div>
-                    );
-                  })}
+                  {/* Zone 5 — four benefit rows (equal internal tracks; zone height = content) */}
+                  <ul
+                    className={[
+                      "mt-4 grid list-none grid-rows-4 content-start p-0",
+                      featured
+                        ? "border-t border-white/15"
+                        : "border-t border-[color-mix(in_srgb,var(--color-midnight-navy)_8%,transparent)]",
+                    ].join(" ")}
+                    aria-label={`${plan.id} benefits`}
+                  >
+                    {benefits.map((benefit, index) => {
+                      const included = benefit.values[planKey] === "yes";
+                      return (
+                        <li
+                          key={benefit.label}
+                          className={[
+                            "flex items-start gap-2.5 py-2 text-sm leading-snug",
+                            index > 0
+                              ? featured
+                                ? "border-t border-white/15"
+                                : "border-t border-[color-mix(in_srgb,var(--color-midnight-navy)_8%,transparent)]"
+                              : "",
+                            featured
+                              ? included
+                                ? "text-white/90"
+                                : "text-white/45"
+                              : included
+                                ? "text-navy-muted"
+                                : "text-[#8D9AAF]",
+                          ]
+                            .filter(Boolean)
+                            .join(" ")}
+                        >
+                          {included ? (
+                            <CheckIcon light={featured} />
+                          ) : (
+                            <CrossIcon light={featured} />
+                          )}
+                          <span>{benefit.label}</span>
+                        </li>
+                      );
+                    })}
+                  </ul>
 
-                  {/* Zone 9 — CTA */}
-                  <div className="pt-7">
+                  {/* Zone 6 — CTA */}
+                  <div className="pt-6">
                     <Link
                       href={quoteHref({ frequency: plan.frequency })}
                       className={[
