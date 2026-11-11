@@ -126,6 +126,23 @@ export const propertyTypeOptions = [
 ] as const;
 
 /**
+ * Verified Google Business Profile destinations (from prior Wix / GBP shortlink).
+ * Keep write vs listing separate so testimonial cards never open the review form.
+ */
+export const googleBusiness = {
+  /** Public profile / reviews listing (read testimonials). */
+  reviewsListingUrl: "https://g.page/r/CXc6CEBOnm4MEBM" as string | null,
+  /** Write-a-review form only — use for “Leave a Google Review”. */
+  leaveReviewUrl: "https://g.page/r/CXc6CEBOnm4MEBM/review" as string | null,
+  /**
+   * Aggregate numerical rating / review count — leave null until verified in project data.
+   * Do not invent a 5.0 figure from marketing copy alone.
+   */
+  aggregateRating: null as number | null,
+  reviewCount: null as number | null,
+} as const;
+
+/**
  * Address autocomplete config.
  * Activates Google Places when `NEXT_PUBLIC_GOOGLE_PLACES_API_KEY` is set at build time.
  * Never hardcode API keys.
