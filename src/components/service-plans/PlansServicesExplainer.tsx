@@ -13,9 +13,9 @@ const services = [
       "Accessible frames, sills and tracks",
     ],
     image: {
-      src: "/about/about-hero-student-window-cleaning.webp",
-      alt: "Student Window Cleaning team member cleaning exterior residential glass with a squeegee",
-      position: "object-[center_18%]",
+      src: "/our-work/exterior-squeegee-soapy.webp",
+      alt: "Student Window Cleaning team member squeegeeing soapy exterior window glass",
+      position: "object-[55%_50%]",
     },
   },
   {
@@ -28,9 +28,9 @@ const services = [
       "Accessible interior and exterior frames, sills and tracks",
     ],
     image: {
-      src: "/our-work/cleaning-action-squeegee.webp",
-      alt: "Close-up of a Student Window Cleaning team member squeegeeing residential window glass",
-      position: "object-[center_35%]",
+      src: "/our-work/interior-exterior-pole.webp",
+      alt: "Student Window Cleaning team member cleaning a window with a telescopic pole",
+      position: "object-[40%_50%]",
     },
   },
   {
@@ -40,9 +40,9 @@ const services = [
       "Debris removal and accessible downspout clearing to help keep water flowing properly.",
     checks: ["Gutter debris removal", "Accessible downspout clearing"],
     image: {
-      src: "/our-work/gutter-detail-debris.webp",
-      alt: "Close-up of a residential gutter holding leaf debris along a shingle roofline",
-      position: "object-center",
+      src: "/our-work/gutter-cleaning-hose.webp",
+      alt: "Student Window Cleaning team member flushing a residential gutter with a hose from a ladder",
+      position: "object-[center_45%]",
     },
   },
 ] as const;
