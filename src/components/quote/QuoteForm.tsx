@@ -24,6 +24,7 @@ type QuoteFormProps = {
   className?: string;
   initialFrequency?: FrequencyId | "";
   initialServices?: ServiceId[];
+  initialPropertyType?: PropertyTypeId | "";
 };
 
 type FormState = {
@@ -187,15 +188,22 @@ export function QuoteForm({
   className = "",
   initialFrequency = "",
   initialServices = [],
+  initialPropertyType = "",
 }: QuoteFormProps) {
   const seededServices = normalizeInitialServices(initialServices);
   const seededFrequency = seedPlan(seededServices, initialFrequency);
+  const seededPropertyType = propertyTypeOptions.some(
+    (option) => option.id === initialPropertyType,
+  )
+    ? initialPropertyType
+    : "";
 
   const [step, setStep] = useState<1 | 2>(1);
   const [form, setForm] = useState<FormState>({
     ...initialState,
     services: seededServices,
     frequency: seededFrequency,
+    propertyType: seededPropertyType,
   });
   const [stepError, setStepError] = useState<string | null>(null);
   const [gutterPlanHint, setGutterPlanHint] = useState(false);

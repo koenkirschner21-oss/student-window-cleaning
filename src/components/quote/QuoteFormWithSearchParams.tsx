@@ -2,7 +2,12 @@
 
 import { useSearchParams } from "next/navigation";
 import { QuoteForm } from "@/components/quote/QuoteForm";
-import { isFrequencyId, isServiceId, type ServiceId } from "@/lib/site";
+import {
+  isFrequencyId,
+  isPropertyTypeId,
+  isServiceId,
+  type ServiceId,
+} from "@/lib/site";
 
 function parseServices(raw: string | null): ServiceId[] {
   if (!raw) return [];
@@ -17,11 +22,16 @@ export function QuoteFormWithSearchParams() {
   const rawFrequency = searchParams.get("frequency");
   const initialFrequency = isFrequencyId(rawFrequency) ? rawFrequency : "";
   const initialServices = parseServices(searchParams.get("service"));
+  const rawPropertyType = searchParams.get("propertyType");
+  const initialPropertyType = isPropertyTypeId(rawPropertyType)
+    ? rawPropertyType
+    : "";
 
   return (
     <QuoteForm
       initialFrequency={initialFrequency}
       initialServices={initialServices}
+      initialPropertyType={initialPropertyType}
     />
   );
 }
