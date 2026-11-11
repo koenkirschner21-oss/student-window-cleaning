@@ -1,45 +1,66 @@
 import Link from "next/link";
 import { Container } from "@/components/ui/Container";
+import { quoteHref, type QuotePlanId } from "@/lib/site";
+
+type BenefitValue = "yes" | "no";
+
+const benefits = [
+  {
+    label: "Professional cleaning visit(s)",
+    values: { basic: "yes", "best-value": "yes", premium: "yes" },
+  },
+  {
+    label: "No automatic recurring subscription",
+    values: { basic: "yes", "best-value": "yes", premium: "yes" },
+  },
+  {
+    label: "Multi-visit discounts",
+    values: { basic: "no", "best-value": "yes", premium: "yes" },
+  },
+  {
+    label: "Three planned visits",
+    values: { basic: "no", "best-value": "no", premium: "yes" },
+  },
+] as const satisfies ReadonlyArray<{
+  label: string;
+  values: Record<"basic" | "best-value" | "premium", BenefitValue>;
+}>;
 
 const plans = [
   {
     id: "basic",
-    name: "Basic",
-    visits: "1 Visit",
-    description: "A professional one-time clean whenever you need it.",
-    inclusions: [
-      "One cleaning visit",
-      "Choice of cleaning services",
-      "No ongoing commitment",
-    ],
-    href: "/quote?frequency=one-time",
+    frequency: "one-time" as QuotePlanId,
     featured: false,
+    eyebrow: "Basic",
+    primary: "1 Visit",
+    primaryIsSavings: false,
+    label: "One-Time Cleaning",
+    description:
+      "A professional one-time clean whenever your home needs a refresh.",
   },
   {
     id: "best-value",
-    name: "Best Value",
-    visits: "2 Visits",
-    description: "Seasonal window care made simple.",
-    inclusions: [
-      "Two cleaning visits",
-      "Choice of cleaning services",
-      "Convenient seasonal maintenance",
-    ],
-    href: "/quote?frequency=two-visit",
+    frequency: "two-visit" as QuotePlanId,
     featured: true,
+    badge: "Best Value",
+    primary: "$50 OFF",
+    primaryIsSavings: true,
+    eachVisit: true,
+    label: "2 Cleaning Visits",
+    description:
+      "Enjoy seasonal window cleaning with savings on both visits.",
   },
   {
     id: "premium",
-    name: "Premium",
-    visits: "3 Visits",
-    description: "More frequent care for consistently clean windows.",
-    inclusions: [
-      "Three cleaning visits",
-      "Choice of cleaning services",
-      "More frequent seasonal maintenance",
-    ],
-    href: "/quote?frequency=three-visit",
+    frequency: "three-visit" as QuotePlanId,
     featured: false,
+    eyebrow: "Premium",
+    primary: "$100 OFF",
+    primaryIsSavings: true,
+    eachVisit: true,
+    label: "3 Cleaning Visits",
+    description:
+      "More frequent cleaning, with greater savings on every visit.",
   },
 ] as const;
 
@@ -49,7 +70,7 @@ function CheckIcon({ light }: { light?: boolean }) {
       viewBox="0 0 16 16"
       fill="none"
       aria-hidden
-      className={`mt-0.5 size-3.5 shrink-0 ${light ? "text-sky" : "text-signature"}`}
+      className={`mt-0.5 size-3.5 shrink-0 ${light ? "text-pure" : "text-signature"}`}
     >
       <path
         d="M3.2 8.2 6.4 11.3 12.8 4.7"
@@ -62,102 +83,160 @@ function CheckIcon({ light }: { light?: boolean }) {
   );
 }
 
+function CrossIcon({ light }: { light?: boolean }) {
+  return (
+    <svg
+      viewBox="0 0 16 16"
+      fill="none"
+      aria-hidden
+      className={`mt-0.5 size-3.5 shrink-0 ${light ? "text-white/40" : "text-[#8D9AAF]"}`}
+    >
+      <path
+        d="M4.2 4.2 11.8 11.8M11.8 4.2 4.2 11.8"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+      />
+    </svg>
+  );
+}
+
 export function CleaningPlans() {
   return (
     <section
       id="cleaning-plans"
       aria-labelledby="cleaning-plans-heading"
-      className="bg-ice text-midnight"
-      style={{ paddingBlock: "var(--space-section-y)" }}
+      className="bg-midnight text-pure py-20 lg:py-24"
     >
       <Container>
-        <div className="max-w-2xl">
-          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-signature">
+        <header className="max-w-2xl text-left">
+          <p className="text-[0.7rem] font-semibold uppercase tracking-[0.18em] text-signature sm:text-xs">
             Our Cleaning Plans
           </p>
           <h2
             id="cleaning-plans-heading"
-            className="font-heading mt-3 text-3xl font-semibold tracking-tight text-midnight sm:text-4xl"
+            className="font-heading mt-3 text-[2.375rem] font-bold leading-tight tracking-tight text-pure sm:text-[2.5rem] lg:text-[2.75rem]"
           >
-            A Clearer View, All Season Long.
+            More Visits. Bigger Savings.
           </h2>
-          <p className="mt-3 text-base leading-relaxed text-navy-muted sm:text-lg">
-            Choose the right level of care for your home, from a one-time
-            refresh to recurring cleaning.
+          <p className="mt-3 max-w-xl text-base leading-relaxed text-white/65 sm:text-lg">
+            Choose a one-time clean or save on every visit with our seasonal
+            cleaning plans. Find the right level of care for your home.
           </p>
-        </div>
+        </header>
 
-        <ul className="mt-10 grid items-stretch gap-5 md:grid-cols-2 lg:mt-12 lg:grid-cols-3 lg:gap-6">
+        <ul className="mt-10 grid list-none items-stretch gap-6 p-0 md:grid-cols-2 lg:mt-11 lg:grid-cols-3 lg:gap-6">
           {plans.map((plan) => {
             const featured = plan.featured;
+            const planKey = plan.id as "basic" | "best-value" | "premium";
+
             return (
               <li key={plan.id} className="flex min-w-0">
                 <article
                   className={[
-                    "relative flex w-full flex-col rounded-lg border p-6 sm:p-7",
+                    "relative flex w-full flex-col rounded-[15px] p-6 sm:p-7",
                     featured
-                      ? "border-midnight bg-midnight text-pure shadow-[0_18px_40px_color-mix(in_srgb,var(--color-midnight-navy)_18%,transparent)] lg:-translate-y-1"
-                      : "border-border bg-pure text-midnight",
+                      ? "border border-signature bg-signature text-pure shadow-[0_10px_28px_color-mix(in_srgb,var(--color-signature-blue)_28%,transparent)]"
+                      : "border border-white/15 bg-pure text-midnight",
                   ].join(" ")}
                 >
-                  {featured ? (
-                    <p className="mb-3 inline-flex w-fit rounded-md bg-signature px-2.5 py-1 text-[0.65rem] font-semibold uppercase tracking-[0.14em] text-pure">
-                      Recommended
+                  {"badge" in plan && plan.badge ? (
+                    <p className="mb-3 inline-flex w-fit rounded-md bg-pure px-2.5 py-1 text-[0.65rem] font-semibold uppercase tracking-[0.14em] text-signature">
+                      {plan.badge}
+                    </p>
+                  ) : "eyebrow" in plan && plan.eyebrow ? (
+                    <p className="text-[0.65rem] font-semibold uppercase tracking-[0.14em] text-signature">
+                      {plan.eyebrow}
                     </p>
                   ) : null}
 
                   <p
                     className={[
-                      "text-[0.65rem] font-semibold uppercase tracking-[0.14em]",
-                      featured ? "text-sky" : "text-signature",
+                      "font-heading font-extrabold tracking-tight",
+                      featured || !("eyebrow" in plan && plan.eyebrow)
+                        ? "mt-0"
+                        : "mt-2",
+                      plan.primaryIsSavings
+                        ? "text-4xl sm:text-[2.65rem]"
+                        : "text-3xl sm:text-4xl",
+                      featured ? "text-pure" : "text-midnight",
                     ].join(" ")}
                   >
-                    {plan.name}
+                    {plan.primary}
                   </p>
+
+                  {"eachVisit" in plan && plan.eachVisit ? (
+                    <p
+                      className={[
+                        "mt-1.5 text-[0.65rem] font-semibold uppercase tracking-[0.16em]",
+                        featured ? "text-pure/80" : "text-signature",
+                      ].join(" ")}
+                    >
+                      Each Visit
+                    </p>
+                  ) : null}
 
                   <p
                     className={[
-                      "font-heading mt-2 font-extrabold tracking-tight",
-                      featured
-                        ? "text-3xl text-pure sm:text-4xl"
-                        : "text-3xl text-midnight sm:text-4xl",
+                      "mt-2 text-sm font-semibold tracking-tight sm:text-[0.95rem]",
+                      featured ? "text-pure" : "text-midnight",
                     ].join(" ")}
                   >
-                    {plan.visits}
+                    {plan.label}
                   </p>
 
                   <p
                     className={[
                       "mt-3 text-sm leading-relaxed sm:text-[0.95rem]",
-                      featured ? "text-white/75" : "text-navy-muted",
+                      featured ? "text-white/80" : "text-navy-muted",
                     ].join(" ")}
                   >
                     {plan.description}
                   </p>
 
-                  <ul className="mt-5 space-y-2.5">
-                    {plan.inclusions.map((item) => (
-                      <li
-                        key={item}
-                        className={[
-                          "flex items-start gap-2 text-sm leading-snug",
-                          featured ? "text-white/85" : "text-navy-muted",
-                        ].join(" ")}
-                      >
-                        <CheckIcon light={featured} />
-                        <span>{item}</span>
-                      </li>
-                    ))}
+                  <ul className="mt-5 list-none p-0" aria-label={`${plan.id} benefits`}>
+                    {benefits.map((benefit, index) => {
+                      const included = benefit.values[planKey] === "yes";
+                      return (
+                        <li
+                          key={benefit.label}
+                          className={[
+                            "flex items-start gap-2.5 py-2.5 text-sm leading-snug",
+                            index > 0
+                              ? featured
+                                ? "border-t border-white/15"
+                                : "border-t border-[color-mix(in_srgb,var(--color-midnight-navy)_8%,transparent)]"
+                              : "",
+                            featured
+                              ? included
+                                ? "text-white/90"
+                                : "text-white/45"
+                              : included
+                                ? "text-navy-muted"
+                                : "text-[#8D9AAF]",
+                          ]
+                            .filter(Boolean)
+                            .join(" ")}
+                        >
+                          {included ? (
+                            <CheckIcon light={featured} />
+                          ) : (
+                            <CrossIcon light={featured} />
+                          )}
+                          <span>{benefit.label}</span>
+                        </li>
+                      );
+                    })}
                   </ul>
 
                   <div className="mt-auto pt-7">
                     <Link
-                      href={plan.href}
+                      href={quoteHref({ frequency: plan.frequency })}
                       className={[
-                        "inline-flex min-h-12 w-full items-center justify-center rounded-md px-5 text-sm font-semibold tracking-tight transition-colors duration-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-signature",
+                        "inline-flex min-h-12 w-full items-center justify-center rounded-md px-5 text-sm font-semibold tracking-tight transition-colors duration-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-3",
                         featured
-                          ? "bg-signature text-pure hover:bg-[#0656d6]"
-                          : "border border-signature/40 bg-transparent text-signature hover:border-signature hover:bg-ice",
+                          ? "bg-pure text-signature hover:bg-ice focus-visible:outline-pure"
+                          : "border border-signature/45 bg-transparent text-signature hover:border-signature hover:bg-ice focus-visible:outline-signature",
                       ].join(" ")}
                     >
                       Get a Free Quote
@@ -172,9 +251,9 @@ export function CleaningPlans() {
         <p className="mt-8">
           <Link
             href="/cleaning-plans"
-            className="inline-flex items-center gap-1.5 text-sm font-semibold text-midnight transition-colors hover:text-signature focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-signature"
+            className="inline-flex items-center gap-1.5 text-sm font-semibold text-pure transition-colors hover:text-sky focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-sky"
           >
-            Explore Cleaning Plans
+            Explore All Cleaning Plans
             <span aria-hidden className="translate-y-px">
               →
             </span>
