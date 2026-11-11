@@ -17,12 +17,12 @@ export function PlansComparison() {
             id="plans-comparison-heading"
             className="font-heading text-3xl font-semibold tracking-tight text-midnight sm:text-[2.15rem] sm:leading-tight"
           >
-            Find the Right Cleaning Plan
+            Save Up to $100 on Every Visit.
           </h2>
           <p className="mt-3 text-base leading-relaxed text-navy-muted">
-            From a one-time refresh to regular seasonal care, choose the plan
-            that fits your home. Every option starts with a free personalized
-            quote.
+            Keep your windows looking their best while saving with our seasonal
+            cleaning plans. Choose a one-time clean or schedule multiple visits
+            throughout the year.
           </p>
         </div>
 
