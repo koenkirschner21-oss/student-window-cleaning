@@ -8,11 +8,11 @@ function GraduationCapIcon() {
       viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"
-      strokeWidth="1.75"
+      strokeWidth="1.7"
       strokeLinecap="round"
       strokeLinejoin="round"
       aria-hidden
-      className="size-6 sm:size-[1.65rem]"
+      className="size-8 sm:size-[2.05rem]"
     >
       <path d="M2.5 9.5 12 4.5l9.5 5-9.5 5-9.5-5Z" />
       <path d="M6.5 11.6v4.2c0 .3 2.4 2.7 5.5 2.7s5.5-2.4 5.5-2.7v-4.2" />
@@ -24,7 +24,7 @@ function GraduationCapIcon() {
 function FiveGoldStars() {
   return (
     <span
-      className="inline-flex shrink-0 items-center gap-[2px]"
+      className="inline-flex items-center justify-center gap-[3px]"
       style={{ color: "#E9AC16" }}
       aria-hidden
     >
@@ -32,7 +32,7 @@ function FiveGoldStars() {
         <svg
           key={index}
           viewBox="0 0 20 20"
-          className="size-[0.85rem] fill-current sm:size-[0.95rem]"
+          className="size-[0.9rem] fill-current sm:size-[1rem]"
         >
           <path d="M10 1.8 12.4 7l5.6.8-4 3.9.9 5.6L10 14.6 5.1 17.3l.9-5.6-4-3.9L7.6 7 10 1.8Z" />
         </svg>
@@ -125,40 +125,38 @@ export function Hero() {
         aria-label="Trust highlights"
         className="border-t border-white/[0.1]"
       >
-        <Container className="py-5 sm:py-6">
-          <ul className="grid grid-cols-1 gap-5 sm:grid-cols-3 sm:gap-0 sm:divide-x sm:divide-white/[0.1]">
-            <li className="flex min-w-0 items-center justify-center gap-3 sm:justify-start sm:pr-8 lg:pr-10">
-              <span className="inline-flex shrink-0 text-sky">
+        <Container className="py-8 sm:py-9">
+          <ul className="grid grid-cols-1 gap-6 sm:grid-cols-3 sm:gap-0 sm:divide-x sm:divide-white/[0.1]">
+            <li className="flex min-w-0 flex-col items-center justify-center gap-2.5 text-center sm:px-6 lg:px-8">
+              <span className="inline-flex shrink-0 text-signature">
                 <GraduationCapIcon />
               </span>
-              <p className="font-heading text-[0.9rem] font-semibold tracking-tight text-pure sm:text-[0.95rem]">
+              <p className="font-heading text-[0.95rem] font-semibold leading-snug tracking-tight text-pure sm:text-base">
                 Proudly Student-Run
               </p>
             </li>
 
-            <li className="flex min-w-0 items-center justify-center gap-2.5 sm:px-8 lg:px-10">
+            <li className="flex min-w-0 flex-col items-center justify-center gap-1.5 text-center sm:px-6 lg:px-8">
               <p
-                className="font-heading text-[1.55rem] font-extrabold leading-none tracking-tight text-pure sm:text-[1.7rem]"
+                className="font-heading text-[1.7rem] font-extrabold leading-none tracking-tight text-pure sm:text-[1.85rem]"
                 aria-hidden
               >
                 20+
               </p>
-              <div className="flex min-w-0 flex-col gap-1">
-                <FiveGoldStars />
-                <p className="font-heading text-[0.8rem] font-semibold tracking-tight text-white/75 sm:text-[0.84rem]">
-                  <span className="sr-only">20+ </span>5-Star Google Reviews
-                </p>
-              </div>
+              <FiveGoldStars />
+              <p className="font-heading text-[0.84rem] font-semibold leading-snug tracking-tight text-white/75 sm:text-[0.9rem]">
+                <span className="sr-only">20+ </span>5-Star Google Reviews
+              </p>
             </li>
 
-            <li className="flex min-w-0 items-center justify-center gap-2.5 sm:justify-end sm:pl-8 lg:pl-10">
+            <li className="flex min-w-0 flex-col items-center justify-center gap-1.5 text-center sm:px-6 lg:px-8">
               <p
-                className="font-heading text-[1.55rem] font-extrabold leading-none tracking-tight text-pure sm:text-[1.7rem]"
+                className="font-heading text-[1.7rem] font-extrabold leading-none tracking-tight text-pure sm:text-[1.85rem]"
                 aria-hidden
               >
                 4+
               </p>
-              <p className="font-heading text-[0.8rem] font-semibold tracking-tight text-white/75 sm:text-[0.84rem]">
+              <p className="font-heading text-[0.84rem] font-semibold leading-snug tracking-tight text-white/75 sm:text-[0.9rem]">
                 <span className="sr-only">4+ </span>Years in Business
               </p>
             </li>
