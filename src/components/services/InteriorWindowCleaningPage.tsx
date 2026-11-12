@@ -386,11 +386,11 @@ export function InteriorWindowCleaningPage() {
         eyebrow="Complete Your Window Cleaning"
         headline="Give Both Sides the Attention They Deserve."
         description="A clean interior makes a difference, but outdoor dirt and buildup can still affect your view. Add exterior window cleaning for a complete inside-and-out refresh."
-        image={{
-          src: "/our-work/cleaning-action-branded-scrub.webp",
-          alt: "Student Window Cleaning team member scrubbing exterior window glass in a branded uniform",
-          objectPosition: "object-[50%_35%]",
-        }}
+        points={[
+          "Inside & Outside Clean",
+          "Better Overall Results",
+          "One Convenient Quote",
+        ]}
         imageOnRight
       />
 

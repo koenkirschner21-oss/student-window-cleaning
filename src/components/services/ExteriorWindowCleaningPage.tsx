@@ -386,12 +386,12 @@ export function ExteriorWindowCleaningPage() {
         headingId="exterior-cross-sell-heading"
         eyebrow="Complete Your Window Cleaning"
         headline="Don't Stop at the Outside."
-        description="Your exterior windows look their best when the inside is just as clean. Combine interior and exterior window cleaning for a complete, clearer view throughout your home."
-        image={{
-          src: "/services/interior-exterior-pole.webp",
-          alt: "Student Window Cleaning team member cleaning accessible window glass with a telescopic pole",
-          objectPosition: "object-[40%_50%]",
-        }}
+        description="Exterior windows look their best when the inside is just as clean. Add interior window cleaning for a complete, clearer view throughout your home."
+        points={[
+          "Clearer Inside & Out",
+          "More Complete Finish",
+          "One Convenient Quote",
+        ]}
       />
 
       <CleaningProcessSection
