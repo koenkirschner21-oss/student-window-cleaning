@@ -11,7 +11,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Interior Window Cleaning | Student Window Cleaning",
     description:
-      "Enjoy clearer views from inside your home with careful interior window cleaning by our local student-run team.",
+      "Bring more natural light into your home with professional interior window cleaning from our local student-run team.",
     url: "/services/interior-window-cleaning",
   },
 };
