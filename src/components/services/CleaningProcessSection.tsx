@@ -1,3 +1,4 @@
+import Image from "next/image";
 import type { ReactNode } from "react";
 import { Container } from "@/components/ui/Container";
 
@@ -6,6 +7,10 @@ export type CleaningProcessStep = {
   title: string;
   description: string;
   icon?: ReactNode;
+  image?: {
+    src: string;
+    alt: string;
+  };
 };
 
 const defaultSteps: readonly CleaningProcessStep[] = [
@@ -44,7 +49,8 @@ type CleaningProcessSectionProps = {
 };
 
 /**
- * Open 4-step cleaning process timeline — reused on dedicated window pages.
+ * Open 4-step cleaning process — reused on dedicated window pages.
+ * Supports icon/timeline or photographic card layouts based on step data.
  */
 export function CleaningProcessSection({
   eyebrow = "How We Work",
@@ -54,6 +60,7 @@ export function CleaningProcessSection({
   tone = "cloud",
 }: CleaningProcessSectionProps) {
   const isNavy = tone === "navy";
+  const usesPhotos = steps.every((step) => Boolean(step.image));
   const ringTone =
     tone === "cloud" ? "ring-cloud" : tone === "white" ? "ring-pure" : "ring-[#061A38]";
 
@@ -97,122 +104,168 @@ export function CleaningProcessSection({
           </p>
         </div>
 
-        {/* Desktop */}
-        <ol className="relative mt-10 hidden list-none p-0 md:mt-11 md:grid md:grid-cols-4 md:gap-x-6 lg:gap-x-8">
-          {!isNavy ? (
-            <div
-              aria-hidden
-              className={`pointer-events-none absolute right-[12.5%] left-[12.5%] h-px bg-[color-mix(in_srgb,var(--color-midnight-navy)_18%,transparent)] ${
-                steps.some((step) => step.icon) ? "top-[5.15rem]" : "top-[3.15rem]"
-              }`}
-            />
-          ) : null}
-
-          {steps.map((step) => (
-            <li
-              key={step.number}
-              className="relative flex flex-col items-center text-center"
-            >
-              {isNavy && step.icon ? (
-                <>
-                  <span className="inline-flex size-[3.75rem] items-center justify-center rounded-[0.85rem] bg-[#0A274F] text-signature">
-                    {step.icon}
-                  </span>
-                  <span className="mt-3 text-[0.75rem] font-semibold tracking-[0.14em] text-sky tabular-nums">
-                    {step.number}
-                  </span>
-                </>
-              ) : (
-                <>
-                  <span className="font-heading text-[2.35rem] font-semibold leading-none tracking-tight text-midnight tabular-nums lg:text-[2.6rem]">
-                    {step.number}
-                  </span>
-                  {step.icon ? (
-                    <span className="mt-3 inline-flex size-10 items-center justify-center text-signature">
-                      {step.icon}
-                    </span>
-                  ) : null}
-                  <span
-                    aria-hidden
-                    className={`relative z-[1] size-2.5 shrink-0 rounded-full bg-signature ring-[3px] ${ringTone} ${step.icon ? "mt-3" : "mt-3.5"}`}
+        {usesPhotos ? (
+          <ol className="mt-10 grid list-none grid-cols-1 gap-7 p-0 sm:mt-11 sm:grid-cols-2 sm:gap-6 lg:grid-cols-4 lg:gap-5">
+            {steps.map((step) => (
+              <li
+                key={step.number}
+                className="flex min-w-0 flex-col items-center text-center"
+              >
+                <figure className="relative m-0 aspect-[16/11] w-full overflow-hidden rounded-[12px] bg-[#0A274F]">
+                  <Image
+                    src={step.image!.src}
+                    alt={step.image!.alt}
+                    fill
+                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+                    className="object-cover object-center"
                   />
-                </>
-              )}
-              <h3
-                className={`font-heading mt-3 text-base font-semibold tracking-tight lg:text-[1.05rem] ${
-                  isNavy ? "text-pure" : "text-midnight"
-                }`}
-              >
-                {step.title}
-              </h3>
-              <p
-                className={`mt-2 max-w-[16.5rem] text-sm leading-relaxed ${
-                  isNavy ? "text-white/70" : "text-navy-muted"
-                }`}
-              >
-                {step.description}
-              </p>
-            </li>
-          ))}
-        </ol>
-
-        {/* Mobile */}
-        <ol className="relative mt-9 list-none space-y-7 p-0 md:hidden">
-          {!isNavy ? (
-            <div
-              aria-hidden
-              className="pointer-events-none absolute top-3 bottom-3 left-[0.6875rem] w-px bg-[color-mix(in_srgb,var(--color-midnight-navy)_18%,transparent)]"
-            />
-          ) : null}
-
-          {steps.map((step) => (
-            <li
-              key={step.number}
-              className={`relative flex gap-4 ${isNavy ? "items-start" : ""}`}
-            >
-              {isNavy && step.icon ? (
-                <span className="inline-flex size-12 shrink-0 items-center justify-center rounded-[0.75rem] bg-[#0A274F] text-signature">
-                  {step.icon}
-                </span>
-              ) : (
+                </figure>
                 <span
-                  aria-hidden
-                  className={`relative z-[1] mt-1.5 size-2.5 shrink-0 rounded-full bg-signature ring-[3px] ${ringTone}`}
-                />
-              )}
-              <div className="min-w-0 flex-1">
-                {isNavy ? (
-                  <span className="text-[0.7rem] font-semibold tracking-[0.14em] text-sky tabular-nums">
-                    {step.number}
-                  </span>
-                ) : (
-                  <div className="flex items-center gap-3">
-                    <span className="font-heading text-[1.65rem] font-semibold leading-none tracking-tight text-midnight tabular-nums">
-                      {step.number}
-                    </span>
-                    {step.icon ? (
-                      <span className="inline-flex text-signature">{step.icon}</span>
-                    ) : null}
-                  </div>
-                )}
+                  className={`mt-3.5 text-[0.75rem] font-semibold tracking-[0.14em] tabular-nums ${
+                    isNavy ? "text-sky" : "text-signature"
+                  }`}
+                >
+                  {step.number}
+                </span>
                 <h3
-                  className={`font-heading mt-1.5 text-[1.05rem] font-semibold tracking-tight ${
+                  className={`font-heading mt-1.5 text-base font-semibold tracking-tight lg:text-[1.05rem] ${
                     isNavy ? "text-pure" : "text-midnight"
                   }`}
                 >
                   {step.title}
                 </h3>
                 <p
-                  className={`mt-1.5 text-sm leading-relaxed ${
+                  className={`mt-2 max-w-[17rem] text-sm leading-relaxed ${
                     isNavy ? "text-white/70" : "text-navy-muted"
                   }`}
                 >
                   {step.description}
                 </p>
-              </div>
-            </li>
-          ))}
-        </ol>
+              </li>
+            ))}
+          </ol>
+        ) : (
+          <>
+            {/* Desktop */}
+            <ol className="relative mt-10 hidden list-none p-0 md:mt-11 md:grid md:grid-cols-4 md:gap-x-6 lg:gap-x-8">
+              {!isNavy ? (
+                <div
+                  aria-hidden
+                  className={`pointer-events-none absolute right-[12.5%] left-[12.5%] h-px bg-[color-mix(in_srgb,var(--color-midnight-navy)_18%,transparent)] ${
+                    steps.some((step) => step.icon) ? "top-[5.15rem]" : "top-[3.15rem]"
+                  }`}
+                />
+              ) : null}
+
+              {steps.map((step) => (
+                <li
+                  key={step.number}
+                  className="relative flex flex-col items-center text-center"
+                >
+                  {isNavy && step.icon ? (
+                    <>
+                      <span className="inline-flex size-[3.75rem] items-center justify-center rounded-[0.85rem] bg-[#0A274F] text-signature">
+                        {step.icon}
+                      </span>
+                      <span className="mt-3 text-[0.75rem] font-semibold tracking-[0.14em] text-sky tabular-nums">
+                        {step.number}
+                      </span>
+                    </>
+                  ) : (
+                    <>
+                      <span className="font-heading text-[2.35rem] font-semibold leading-none tracking-tight text-midnight tabular-nums lg:text-[2.6rem]">
+                        {step.number}
+                      </span>
+                      {step.icon ? (
+                        <span className="mt-3 inline-flex size-10 items-center justify-center text-signature">
+                          {step.icon}
+                        </span>
+                      ) : null}
+                      <span
+                        aria-hidden
+                        className={`relative z-[1] size-2.5 shrink-0 rounded-full bg-signature ring-[3px] ${ringTone} ${step.icon ? "mt-3" : "mt-3.5"}`}
+                      />
+                    </>
+                  )}
+                  <h3
+                    className={`font-heading mt-3 text-base font-semibold tracking-tight lg:text-[1.05rem] ${
+                      isNavy ? "text-pure" : "text-midnight"
+                    }`}
+                  >
+                    {step.title}
+                  </h3>
+                  <p
+                    className={`mt-2 max-w-[16.5rem] text-sm leading-relaxed ${
+                      isNavy ? "text-white/70" : "text-navy-muted"
+                    }`}
+                  >
+                    {step.description}
+                  </p>
+                </li>
+              ))}
+            </ol>
+
+            {/* Mobile */}
+            <ol className="relative mt-9 list-none space-y-7 p-0 md:hidden">
+              {!isNavy ? (
+                <div
+                  aria-hidden
+                  className="pointer-events-none absolute top-3 bottom-3 left-[0.6875rem] w-px bg-[color-mix(in_srgb,var(--color-midnight-navy)_18%,transparent)]"
+                />
+              ) : null}
+
+              {steps.map((step) => (
+                <li
+                  key={step.number}
+                  className={`relative flex gap-4 ${isNavy ? "items-start" : ""}`}
+                >
+                  {isNavy && step.icon ? (
+                    <span className="inline-flex size-12 shrink-0 items-center justify-center rounded-[0.75rem] bg-[#0A274F] text-signature">
+                      {step.icon}
+                    </span>
+                  ) : (
+                    <span
+                      aria-hidden
+                      className={`relative z-[1] mt-1.5 size-2.5 shrink-0 rounded-full bg-signature ring-[3px] ${ringTone}`}
+                    />
+                  )}
+                  <div className="min-w-0 flex-1">
+                    {isNavy ? (
+                      <span className="text-[0.7rem] font-semibold tracking-[0.14em] text-sky tabular-nums">
+                        {step.number}
+                      </span>
+                    ) : (
+                      <div className="flex items-center gap-3">
+                        <span className="font-heading text-[1.65rem] font-semibold leading-none tracking-tight text-midnight tabular-nums">
+                          {step.number}
+                        </span>
+                        {step.icon ? (
+                          <span className="inline-flex text-signature">
+                            {step.icon}
+                          </span>
+                        ) : null}
+                      </div>
+                    )}
+                    <h3
+                      className={`font-heading mt-1.5 text-[1.05rem] font-semibold tracking-tight ${
+                        isNavy ? "text-pure" : "text-midnight"
+                      }`}
+                    >
+                      {step.title}
+                    </h3>
+                    <p
+                      className={`mt-1.5 text-sm leading-relaxed ${
+                        isNavy ? "text-white/70" : "text-navy-muted"
+                      }`}
+                    >
+                      {step.description}
+                    </p>
+                  </div>
+                </li>
+              ))}
+            </ol>
+          </>
+        )}
       </Container>
     </section>
   );

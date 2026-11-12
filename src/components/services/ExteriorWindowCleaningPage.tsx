@@ -86,19 +86,35 @@ function InclusionIcon({
   }
 
   if (kind === "frame") {
+    // Window frame with sill shelf and track groove — reads as frames/sills/tracks
     return (
       <svg viewBox="0 0 24 24" fill="none" aria-hidden className={className}>
         <rect
-          x="3.5"
-          y="5"
-          width="17"
-          height="14"
-          rx="1.5"
+          x="4"
+          y="3.5"
+          width="16"
+          height="13"
+          rx="1.25"
           stroke="currentColor"
           strokeWidth="1.75"
         />
+        <rect
+          x="6.25"
+          y="5.75"
+          width="11.5"
+          height="8.5"
+          rx="0.75"
+          stroke="currentColor"
+          strokeWidth="1.5"
+        />
         <path
-          d="M3.5 16.5h17M8 5v11.5"
+          d="M3.5 18.25h17"
+          stroke="currentColor"
+          strokeWidth="1.75"
+          strokeLinecap="round"
+        />
+        <path
+          d="M5.5 20.5h13"
           stroke="currentColor"
           strokeWidth="1.75"
           strokeLinecap="round"
@@ -127,119 +143,39 @@ function InclusionIcon({
     );
   }
 
+  // Deck / outdoor glass railing panels
   return (
     <svg viewBox="0 0 24 24" fill="none" aria-hidden className={className}>
       <path
-        d="M4 18h16"
+        d="M3.5 19.5h17"
         stroke="currentColor"
         strokeWidth="1.75"
         strokeLinecap="round"
       />
       <path
-        d="M6 18V9.5L12 6l6 3.5V18"
-        stroke="currentColor"
-        strokeWidth="1.75"
-        strokeLinejoin="round"
-      />
-      <path
-        d="M9.5 18v-5h5v5"
-        stroke="currentColor"
-        strokeWidth="1.75"
-        strokeLinejoin="round"
-      />
-    </svg>
-  );
-}
-
-function ProcessIcon({ kind }: { kind: "wash" | "squeegee" | "frame" | "sill" }) {
-  const className = "size-7";
-
-  if (kind === "wash") {
-    return (
-      <svg viewBox="0 0 24 24" fill="none" aria-hidden className={className}>
-        <path
-          d="M12 3.5v3.25M7.5 5.75l1.5 2.25M16.5 5.75 15 8"
-          stroke="currentColor"
-          strokeWidth="1.75"
-          strokeLinecap="round"
-        />
-        <path
-          d="M8.5 11.5c0 3.2 1.6 5.5 3.5 7.5 1.9-2 3.5-4.3 3.5-7.5a3.5 3.5 0 1 0-7 0Z"
-          stroke="currentColor"
-          strokeWidth="1.75"
-          strokeLinejoin="round"
-        />
-      </svg>
-    );
-  }
-
-  if (kind === "squeegee") {
-    return (
-      <svg viewBox="0 0 24 24" fill="none" aria-hidden className={className}>
-        <path
-          d="M4.5 5.75h15"
-          stroke="currentColor"
-          strokeWidth="1.75"
-          strokeLinecap="round"
-        />
-        <path
-          d="M6 5.75v2.5c0 .85.55 1.6 1.35 1.85L12 11.75l4.65-1.65c.8-.25 1.35-1 1.35-1.85v-2.5"
-          stroke="currentColor"
-          strokeWidth="1.75"
-          strokeLinejoin="round"
-        />
-        <path
-          d="M12 11.75V19.5"
-          stroke="currentColor"
-          strokeWidth="1.75"
-          strokeLinecap="round"
-        />
-        <path
-          d="M10.25 19.5h3.5"
-          stroke="currentColor"
-          strokeWidth="1.75"
-          strokeLinecap="round"
-        />
-      </svg>
-    );
-  }
-
-  if (kind === "frame") {
-    return (
-      <svg viewBox="0 0 24 24" fill="none" aria-hidden className={className}>
-        <rect
-          x="4"
-          y="4"
-          width="16"
-          height="16"
-          rx="1.5"
-          stroke="currentColor"
-          strokeWidth="1.75"
-        />
-        <path d="M12 4v16M4 12h16" stroke="currentColor" strokeWidth="1.75" />
-      </svg>
-    );
-  }
-
-  return (
-    <svg viewBox="0 0 24 24" fill="none" aria-hidden className={className}>
-      <path
-        d="M4 17.5h16"
+        d="M4.5 19.5V8.25M19.5 19.5V8.25"
         stroke="currentColor"
         strokeWidth="1.75"
         strokeLinecap="round"
       />
       <path
-        d="M6 17.5V8.5h12v9"
-        stroke="currentColor"
-        strokeWidth="1.75"
-        strokeLinejoin="round"
-      />
-      <path
-        d="M8.5 12.5h7"
+        d="M3.75 8.25h16.5"
         stroke="currentColor"
         strokeWidth="1.75"
         strokeLinecap="round"
+      />
+      <path
+        d="M9.25 8.25V19.5M14.75 8.25V19.5"
+        stroke="currentColor"
+        strokeWidth="1.75"
+        strokeLinecap="round"
+      />
+      <path
+        d="M5.75 11.25h2.75M11.25 14h2.5M15.5 11.25h2.75"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        opacity="0.85"
       />
     </svg>
   );
@@ -251,28 +187,40 @@ const exteriorSteps = [
     title: "Wash the Glass",
     description:
       "We hand-scrub the glass to loosen dirt, dust, and outdoor buildup.",
-    icon: <ProcessIcon kind="wash" />,
+    image: {
+      src: "/services/process/step-01-wash.webp",
+      alt: "Student Window Cleaning team member scrubbing exterior window glass with a professional washer",
+    },
   },
   {
     number: "02",
     title: "Squeegee the Glass",
     description:
       "We remove the cleaning solution using professional squeegee techniques for a clear, streak-free finish.",
-    icon: <ProcessIcon kind="squeegee" />,
+    image: {
+      src: "/services/process/step-02-squeegee.webp",
+      alt: "Student Window Cleaning team member squeegeeing soapy exterior window glass for a streak-free finish",
+    },
   },
   {
     number: "03",
     title: "Detail the Frame",
     description:
       "We carefully detail the window edges and applicable exterior frames.",
-    icon: <ProcessIcon kind="frame" />,
+    image: {
+      src: "/services/process/step-03-detail-frame.webp",
+      alt: "Close-up of a microfiber cloth detailing the edge where window glass meets the white frame",
+    },
   },
   {
     number: "04",
     title: "Clean Sills & Tracks",
     description:
       "We finish by cleaning applicable exterior sills and tracks.",
-    icon: <ProcessIcon kind="sill" />,
+    image: {
+      src: "/services/process/step-04-sills-tracks.webp",
+      alt: "Gloved hands wiping a window sill and track with a blue microfiber cloth",
+    },
   },
 ] as const;
 
