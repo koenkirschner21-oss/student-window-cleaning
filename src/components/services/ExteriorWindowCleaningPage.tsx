@@ -4,6 +4,7 @@ import { CleaningProcessSection } from "@/components/services/CleaningProcessSec
 import { ScreenCleaningAddon } from "@/components/services/ScreenCleaningAddon";
 import { ServicePageCta } from "@/components/services/ServicePageCta";
 import { ServicePageHero } from "@/components/services/ServicePageHero";
+import { WindowCleaningCrossSell } from "@/components/services/WindowCleaningCrossSell";
 import { CleaningPlanCards } from "@/components/service-plans/CleaningPlanCards";
 import { Container } from "@/components/ui/Container";
 import { quoteHref } from "@/lib/site";
@@ -379,6 +380,18 @@ export function ExteriorWindowCleaningPage() {
       <ScreenCleaningAddon
         headingId="exterior-screen-addon-heading"
         service="exterior"
+      />
+
+      <WindowCleaningCrossSell
+        headingId="exterior-cross-sell-heading"
+        eyebrow="Complete Your Window Cleaning"
+        headline="Don't Stop at the Outside."
+        description="Your exterior windows look their best when the inside is just as clean. Combine interior and exterior window cleaning for a complete, clearer view throughout your home."
+        image={{
+          src: "/services/interior-exterior-pole.webp",
+          alt: "Student Window Cleaning team member cleaning accessible window glass with a telescopic pole",
+          objectPosition: "object-[40%_50%]",
+        }}
       />
 
       <CleaningProcessSection

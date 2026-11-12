@@ -4,6 +4,7 @@ import { CleaningProcessSection } from "@/components/services/CleaningProcessSec
 import { ScreenCleaningAddon } from "@/components/services/ScreenCleaningAddon";
 import { ServicePageCta } from "@/components/services/ServicePageCta";
 import { ServicePageHero } from "@/components/services/ServicePageHero";
+import { WindowCleaningCrossSell } from "@/components/services/WindowCleaningCrossSell";
 import { CleaningPlanCards } from "@/components/service-plans/CleaningPlanCards";
 import { Container } from "@/components/ui/Container";
 import { quoteHref } from "@/lib/site";
@@ -273,11 +274,11 @@ export function InteriorWindowCleaningPage() {
 
               <figure className="relative m-0 min-h-[14rem] border-t border-border lg:min-h-[18rem] lg:border-l lg:border-t-0">
                 <Image
-                  src="/services/interior-exterior-pole.webp"
-                  alt="Student Window Cleaning team member cleaning a residential window with a telescopic pole"
+                  src="/services/process/step-03-detail-frame.webp"
+                  alt="Close-up of careful window-frame detailing with a microfiber cloth"
                   fill
                   sizes="(max-width: 1024px) 100vw, 48vw"
-                  className="object-cover object-[40%_50%]"
+                  className="object-cover object-center"
                   priority
                 />
               </figure>
@@ -378,6 +379,19 @@ export function InteriorWindowCleaningPage() {
       <ScreenCleaningAddon
         headingId="interior-screen-addon-heading"
         service="interior-exterior"
+      />
+
+      <WindowCleaningCrossSell
+        headingId="interior-cross-sell-heading"
+        eyebrow="Complete Your Window Cleaning"
+        headline="Give Both Sides the Attention They Deserve."
+        description="A clean interior makes a difference, but outdoor dirt and buildup can still affect your view. Add exterior window cleaning for a complete inside-and-out refresh."
+        image={{
+          src: "/our-work/cleaning-action-branded-scrub.webp",
+          alt: "Student Window Cleaning team member scrubbing exterior window glass in a branded uniform",
+          objectPosition: "object-[50%_35%]",
+        }}
+        imageOnRight
       />
 
       <CleaningProcessSection
