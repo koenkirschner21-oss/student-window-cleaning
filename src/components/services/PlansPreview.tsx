@@ -9,7 +9,7 @@ export function PlansPreview() {
   return (
     <section
       aria-labelledby="services-plans-heading"
-      className="bg-ice text-midnight"
+      className="bg-pure text-midnight"
       style={{ paddingBlock: "var(--space-section-y)" }}
     >
       <Container>
