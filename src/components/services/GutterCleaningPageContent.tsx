@@ -147,13 +147,13 @@ export function GutterCleaningPageContent() {
                 </p>
               </div>
 
-              <figure className="relative m-0 min-h-[16rem] border-t border-border sm:min-h-[18rem] lg:min-h-[20rem] lg:border-l lg:border-t-0">
+              <figure className="relative m-0 min-h-[17rem] border-t border-border sm:min-h-[19rem] lg:min-h-[22rem] lg:border-l lg:border-t-0">
                 <Image
                   src="/services/gutter-cleaning-hose.webp"
                   alt="Team member on a ladder flushing a residential roof gutter with a hose nozzle"
                   fill
                   sizes="(max-width: 1024px) 100vw, 48vw"
-                  className="object-cover object-[center_35%]"
+                  className="object-cover object-[72%_78%] sm:object-[74%_80%] lg:object-[76%_82%]"
                   priority
                 />
               </figure>
@@ -254,19 +254,12 @@ export function GutterCleaningPageContent() {
             </div>
           </div>
 
-          <div className="mt-9 flex flex-col items-center text-center sm:mt-10">
-            <h3 className="font-heading text-[clamp(1.35rem,2.4vw,1.65rem)] font-semibold tracking-tight text-pure">
-              Keep Your Gutters Flowing Properly.
-            </h3>
-            <p className="mt-2.5 max-w-lg text-sm leading-relaxed text-white/70 sm:text-base">
-              Tell us about your property and we&apos;ll prepare a free,
-              personalized gutter-cleaning quote.
-            </p>
+          <div className="mt-8 flex justify-center sm:mt-9">
             <Link
               href={quoteHref({ service: "gutter-cleaning" })}
-              className="mt-5 inline-flex min-h-12 items-center justify-center rounded-md bg-signature px-7 text-sm font-semibold tracking-tight text-pure transition-colors duration-200 hover:bg-[#0656d6] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-sky"
+              className="inline-flex min-h-12 items-center justify-center rounded-md bg-signature px-7 text-sm font-semibold tracking-tight text-pure transition-colors duration-200 hover:bg-[#0656d6] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-sky"
             >
-              Get a Free Quote
+              Get a Free Gutter Cleaning Quote
             </Link>
           </div>
         </Container>
