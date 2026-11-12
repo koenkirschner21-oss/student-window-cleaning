@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { quoteHref, type FrequencyId } from "@/lib/site";
+import { quoteHref, type FrequencyId, type ServiceId } from "@/lib/site";
 
 export type CleaningPlanCard = {
   id: string;
@@ -88,12 +88,17 @@ function CheckIcon({ light }: { light?: boolean }) {
 type CleaningPlanCardsProps = {
   /** Extra classes for the outer grid (spacing variants). */
   className?: string;
+  /** Optional service preselect combined with each plan frequency. */
+  service?: ServiceId;
 };
 
 /**
  * Three equal-height plan cards with frequency-preselect quote CTAs.
  */
-export function CleaningPlanCards({ className = "" }: CleaningPlanCardsProps) {
+export function CleaningPlanCards({
+  className = "",
+  service,
+}: CleaningPlanCardsProps) {
   return (
     <ul
       className={[
@@ -209,7 +214,10 @@ export function CleaningPlanCards({ className = "" }: CleaningPlanCardsProps) {
 
               <div className="mt-auto pt-6">
                 <Link
-                  href={quoteHref({ frequency: plan.frequency })}
+                  href={quoteHref({
+                    frequency: plan.frequency,
+                    ...(service ? { service } : {}),
+                  })}
                   className={[
                     "inline-flex min-h-12 w-full items-center justify-center rounded-md px-5 text-sm font-semibold tracking-tight transition-colors duration-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-3",
                     featured

@@ -1,9 +1,11 @@
+import type { ReactNode } from "react";
 import { Container } from "@/components/ui/Container";
 
 export type CleaningProcessStep = {
   number: string;
   title: string;
   description: string;
+  icon?: ReactNode;
 };
 
 const defaultSteps: readonly CleaningProcessStep[] = [
@@ -52,6 +54,7 @@ export function CleaningProcessSection({
   tone = "cloud",
 }: CleaningProcessSectionProps) {
   const ringTone = tone === "cloud" ? "ring-cloud" : "ring-pure";
+  const hasIcons = steps.some((step) => step.icon);
 
   return (
     <section
@@ -79,7 +82,7 @@ export function CleaningProcessSection({
         <ol className="relative mt-10 hidden list-none p-0 md:mt-11 md:grid md:grid-cols-4 md:gap-x-6 lg:gap-x-8">
           <div
             aria-hidden
-            className="pointer-events-none absolute top-[3.15rem] right-[12.5%] left-[12.5%] h-px bg-[color-mix(in_srgb,var(--color-midnight-navy)_18%,transparent)]"
+            className={`pointer-events-none absolute right-[12.5%] left-[12.5%] h-px bg-[color-mix(in_srgb,var(--color-midnight-navy)_18%,transparent)] ${hasIcons ? "top-[5.15rem]" : "top-[3.15rem]"}`}
           />
 
           {steps.map((step) => (
@@ -90,9 +93,14 @@ export function CleaningProcessSection({
               <span className="font-heading text-[2.35rem] font-semibold leading-none tracking-tight text-midnight tabular-nums lg:text-[2.6rem]">
                 {step.number}
               </span>
+              {step.icon ? (
+                <span className="mt-3 inline-flex size-10 items-center justify-center text-signature">
+                  {step.icon}
+                </span>
+              ) : null}
               <span
                 aria-hidden
-                className={`relative z-[1] mt-3.5 size-2.5 shrink-0 rounded-full bg-signature ring-[3px] ${ringTone}`}
+                className={`relative z-[1] size-2.5 shrink-0 rounded-full bg-signature ring-[3px] ${ringTone} ${step.icon ? "mt-3" : "mt-3.5"}`}
               />
               <h3 className="font-heading mt-4 text-base font-semibold tracking-tight text-midnight lg:text-[1.05rem]">
                 {step.title}
@@ -117,9 +125,14 @@ export function CleaningProcessSection({
                 className={`relative z-[1] mt-1.5 size-2.5 shrink-0 rounded-full bg-signature ring-[3px] ${ringTone}`}
               />
               <div className="min-w-0 flex-1">
-                <span className="font-heading text-[1.65rem] font-semibold leading-none tracking-tight text-midnight tabular-nums">
-                  {step.number}
-                </span>
+                <div className="flex items-center gap-3">
+                  <span className="font-heading text-[1.65rem] font-semibold leading-none tracking-tight text-midnight tabular-nums">
+                    {step.number}
+                  </span>
+                  {step.icon ? (
+                    <span className="inline-flex text-signature">{step.icon}</span>
+                  ) : null}
+                </div>
                 <h3 className="font-heading mt-2 text-[1.05rem] font-semibold tracking-tight text-midnight">
                   {step.title}
                 </h3>

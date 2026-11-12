@@ -3,6 +3,7 @@ import { Container } from "@/components/ui/Container";
 import { contact, quoteHref, type ServiceId } from "@/lib/site";
 
 type ServicePageCtaProps = {
+  eyebrow?: string;
   headline: string;
   supporting: string;
   service?: ServiceId;
@@ -12,6 +13,7 @@ type ServicePageCtaProps = {
  * Contained navy quote CTA used on dedicated service pages.
  */
 export function ServicePageCta({
+  eyebrow = "Get a Free Quote",
   headline,
   supporting,
   service,
@@ -28,7 +30,7 @@ export function ServicePageCta({
           style={{ backgroundColor: "#061A38" }}
         >
           <p className="text-[0.7rem] font-semibold uppercase tracking-[0.18em] text-[#3999EA] sm:text-xs">
-            Get a Free Quote
+            {eyebrow}
           </p>
           <h2
             id="service-page-cta-heading"
