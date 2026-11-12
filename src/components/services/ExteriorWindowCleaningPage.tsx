@@ -392,6 +392,7 @@ export function ExteriorWindowCleaningPage() {
           "More Complete Finish",
           "One Convenient Quote",
         ]}
+        imageOnRight
       />
 
       <CleaningProcessSection
