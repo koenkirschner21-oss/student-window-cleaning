@@ -7,6 +7,12 @@ import { CleaningPlanCards } from "@/components/service-plans/CleaningPlanCards"
 import { Container } from "@/components/ui/Container";
 import { quoteHref } from "@/lib/site";
 
+const introBenefits = [
+  "Hand-Scrubbed Glass",
+  "Detailed Finish",
+  "Local Student Team",
+] as const;
+
 const featureChecks = [
   "Exterior window glass, hand-scrubbed and cleaned",
   "Exterior frames, sills and tracks",
@@ -14,32 +20,27 @@ const featureChecks = [
   "Deck glass and outdoor glass panels",
 ] as const;
 
-const inclusionGroups = [
-  {
-    title: "Exterior Window Glass",
-    description:
-      "Hand-scrubbing helps loosen outdoor dirt and buildup before the glass receives a clean, polished finish.",
-    icon: "glass" as const,
-  },
-  {
-    title: "Frames, Sills & Tracks",
-    description:
-      "We pay attention to applicable exterior window details so the surrounding areas receive care too.",
-    icon: "frame" as const,
-  },
-  {
-    title: "Doors & Garage Windows",
-    description:
-      "Our service includes exterior glass on entry doors, sliding doors, and garage windows.",
-    icon: "door" as const,
-  },
-  {
-    title: "Deck Glass",
-    description:
-      "Outdoor glass panels receive professional cleaning to help your deck look clean and welcoming.",
-    icon: "deck" as const,
-  },
+const inclusionSummaries = [
+  { title: "Exterior Glass", icon: "glass" as const },
+  { title: "Frames, Sills & Tracks", icon: "frame" as const },
+  { title: "Doors & Garage Windows", icon: "door" as const },
+  { title: "Deck Glass", icon: "deck" as const },
 ] as const;
+
+function CheckCircleIcon({ className = "size-4" }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 16 16" fill="none" aria-hidden className={className}>
+      <circle cx="8" cy="8" r="6.25" stroke="currentColor" strokeWidth="1.5" />
+      <path
+        d="M5.1 8.15 7.05 10l3.85-4.1"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
 
 function CheckIcon() {
   return (
@@ -62,11 +63,11 @@ function CheckIcon() {
 
 function InclusionIcon({
   kind,
+  className = "size-9",
 }: {
-  kind: (typeof inclusionGroups)[number]["icon"];
+  kind: (typeof inclusionSummaries)[number]["icon"];
+  className?: string;
 }) {
-  const className = "size-6 shrink-0 text-signature";
-
   if (kind === "glass") {
     return (
       <svg viewBox="0 0 24 24" fill="none" aria-hidden className={className}>
@@ -151,7 +152,7 @@ function InclusionIcon({
 }
 
 function ProcessIcon({ kind }: { kind: "wash" | "squeegee" | "frame" | "sill" }) {
-  const className = "size-6";
+  const className = "size-7";
 
   if (kind === "wash") {
     return (
@@ -176,19 +177,25 @@ function ProcessIcon({ kind }: { kind: "wash" | "squeegee" | "frame" | "sill" })
     return (
       <svg viewBox="0 0 24 24" fill="none" aria-hidden className={className}>
         <path
-          d="M5 6.5h14"
+          d="M4.5 5.75h15"
           stroke="currentColor"
           strokeWidth="1.75"
           strokeLinecap="round"
         />
         <path
-          d="M6.5 6.5v2.25c0 .7.45 1.3 1.1 1.55L12 12.5l4.4-2.2c.65-.25 1.1-.85 1.1-1.55V6.5"
+          d="M6 5.75v2.5c0 .85.55 1.6 1.35 1.85L12 11.75l4.65-1.65c.8-.25 1.35-1 1.35-1.85v-2.5"
           stroke="currentColor"
           strokeWidth="1.75"
           strokeLinejoin="round"
         />
         <path
-          d="M12 12.5V20"
+          d="M12 11.75V19.5"
+          stroke="currentColor"
+          strokeWidth="1.75"
+          strokeLinecap="round"
+        />
+        <path
+          d="M10.25 19.5h3.5"
           stroke="currentColor"
           strokeWidth="1.75"
           strokeLinecap="round"
@@ -278,7 +285,7 @@ export function ExteriorWindowCleaningPage() {
         description="Professional exterior glass cleaning for homes across Whitby and Durham Region, delivered by our local student-run team."
       />
 
-      {/* Approved introduction */}
+      {/* Introduction */}
       <section
         aria-labelledby="exterior-intro-heading"
         className="bg-white text-midnight"
@@ -298,11 +305,24 @@ export function ExteriorWindowCleaningPage() {
                   A Cleaner View Starts Outside.
                 </h2>
                 <p className="mt-4 max-w-md text-base leading-relaxed text-navy-muted">
-                  Give your home a brighter, well-maintained appearance with
-                  professional exterior window cleaning from our local
-                  student-run team. We take care of the glass and the details
-                  that make a difference.
+                  Give your home a fresh, polished look with exterior window
+                  cleaning from our local student-run team. From the glass to
+                  the finishing details, we take care of the work that makes
+                  your home shine.
                 </p>
+                <ul className="mt-5 flex flex-wrap gap-x-5 gap-y-2.5">
+                  {introBenefits.map((item) => (
+                    <li
+                      key={item}
+                      className="inline-flex items-center gap-2 text-sm font-semibold tracking-tight text-midnight"
+                    >
+                      <span className="text-signature">
+                        <CheckCircleIcon />
+                      </span>
+                      <span>{item}</span>
+                    </li>
+                  ))}
+                </ul>
               </div>
 
               <figure className="relative m-0 min-h-[14rem] border-t border-border lg:min-h-[18rem] lg:border-l lg:border-t-0">
@@ -324,7 +344,9 @@ export function ExteriorWindowCleaningPage() {
       <section
         aria-labelledby="exterior-included-heading"
         className="bg-white text-midnight"
-        style={{ paddingBlock: "clamp(1.5rem, 3vw, 2.5rem) clamp(3.25rem, 5.5vw, 4.75rem)" }}
+        style={{
+          paddingBlock: "clamp(1.5rem, 3vw, 2.5rem) clamp(3.25rem, 5.5vw, 4.75rem)",
+        }}
       >
         <Container width="portfolio">
           <div className="mx-auto max-w-2xl text-center">
@@ -356,18 +378,18 @@ export function ExteriorWindowCleaningPage() {
                 />
               </figure>
               <div className="flex flex-col justify-center px-5 py-7 sm:px-7 sm:py-8 lg:px-9 lg:py-10">
-                <h3 className="font-heading text-[1.35rem] font-semibold tracking-tight text-midnight sm:text-[1.5rem]">
+                <h3 className="font-heading text-[1.45rem] font-semibold tracking-tight text-midnight sm:text-[1.65rem]">
                   A Complete Exterior Clean.
                 </h3>
                 <p className="mt-3 text-base leading-relaxed text-navy-muted">
                   We hand-scrub exterior glass and pay attention to the details
                   around each window for a thorough, professional result.
                 </p>
-                <ul className="mt-5 space-y-2.5">
+                <ul className="mt-6 space-y-3.5">
                   {featureChecks.map((item) => (
                     <li
                       key={item}
-                      className="flex gap-2.5 text-sm leading-snug text-navy-muted"
+                      className="flex gap-3 text-[0.95rem] leading-snug text-navy-muted"
                     >
                       <CheckIcon />
                       <span>{item}</span>
@@ -378,21 +400,23 @@ export function ExteriorWindowCleaningPage() {
             </div>
           </div>
 
-          <ul className="mt-9 grid gap-7 sm:mt-10 sm:grid-cols-2 lg:grid-cols-4 lg:gap-6">
-            {inclusionGroups.map((item) => (
-              <li key={item.title} className="min-w-0">
-                <InclusionIcon kind={item.icon} />
-                <p className="font-heading mt-3.5 text-[1.05rem] font-semibold tracking-tight text-midnight">
+          <ul className="mt-10 grid gap-8 sm:mt-11 sm:grid-cols-2 lg:grid-cols-4 lg:gap-6">
+            {inclusionSummaries.map((item) => (
+              <li
+                key={item.title}
+                className="flex min-h-[5.5rem] min-w-0 flex-col items-center text-center"
+              >
+                <span className="text-signature">
+                  <InclusionIcon kind={item.icon} />
+                </span>
+                <p className="font-heading mt-4 min-h-[2.75rem] text-[1.05rem] font-semibold tracking-tight text-midnight">
                   {item.title}
-                </p>
-                <p className="mt-2 text-sm leading-relaxed text-navy-muted">
-                  {item.description}
                 </p>
               </li>
             ))}
           </ul>
 
-          <div className="mt-9 flex justify-center sm:mt-10">
+          <div className="mt-10 flex justify-center sm:mt-11">
             <Link
               href={quoteHref({ service: "exterior" })}
               className="inline-flex min-h-12 items-center justify-center rounded-md bg-signature px-7 text-sm font-semibold tracking-tight text-pure transition-colors duration-200 hover:bg-[#0656d6] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-signature"
@@ -403,16 +427,11 @@ export function ExteriorWindowCleaningPage() {
         </Container>
       </section>
 
-      <CleaningProcessSection
-        description="Every window receives a detailed cleaning process, from the initial wash to the final finishing touches."
-        steps={exteriorSteps}
-      />
-
-      {/* Screen Cleaning add-on */}
+      {/* Screen Cleaning — after What's Included */}
       <section
         aria-labelledby="exterior-screen-addon-heading"
         className="bg-white text-midnight"
-        style={{ paddingBlock: "clamp(3rem, 5vw, 4.5rem)" }}
+        style={{ paddingBlock: "clamp(2.5rem, 4.5vw, 4rem)" }}
       >
         <Container width="portfolio">
           <aside className="overflow-hidden rounded-[15px]">
@@ -458,10 +477,16 @@ export function ExteriorWindowCleaningPage() {
         </Container>
       </section>
 
-      {/* Cleaning Plans */}
+      <CleaningProcessSection
+        description="Every window receives a detailed cleaning process, from the initial wash to the final finishing touches."
+        steps={exteriorSteps}
+        tone="navy"
+      />
+
+      {/* Cleaning Plans — white background */}
       <section
         aria-labelledby="exterior-plans-heading"
-        className="bg-cloud text-midnight"
+        className="bg-pure text-midnight"
         style={{ paddingBlock: "var(--space-section-y)" }}
       >
         <Container>
