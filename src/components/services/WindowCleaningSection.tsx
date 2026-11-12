@@ -7,7 +7,8 @@ const offers = [
   {
     id: "exterior-window-cleaning",
     title: "Exterior Window Cleaning",
-    href: quoteHref({ service: "exterior" }),
+    href: "/services/exterior-window-cleaning",
+    exploreLabel: "Explore Exterior Cleaning",
     description:
       "Refresh your home's exterior with professionally cleaned windows that leave your property looking brighter and well cared for.",
     checks: [
@@ -24,8 +25,8 @@ const offers = [
   {
     id: "interior-window-cleaning",
     title: "Interior Window Cleaning",
-    // Quote form offers Interior & Exterior (not interior-only) — no preselection.
-    href: quoteHref(),
+    href: "/services/interior-window-cleaning",
+    exploreLabel: "Explore Interior Cleaning",
     description:
       "Enjoy cleaner glass and clearer views from inside your home, with careful attention to the details around every window.",
     checks: [
@@ -61,8 +62,8 @@ function CheckIcon() {
 }
 
 /**
- * Window Cleaning service section — student-led intro, exterior/interior
- * offers, quote CTA, then a compact homepage-style screen add-on.
+ * Services overview — exterior/interior cards linking to dedicated pages,
+ * then the unchanged screen-cleaning add-on.
  */
 export function WindowCleaningSection() {
   return (
@@ -76,47 +77,17 @@ export function WindowCleaningSection() {
       }}
     >
       <Container width="portfolio">
-        {/* Intro — white, text left / photo right */}
-        <div className="overflow-hidden rounded-[15px] border border-border bg-pure">
-          <div className="grid items-stretch lg:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)]">
-            <div className="flex flex-col justify-center px-5 py-7 sm:px-7 sm:py-8 lg:px-9 lg:py-10">
-              <p className="text-[0.7rem] font-semibold uppercase tracking-[0.18em] text-signature sm:text-xs">
-                Professional Window Care
-              </p>
-              <h2
-                id="window-cleaning-heading"
-                className="font-heading mt-2.5 text-[clamp(1.85rem,3.2vw,2.35rem)] font-semibold tracking-tight text-midnight sm:mt-3 sm:leading-tight"
-              >
-                Clean Windows. Local Students. Professional Results.
-              </h2>
-              <p className="mt-4 max-w-md text-base leading-relaxed text-navy-muted">
-                Support hardworking local students while giving your home the
-                care it deserves. From exterior windows to interior glass, our
-                student-run team makes it easy to enjoy a clearer view.
-              </p>
-            </div>
+        <h2 id="window-cleaning-heading" className="sr-only">
+          Window Cleaning Services
+        </h2>
 
-            <figure className="relative m-0 min-h-[14rem] border-t border-border lg:min-h-[18rem] lg:border-l lg:border-t-0">
-              <Image
-                src="/services/window-cleaning-intro-soapy.webp"
-                alt="Close-up of a professional squeegee clearing soapy foam from window glass to reveal clear blue sky"
-                fill
-                sizes="(max-width: 1024px) 100vw, 48vw"
-                className="object-cover object-center"
-                priority={false}
-              />
-            </figure>
-          </div>
-        </div>
-
-        {/* Exterior / Interior cards — whole card links to quote */}
-        <div className="mt-9 grid items-stretch gap-6 sm:mt-10 md:grid-cols-2 md:gap-7">
+        <div className="grid items-stretch gap-6 md:grid-cols-2 md:gap-7">
           {offers.map((offer) => (
             <Link
               key={offer.id}
               id={offer.id}
               href={offer.href}
-              aria-label={`Get a free quote for ${offer.title}`}
+              aria-label={`${offer.exploreLabel} — ${offer.title}`}
               className="scroll-mt-28 flex h-full flex-col overflow-hidden rounded-[14px] border border-border bg-pure shadow-none transition-[border-color,box-shadow,transform] duration-200 ease-out hover:-translate-y-[2px] hover:border-signature hover:shadow-[0_10px_28px_-18px_rgba(8,101,248,0.55)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-signature motion-reduce:transition-colors motion-reduce:hover:translate-y-0 motion-reduce:hover:shadow-none"
             >
               <div className="px-5 pt-5 sm:px-6 sm:pt-6">
@@ -151,26 +122,17 @@ export function WindowCleaningSection() {
                     </li>
                   ))}
                 </ul>
+                <p className="mt-auto pt-5 text-sm font-semibold text-signature">
+                  {offer.exploreLabel}
+                  <span aria-hidden className="ml-1.5">
+                    →
+                  </span>
+                </p>
               </div>
             </Link>
           ))}
         </div>
 
-        {/* Quote CTA — after cards, before screen add-on */}
-        <div className="mt-8 flex flex-col items-center text-center sm:mt-9">
-          <p className="max-w-lg text-sm leading-relaxed text-navy-muted sm:text-base">
-            Ready for cleaner windows? Tell us about your property and
-            we&apos;ll prepare a free, personalized quote.
-          </p>
-          <Link
-            href={quoteHref()}
-            className="mt-4 inline-flex min-h-12 items-center justify-center rounded-md bg-signature px-7 text-sm font-semibold tracking-tight text-pure transition-colors duration-200 hover:bg-[#0656d6] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-signature"
-          >
-            Get a Free Quote
-          </Link>
-        </div>
-
-        {/* Screen cleaning add-on — homepage-style horizontal feature */}
         <aside
           className="mt-8 overflow-hidden rounded-[15px] sm:mt-9"
           aria-labelledby="screen-cleaning-addon-heading"

@@ -6,7 +6,7 @@ const services = [
   {
     id: "exterior-window-cleaning",
     title: "Exterior Window Cleaning",
-    href: "/services#exterior-window-cleaning",
+    href: "/services/exterior-window-cleaning",
     description:
       "A focused clean for your home's exterior glass and accessible details.",
     checks: [
@@ -22,7 +22,7 @@ const services = [
   {
     id: "interior-exterior-window-cleaning",
     title: "Interior & Exterior Window Cleaning",
-    href: "/services#interior-window-cleaning",
+    href: "/services/interior-window-cleaning",
     description:
       "A complete inside-and-out refresh for clearer views throughout your home.",
     checks: [
@@ -38,7 +38,7 @@ const services = [
   {
     id: "gutter-cleaning",
     title: "Gutter Cleaning",
-    href: "/services#gutter-cleaning",
+    href: "/services/gutter-cleaning",
     description:
       "Debris removal and accessible downspout clearing to help keep water flowing properly.",
     checks: ["Gutter debris removal", "Accessible downspout clearing"],

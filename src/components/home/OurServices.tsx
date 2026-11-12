@@ -6,7 +6,7 @@ const services = [
   {
     id: "exterior-window-cleaning",
     title: "Exterior Window Cleaning",
-    href: "/services#exterior-window-cleaning",
+    href: "/services/exterior-window-cleaning",
     image: {
       src: "/our-work/exterior-squeegee-soapy.webp",
       alt: "Student Window Cleaning team member squeegeeing soapy exterior window glass",
@@ -21,7 +21,7 @@ const services = [
   {
     id: "interior-exterior-window-cleaning",
     title: "Interior & Exterior Window Cleaning",
-    href: "/services#interior-exterior-window-cleaning",
+    href: "/services/interior-window-cleaning",
     image: {
       src: "/our-work/interior-exterior-pole.webp",
       alt: "Student Window Cleaning team member cleaning a window with a telescopic pole",
@@ -36,7 +36,7 @@ const services = [
   {
     id: "gutter-cleaning",
     title: "Gutter Cleaning",
-    href: "/services#gutter-cleaning",
+    href: "/services/gutter-cleaning",
     image: {
       src: "/our-work/gutter-cleaning-hose.webp",
       alt: "Student Window Cleaning team member flushing a residential gutter with a hose from a ladder",
