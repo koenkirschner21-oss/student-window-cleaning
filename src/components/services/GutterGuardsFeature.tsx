@@ -110,8 +110,18 @@ export function GutterGuardsFeature() {
       style={{ paddingBlock: "clamp(3rem, 5vw, 4.5rem)" }}
     >
       <Container width="portfolio">
-        <div className="grid items-center gap-8 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)] lg:gap-12">
-          <div className="max-w-xl">
+        <div className="grid items-center gap-8 lg:grid-cols-[minmax(0,0.95fr)_minmax(0,1.05fr)] lg:gap-12">
+          <figure className="relative m-0 aspect-[4/3] w-full overflow-hidden rounded-[14px] border border-border bg-cloud lg:aspect-[5/4]">
+            <Image
+              src="/services/gutter-guards.webp"
+              alt="Close-up of micro-mesh gutter guard being installed into a white residential gutter under roof shingles"
+              fill
+              sizes="(max-width: 1024px) 100vw, 48vw"
+              className="object-cover object-[center_40%]"
+            />
+          </figure>
+
+          <div className="max-w-xl lg:justify-self-end">
             <p className="text-[0.7rem] font-semibold uppercase tracking-[0.18em] text-signature sm:text-xs">
               Long-Term Gutter Protection
             </p>
@@ -143,16 +153,6 @@ export function GutterGuardsFeature() {
               ))}
             </ul>
           </div>
-
-          <figure className="relative m-0 aspect-[4/3] w-full overflow-hidden rounded-[14px] border border-border bg-cloud lg:aspect-[5/4]">
-            <Image
-              src="/services/gutter-guards.webp"
-              alt="Close-up of micro-mesh gutter guard being installed into a white residential gutter under roof shingles"
-              fill
-              sizes="(max-width: 1024px) 100vw, 48vw"
-              className="object-cover object-[center_40%]"
-            />
-          </figure>
         </div>
 
         <div
