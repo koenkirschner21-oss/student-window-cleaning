@@ -12,7 +12,7 @@ function GraduationCapIcon() {
       strokeLinecap="round"
       strokeLinejoin="round"
       aria-hidden
-      className="size-8 sm:size-[2.05rem]"
+      className="size-[1.65rem] sm:size-[1.7rem]"
     >
       <path d="M2.5 9.5 12 4.5l9.5 5-9.5 5-9.5-5Z" />
       <path d="M6.5 11.6v4.2c0 .3 2.4 2.7 5.5 2.7s5.5-2.4 5.5-2.7v-4.2" />
@@ -32,7 +32,7 @@ function FiveGoldStars() {
         <svg
           key={index}
           viewBox="0 0 20 20"
-          className="size-[0.9rem] fill-current sm:size-[1rem]"
+          className="size-[0.75rem] fill-current sm:size-[0.85rem]"
         >
           <path d="M10 1.8 12.4 7l5.6.8-4 3.9.9 5.6L10 14.6 5.1 17.3l.9-5.6-4-3.9L7.6 7 10 1.8Z" />
         </svg>
@@ -125,38 +125,38 @@ export function Hero() {
         aria-label="Trust highlights"
         className="border-t border-white/[0.1]"
       >
-        <Container className="py-8 sm:py-9">
-          <ul className="grid grid-cols-1 gap-6 sm:grid-cols-3 sm:gap-0 sm:divide-x sm:divide-white/[0.1]">
-            <li className="flex min-w-0 flex-col items-center justify-center gap-2.5 text-center sm:px-6 lg:px-8">
+        <Container className="py-6 sm:py-7">
+          <ul className="grid grid-cols-1 gap-5 sm:grid-cols-3 sm:gap-0 sm:divide-x sm:divide-white/[0.1]">
+            <li className="flex min-w-0 flex-col items-center justify-center gap-2 text-center sm:px-6 lg:px-8">
               <span className="inline-flex shrink-0 text-pure">
                 <GraduationCapIcon />
               </span>
-              <p className="font-heading text-[0.84rem] font-semibold leading-snug tracking-tight text-white/75 sm:text-[0.9rem]">
+              <p className="font-heading text-[0.76rem] font-semibold leading-snug tracking-tight text-white/75 sm:text-[0.82rem]">
                 Proudly Student-Run
               </p>
             </li>
 
-            <li className="flex min-w-0 flex-col items-center justify-center gap-1.5 text-center sm:px-6 lg:px-8">
+            <li className="flex min-w-0 flex-col items-center justify-center gap-1 text-center sm:px-6 lg:px-8">
               <p
-                className="font-heading text-[1.45rem] font-extrabold leading-none tracking-tight text-pure sm:text-[1.55rem]"
+                className="font-heading text-[1.2rem] font-extrabold leading-none tracking-tight text-pure sm:text-[1.28rem]"
                 aria-hidden
               >
                 20+
               </p>
               <FiveGoldStars />
-              <p className="font-heading text-[0.84rem] font-semibold leading-snug tracking-tight text-white/75 sm:text-[0.9rem]">
+              <p className="font-heading text-[0.76rem] font-semibold leading-snug tracking-tight text-white/75 sm:text-[0.82rem]">
                 <span className="sr-only">20+ </span>5-Star Google Reviews
               </p>
             </li>
 
-            <li className="flex min-w-0 flex-col items-center justify-center gap-1.5 text-center sm:px-6 lg:px-8">
+            <li className="flex min-w-0 flex-col items-center justify-center gap-1 text-center sm:px-6 lg:px-8">
               <p
-                className="font-heading text-[1.45rem] font-extrabold leading-none tracking-tight text-pure sm:text-[1.55rem]"
+                className="font-heading text-[1.2rem] font-extrabold leading-none tracking-tight text-pure sm:text-[1.28rem]"
                 aria-hidden
               >
                 4+
               </p>
-              <p className="font-heading text-[0.84rem] font-semibold leading-snug tracking-tight text-white/75 sm:text-[0.9rem]">
+              <p className="font-heading text-[0.76rem] font-semibold leading-snug tracking-tight text-white/75 sm:text-[0.82rem]">
                 <span className="sr-only">4+ </span>Years in Business
               </p>
             </li>

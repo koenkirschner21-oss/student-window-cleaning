@@ -49,6 +49,30 @@ export const navLinks = [
   { href: "/our-work", label: "Our Work" },
 ] as const;
 
+/** Header Services dropdown destinations — dedicated service pages. */
+export const serviceNavItems = [
+  {
+    href: "/services/exterior-window-cleaning",
+    label: "Exterior Window Cleaning",
+    icon: "exterior",
+  },
+  {
+    href: "/services/interior-window-cleaning",
+    label: "Interior Window Cleaning",
+    icon: "interior",
+  },
+  {
+    href: "/services/gutter-cleaning",
+    label: "Gutter Cleaning",
+    icon: "gutter",
+  },
+  {
+    href: "/services/gutter-guards",
+    label: "Gutter Guards",
+    icon: "guards",
+  },
+] as const;
+
 export const exploreLinks = [
   { href: "/", label: "Home" },
   ...navLinks,
@@ -166,27 +190,25 @@ export const addressAutocomplete = {
 } as const;
 
 /**
- * Quote trust-band residential photo.
- * Approved landscape source (privacy-treated address above garage).
- * Prefer object-cover in the shorter/wider trust band — no AI enhancement.
- * Not claimed as a completed Student Window Cleaning job.
+ * Quote trust-band photo — student community group portrait.
+ * Prefer object-cover + object-center so faces stay visible in the band.
  */
 export const quoteTrustPhoto: {
   src: string;
   alt: string;
 } | null = {
-  src: "/quote/residential-property.webp",
-  alt: "Landscape view of a modern two-story home with white-trimmed windows, garage, and driveway",
+  src: "/about/student-community-lang-group.webp",
+  alt: "University student community group in professional attire posing together in front of a Gordon S. Lang School of Business and Economics banner",
 };
 
 /**
- * Homepage final-quote panel photo (authentic property — natural colours).
- * Portrait source framed with object-cover; not the homepage hero image.
+ * Homepage quote-section photo — branded team member cleaning a residential window.
+ * Natural colours; not the homepage hero image.
  */
 export const homepageQuotePhoto = {
   src: "/home/quote-panel-worker.webp",
-  alt: "Two-storey brick home with clean white-framed windows, gutters, and landscaped front yard under a clear blue sky",
-  objectPosition: "center 42%",
+  alt: "Student Window Cleaning team member in a branded white shirt scrubbing a residential window on a brick home",
+  objectPosition: "center 28%",
 } as const;
 
 export type ServiceId = (typeof serviceOptions)[number]["id"];

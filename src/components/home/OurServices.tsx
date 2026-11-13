@@ -6,7 +6,7 @@ const services = [
   {
     id: "exterior-window-cleaning",
     title: "Exterior Window Cleaning",
-    href: "/services#exterior-window-cleaning",
+    href: "/services/exterior-window-cleaning",
     image: {
       src: "/our-work/exterior-squeegee-soapy.webp",
       alt: "Student Window Cleaning team member squeegeeing soapy exterior window glass",
@@ -21,7 +21,7 @@ const services = [
   {
     id: "interior-exterior-window-cleaning",
     title: "Interior & Exterior Window Cleaning",
-    href: "/services#interior-exterior-window-cleaning",
+    href: "/services/interior-window-cleaning",
     image: {
       src: "/our-work/interior-exterior-pole.webp",
       alt: "Student Window Cleaning team member cleaning a window with a telescopic pole",
@@ -36,7 +36,7 @@ const services = [
   {
     id: "gutter-cleaning",
     title: "Gutter Cleaning",
-    href: "/services#gutter-cleaning",
+    href: "/services/gutter-cleaning",
     image: {
       src: "/our-work/gutter-cleaning-hose.webp",
       alt: "Student Window Cleaning team member flushing a residential gutter with a hose from a ladder",
@@ -109,7 +109,7 @@ export function OurServices() {
           </p>
         </header>
 
-        <ul className="mt-9 grid list-none justify-items-stretch gap-6 p-0 sm:mt-10 md:grid-cols-[repeat(3,minmax(0,19.6875rem))] md:justify-center md:gap-6 lg:mt-11 lg:gap-7">
+        <ul className="mt-9 grid list-none justify-items-stretch gap-6 p-0 sm:mt-10 md:grid-cols-[repeat(3,minmax(0,21.5rem))] md:justify-center md:gap-5 lg:mt-11 lg:gap-6">
           {services.map((service) => (
             <li key={service.id} className="min-w-0">
               <Link
@@ -121,7 +121,7 @@ export function OurServices() {
                     src={service.image.src}
                     alt={service.image.alt}
                     fill
-                    sizes="(max-width: 768px) min(100vw, 19.6875rem), 315px"
+                    sizes="(max-width: 768px) min(100vw, 21.5rem), 344px"
                     className="object-cover"
                     style={{ objectPosition: service.image.objectPosition }}
                   />
@@ -132,12 +132,12 @@ export function OurServices() {
                     {service.title}
                   </h3>
 
-                  <ul className="mt-3.5 grid list-none grid-rows-3 p-0 sm:mt-4">
+                  <ul className="mt-3 grid list-none grid-rows-3 p-0 sm:mt-3.5">
                     {service.inclusions.map((item, index) => (
                       <li
                         key={item}
                         className={[
-                          "flex items-start gap-2 py-2.5 text-sm leading-snug text-navy-muted sm:py-3 sm:text-[0.95rem]",
+                          "flex items-start gap-2 py-[0.45rem] text-sm leading-snug text-navy-muted sm:py-2 sm:text-[0.95rem]",
                           index > 0
                             ? "border-t border-[color-mix(in_srgb,var(--color-midnight-navy)_8%,transparent)]"
                             : "",

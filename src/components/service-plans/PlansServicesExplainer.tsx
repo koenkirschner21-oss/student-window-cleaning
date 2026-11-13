@@ -6,6 +6,7 @@ const services = [
   {
     id: "exterior-window-cleaning",
     title: "Exterior Window Cleaning",
+    href: "/services/exterior-window-cleaning",
     description:
       "A focused clean for your home's exterior glass and accessible details.",
     checks: [
@@ -21,6 +22,7 @@ const services = [
   {
     id: "interior-exterior-window-cleaning",
     title: "Interior & Exterior Window Cleaning",
+    href: "/services/interior-window-cleaning",
     description:
       "A complete inside-and-out refresh for clearer views throughout your home.",
     checks: [
@@ -36,6 +38,7 @@ const services = [
   {
     id: "gutter-cleaning",
     title: "Gutter Cleaning",
+    href: "/services/gutter-cleaning",
     description:
       "Debris removal and accessible downspout clearing to help keep water flowing properly.",
     checks: ["Gutter debris removal", "Accessible downspout clearing"],
@@ -67,8 +70,7 @@ function CheckIcon() {
 }
 
 /**
- * Cleaning Plans service selection — photo-led cards for each service option.
- * No per-card quote CTAs; services are selected during the quote flow.
+ * Cleaning Plans service selection — equal-height interactive cards linking to /services.
  */
 export function PlansServicesExplainer() {
   return (
@@ -101,8 +103,12 @@ export function PlansServicesExplainer() {
         <ul className="mt-8 grid items-stretch gap-5 sm:mt-9 sm:grid-cols-2 sm:gap-6 lg:mt-10 lg:grid-cols-3">
           {services.map((service) => (
             <li key={service.id} className="flex min-w-0">
-              <article className="flex w-full flex-col overflow-hidden rounded-[1.25rem] border border-border bg-pure">
-                <div className="relative aspect-[5/3] w-full overflow-hidden bg-cloud">
+              <Link
+                href={service.href}
+                aria-label={`Learn more about ${service.title}`}
+                className="flex h-full w-full cursor-pointer flex-col overflow-hidden rounded-[1.25rem] border border-border bg-pure shadow-none transition-[border-color,box-shadow,transform] duration-200 ease-out hover:-translate-y-[2px] hover:border-signature hover:shadow-[0_10px_28px_-18px_rgba(8,101,248,0.55)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-signature motion-reduce:transition-colors motion-reduce:hover:translate-y-0 motion-reduce:hover:shadow-none"
+              >
+                <div className="relative aspect-[5/3] w-full shrink-0 overflow-hidden bg-cloud">
                   <Image
                     src={service.image.src}
                     alt={service.image.alt}
@@ -112,10 +118,10 @@ export function PlansServicesExplainer() {
                   />
                 </div>
                 <div className="flex flex-1 flex-col p-5 sm:p-6">
-                  <h3 className="font-heading text-lg font-semibold tracking-tight text-midnight sm:text-xl">
+                  <h3 className="font-heading min-h-[3.25rem] text-lg font-semibold tracking-tight text-midnight sm:min-h-[3.5rem] sm:text-xl">
                     {service.title}
                   </h3>
-                  <p className="mt-2 text-sm leading-relaxed text-navy-muted">
+                  <p className="mt-2 min-h-[2.75rem] text-sm leading-relaxed text-navy-muted">
                     {service.description}
                   </p>
                   <div className="my-4 h-px w-full bg-border" />
@@ -131,12 +137,12 @@ export function PlansServicesExplainer() {
                     ))}
                   </ul>
                 </div>
-              </article>
+              </Link>
             </li>
           ))}
         </ul>
 
-        <div className="mt-8 flex flex-col gap-3 border-t border-border pt-6 sm:mt-9 sm:flex-row sm:items-center sm:justify-between sm:gap-6 sm:pt-7">
+        <div className="mt-8 border-t border-border pt-6 sm:mt-9 sm:pt-7">
           <Link
             href="/services"
             className="inline-flex items-center gap-1.5 text-sm font-semibold text-signature transition-colors hover:text-midnight focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-signature"
@@ -146,10 +152,6 @@ export function PlansServicesExplainer() {
               →
             </span>
           </Link>
-          <div className="hidden h-4 w-px shrink-0 bg-border sm:block" aria-hidden />
-          <p className="text-sm leading-relaxed text-navy-muted sm:text-right">
-            Select your services when requesting a free quote.
-          </p>
         </div>
       </Container>
     </section>

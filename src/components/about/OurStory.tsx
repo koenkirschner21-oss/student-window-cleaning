@@ -2,7 +2,7 @@ import Image from "next/image";
 import { Container } from "@/components/ui/Container";
 
 /**
- * Our Story — editorial copy + authentic circular heritage badge.
+ * Our Story — circular heritage badge left, editorial copy right.
  * Hero and sections below this block are out of scope.
  */
 export function OurStory() {
@@ -14,7 +14,19 @@ export function OurStory() {
     >
       <Container width="portfolio">
         <div className="grid items-center gap-10 md:grid-cols-2 md:gap-12 lg:gap-16">
-          <div className="max-w-xl">
+          <div className="flex justify-center md:justify-start">
+            {/* Source is 1536×1024 with a full-height circular mark (~230–256px diameter). */}
+            <Image
+              src="/brand/logos/heritage-badge.png"
+              alt="Student Window Cleaning circular logo"
+              width={1536}
+              height={1024}
+              className="h-auto w-[345px] sm:w-[368px] lg:w-[384px]"
+              sizes="(max-width: 768px) 345px, 384px"
+            />
+          </div>
+
+          <div className="max-w-xl md:justify-self-end">
             <p className="text-[0.7rem] font-semibold uppercase tracking-[0.18em] text-navy-muted sm:text-xs">
               Our Story
             </p>
@@ -40,18 +52,6 @@ export function OurStory() {
                 Region.
               </p>
             </div>
-          </div>
-
-          <div className="flex justify-center md:justify-end">
-            {/* Source is 1536×1024 with a full-height circular mark (~230–256px diameter). */}
-            <Image
-              src="/brand/logos/heritage-badge.png"
-              alt="Student Window Cleaning circular logo"
-              width={1536}
-              height={1024}
-              className="h-auto w-[345px] sm:w-[368px] lg:w-[384px]"
-              sizes="(max-width: 768px) 345px, 384px"
-            />
           </div>
         </div>
       </Container>

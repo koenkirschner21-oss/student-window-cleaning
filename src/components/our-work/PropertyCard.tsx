@@ -65,6 +65,38 @@ export function PropertyCard({
           {project.typeLabel}
         </p>
       ) : null}
+      {project.location ? (
+        <p className="mt-1.5 flex items-center gap-1.5 text-[0.8125rem] leading-snug text-navy-muted">
+          <MapPinIcon />
+          <span>{project.location}</span>
+        </p>
+      ) : null}
     </article>
+  );
+}
+
+function MapPinIcon() {
+  return (
+    <svg
+      viewBox="0 0 16 16"
+      fill="none"
+      aria-hidden
+      className="size-3.5 shrink-0 text-signature"
+    >
+      <path
+        d="M8 8.75a1.75 1.75 0 1 0 0-3.5 1.75 1.75 0 0 0 0 3.5Z"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M12.5 7.1c0 2.85-3.35 5.9-4.2 6.7a.4.4 0 0 1-.6 0C6.85 13 3.5 9.95 3.5 7.1a4.5 4.5 0 1 1 9 0Z"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
   );
 }

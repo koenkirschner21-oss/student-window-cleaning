@@ -25,11 +25,12 @@ export function ServicesFinalCta() {
             id="services-final-cta-heading"
             className="font-heading mx-auto mt-3 max-w-2xl text-2xl font-semibold tracking-tight text-pure sm:text-[1.95rem] sm:leading-tight"
           >
-            Ready for Cleaner Windows and Gutters?
+            Clean Windows. Support Local Students.
           </h2>
           <p className="mx-auto mt-3.5 max-w-xl text-base leading-relaxed text-white/72">
-            Tell us what your property needs and we&apos;ll prepare a free,
-            personalized virtual quote. No obligation.
+            Give your home the care it deserves while supporting hardworking
+            students in your community. Get started with a free, personalized
+            quote.
           </p>
           <div className="mt-7 flex flex-col items-center gap-4 sm:mt-8">
             <Link

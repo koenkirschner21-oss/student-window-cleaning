@@ -4,6 +4,10 @@ import { site } from "@/lib/site";
 const routes = [
   "/",
   "/services",
+  "/services/exterior-window-cleaning",
+  "/services/interior-window-cleaning",
+  "/services/gutter-cleaning",
+  "/services/gutter-guards",
   "/cleaning-plans",
   "/about",
   "/our-work",

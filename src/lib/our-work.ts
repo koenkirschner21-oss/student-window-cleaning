@@ -44,6 +44,8 @@ export type WorkProject = {
   category: WorkProjectCategory;
   /** Secondary label under the title (commercial category). */
   typeLabel?: string;
+  /** Concise city label shown under the title / type, e.g. "Whitby, ON". */
+  location?: string;
   /** Cover path for the card thumbnail. */
   thumbnail?: string | null;
   /** Ordered media for detail / lightbox. */
@@ -69,13 +71,14 @@ export const residentialProjects: WorkProject[] = [
     id: "large-detached-img-0510",
     title: "Large Detached Home",
     category: "residential",
+    location: "Pickering, ON",
     thumbnail: "/our-work/projects/featured-detached-img-0510.webp",
     media: [
       {
         id: "large-detached-img-0510-1",
         kind: "image",
         src: "/our-work/projects/featured-detached-img-0510.webp",
-        alt: "Large detached home with light facade, arched windows, and double garage",
+        alt: "Large detached home in Pickering, Ontario with light facade, arched windows, and double garage",
         ...PORTFOLIO_FRAME,
         sourceFilename: "IMG_0510.jpg",
         objectFit: "cover",
@@ -88,13 +91,14 @@ export const residentialProjects: WorkProject[] = [
     id: "townhouse-img-2194",
     title: "Townhouse",
     category: "residential",
+    location: "Pickering, ON",
     thumbnail: "/our-work/projects/townhouse-img-2194.webp",
     media: [
       {
         id: "townhouse-img-2194-1",
         kind: "image",
         src: "/our-work/projects/townhouse-img-2194.webp",
-        alt: "Townhouse with grey vertical siding, brick chimney, and clean upper windows",
+        alt: "Townhouse in Pickering, Ontario with grey vertical siding, brick chimney, and clean upper windows",
         ...PORTFOLIO_FRAME,
         sourceFilename: "IMG_2194.jpg",
         objectFit: "cover",
@@ -107,13 +111,14 @@ export const residentialProjects: WorkProject[] = [
     id: "two-garage-img-0509",
     title: "Two-Garage Home",
     category: "residential",
+    location: "Pickering, ON",
     thumbnail: "/our-work/projects/two-garage-img-0509.webp",
     media: [
       {
         id: "two-garage-img-0509-1",
         kind: "image",
         src: "/our-work/projects/two-garage-img-0509.webp",
-        alt: "Two-garage home with grey brick facade and white-trimmed windows",
+        alt: "Two-garage home in Pickering, Ontario with grey brick facade and white-trimmed windows",
         ...PORTFOLIO_FRAME,
         sourceFilename: "IMG_0509.jpg",
         objectFit: "cover",
@@ -126,13 +131,14 @@ export const residentialProjects: WorkProject[] = [
     id: "split-level-img-0085",
     title: "Split-Level Home",
     category: "residential",
+    location: "Whitby, ON",
     thumbnail: "/our-work/projects/split-level-img-0085.webp",
     media: [
       {
         id: "split-level-img-0085-1",
         kind: "image",
         src: "/our-work/projects/split-level-img-0085.webp",
-        alt: "Split-level home with red brick facade, elevated entrance, and single garage",
+        alt: "Split-level home in Whitby, Ontario with red brick facade, elevated entrance, and single garage",
         ...PORTFOLIO_FRAME,
         sourceFilename: "IMG_0085.jpg",
         objectFit: "cover",
@@ -146,13 +152,14 @@ export const residentialProjects: WorkProject[] = [
     id: "two-storey-img-0089",
     title: "Two-Storey Home",
     category: "residential",
+    location: "Whitby, ON",
     thumbnail: "/our-work/projects/two-storey-img-0089.webp",
     media: [
       {
         id: "two-storey-img-0089-1",
         kind: "image",
         src: "/our-work/projects/two-storey-img-0089.webp",
-        alt: "Two-storey home with brick lower level and light horizontal siding above",
+        alt: "Two-storey home in Whitby, Ontario with brick lower level and light horizontal siding above",
         ...PORTFOLIO_FRAME,
         sourceFilename: "IMG_0089(1).jpg",
         objectFit: "cover",
@@ -166,13 +173,14 @@ export const residentialProjects: WorkProject[] = [
     id: "detached-img-0155",
     title: "Detached Home",
     category: "residential",
+    location: "Ajax, ON",
     thumbnail: "/our-work/projects/two-storey-img-0155.webp",
     media: [
       {
         id: "detached-img-0155-1",
         kind: "image",
         src: "/our-work/projects/two-storey-img-0155.webp",
-        alt: "Detached home with light siding, bay window, and attached garage",
+        alt: "Detached home in Ajax, Ontario with light siding, bay window, and attached garage",
         ...PORTFOLIO_FRAME,
         sourceFilename: "IMG_0155(1).jpg",
         objectFit: "cover",
@@ -194,13 +202,14 @@ export const commercialProjects: WorkProject[] = [
     title: "The Brick",
     typeLabel: "Retail Property",
     category: "commercial",
+    location: "Whitby, ON",
     thumbnail: "/our-work/projects/commercial-the-brick-img-0350.webp",
     media: [
       {
         id: "commercial-the-brick-1",
         kind: "image",
         src: "/our-work/projects/commercial-the-brick-img-0350.webp",
-        alt: "The Brick storefront exterior with arched glass entrance",
+        alt: "The Brick storefront in Whitby, Ontario with arched glass entrance",
         ...PORTFOLIO_FRAME,
         sourceFilename: "IMG_0350 2.jpg",
         objectFit: "cover",
@@ -214,13 +223,14 @@ export const commercialProjects: WorkProject[] = [
     title: "Montessori Learning Centre",
     typeLabel: "Educational Facility",
     category: "commercial",
+    location: "Pickering, ON",
     thumbnail: "/our-work/projects/commercial-montessori-img-5402.webp",
     media: [
       {
         id: "commercial-montessori-1",
         kind: "image",
         src: "/our-work/projects/commercial-montessori-img-5402.webp",
-        alt: "Montessori Learning Centre storefront with brick pillars and glass windows",
+        alt: "Montessori Learning Centre storefront in Pickering, Ontario with brick pillars and glass windows",
         ...PORTFOLIO_FRAME,
         sourceFilename: "IMG_5402.png",
         objectFit: "cover",

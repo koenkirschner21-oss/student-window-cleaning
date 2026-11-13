@@ -5,7 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useId, useRef, useState } from "react";
 import { Container } from "@/components/ui/Container";
-import { navLinks, site } from "@/lib/site";
+import { navLinks, serviceNavItems, site } from "@/lib/site";
 
 function navLinkClass(active: boolean) {
   return [
@@ -29,12 +29,242 @@ function mobileNavLinkClass(active: boolean) {
   ].join(" ");
 }
 
+function ChevronIcon({ open }: { open?: boolean }) {
+  return (
+    <svg
+      viewBox="0 0 16 16"
+      fill="none"
+      aria-hidden
+      className={`size-3.5 shrink-0 transition-transform duration-150 ${open ? "rotate-180" : ""}`}
+    >
+      <path
+        d="M4 6.25 8 10l4-3.75"
+        stroke="currentColor"
+        strokeWidth="1.75"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
+function serviceDropdownItemClass(active: boolean) {
+  return [
+    "flex min-h-[2.65rem] items-center px-4 text-left text-sm font-medium tracking-tight text-midnight",
+    "transition-[background-color,color] duration-150 ease-out",
+    active
+      ? "bg-ice text-midnight"
+      : "bg-transparent hover:bg-ice hover:text-midnight",
+    "focus-visible:bg-ice focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-signature",
+  ].join(" ");
+}
+
+function ServicesDropdownPanel({
+  id,
+  pathname,
+  onNavigate,
+}: {
+  id: string;
+  pathname: string;
+  onNavigate?: () => void;
+}) {
+  return (
+    <ul
+      id={id}
+      role="list"
+      className="m-0 w-[16.5rem] list-none overflow-hidden rounded-[10px] border border-border bg-pure py-1.5 shadow-[0_12px_30px_-16px_rgba(6,26,56,0.42)]"
+    >
+      {serviceNavItems.map((item) => {
+        const active = pathname === item.href;
+        return (
+          <li key={item.href}>
+            <Link
+              href={item.href}
+              className={serviceDropdownItemClass(active)}
+              aria-current={active ? "page" : undefined}
+              onClick={onNavigate}
+            >
+              {item.label}
+            </Link>
+          </li>
+        );
+      })}
+    </ul>
+  );
+}
+
+function DesktopServicesNav({
+  active,
+  pathname,
+}: {
+  active: boolean;
+  pathname: string;
+}) {
+  const [open, setOpen] = useState(false);
+  const wrapRef = useRef<HTMLDivElement>(null);
+  const triggerRef = useRef<HTMLAnchorElement>(null);
+  const menuId = useId();
+  const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  function clearCloseTimer() {
+    if (closeTimer.current) {
+      clearTimeout(closeTimer.current);
+      closeTimer.current = null;
+    }
+  }
+
+  function scheduleClose() {
+    clearCloseTimer();
+    closeTimer.current = setTimeout(() => setOpen(false), 120);
+  }
+
+  useEffect(() => {
+    if (!open) return;
+
+    const onPointerDown = (event: MouseEvent | PointerEvent) => {
+      if (!wrapRef.current?.contains(event.target as Node)) {
+        setOpen(false);
+      }
+    };
+
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setOpen(false);
+        triggerRef.current?.focus();
+      }
+    };
+
+    document.addEventListener("pointerdown", onPointerDown);
+    document.addEventListener("keydown", onKey);
+    return () => {
+      document.removeEventListener("pointerdown", onPointerDown);
+      document.removeEventListener("keydown", onKey);
+    };
+  }, [open]);
+
+  useEffect(() => () => clearCloseTimer(), []);
+
+  return (
+    <div
+      ref={wrapRef}
+      className="relative flex h-full min-h-[var(--header-height)] items-center self-stretch"
+      onMouseEnter={() => {
+        clearCloseTimer();
+        setOpen(true);
+      }}
+      onMouseLeave={scheduleClose}
+    >
+      <Link
+        ref={triggerRef}
+        href="/services"
+        className={navLinkClass(active)}
+        aria-current={active ? "page" : undefined}
+        aria-haspopup="menu"
+        aria-expanded={open}
+        aria-controls={menuId}
+        onFocus={() => {
+          clearCloseTimer();
+          setOpen(true);
+        }}
+        onKeyDown={(event) => {
+          if (event.key === "ArrowDown") {
+            event.preventDefault();
+            clearCloseTimer();
+            setOpen(true);
+            requestAnimationFrame(() => {
+              wrapRef.current
+                ?.querySelector<HTMLElement>(`#${CSS.escape(menuId)} a`)
+                ?.focus();
+            });
+          }
+        }}
+      >
+        Services
+      </Link>
+
+      {/* Anchored below the navbar; shifted left so Services sits more naturally above the panel. */}
+      <div
+        className={[
+          "absolute top-full left-[-2.5rem] z-[60] pt-1.5 transition-opacity duration-150",
+          open ? "visible opacity-100" : "invisible pointer-events-none opacity-0",
+        ].join(" ")}
+        onMouseEnter={clearCloseTimer}
+      >
+        <ServicesDropdownPanel
+          id={menuId}
+          pathname={pathname}
+          onNavigate={() => setOpen(false)}
+        />
+      </div>
+    </div>
+  );
+}
+
+function MobileServicesNav({
+  active,
+  pathname,
+  onNavigate,
+}: {
+  active: boolean;
+  pathname: string;
+  onNavigate: () => void;
+}) {
+  const [expanded, setExpanded] = useState(false);
+  const submenuId = useId();
+
+  return (
+    <div>
+      <div className="flex items-center gap-1">
+        <Link
+          href="/services"
+          className={`${mobileNavLinkClass(active)} flex-1`}
+          aria-current={active ? "page" : undefined}
+          onClick={onNavigate}
+        >
+          Services
+        </Link>
+        <button
+          type="button"
+          className="inline-flex size-11 shrink-0 items-center justify-center rounded-md border border-border text-midnight transition-colors hover:border-border-strong focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-signature"
+          aria-expanded={expanded}
+          aria-controls={submenuId}
+          aria-label={expanded ? "Collapse Services menu" : "Expand Services menu"}
+          onClick={() => setExpanded((value) => !value)}
+        >
+          <ChevronIcon open={expanded} />
+        </button>
+      </div>
+      <div id={submenuId} hidden={!expanded} className="pb-1 pl-2">
+        <ul className="mt-1 space-y-0.5 border-l border-border pl-3">
+          {serviceNavItems.map((item) => {
+            const itemActive = pathname === item.href;
+            return (
+              <li key={item.href}>
+                <Link
+                  href={item.href}
+                  className={serviceDropdownItemClass(itemActive)}
+                  aria-current={itemActive ? "page" : undefined}
+                  onClick={onNavigate}
+                >
+                  {item.label}
+                </Link>
+              </li>
+            );
+          })}
+        </ul>
+      </div>
+    </div>
+  );
+}
+
 export function Header() {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
   const menuId = useId();
   const toggleRef = useRef<HTMLButtonElement>(null);
   const menuRef = useRef<HTMLDivElement>(null);
+  const servicesActive =
+    pathname === "/services" || pathname.startsWith("/services/");
 
   useEffect(() => {
     if (!open) return;
@@ -83,9 +313,18 @@ export function Header() {
 
         <nav
           aria-label="Primary"
-          className="hidden items-center justify-center gap-8 lg:flex"
+          className="hidden h-full items-center justify-center gap-8 lg:flex"
         >
           {navLinks.map((link) => {
+            if (link.href === "/services") {
+              return (
+                <DesktopServicesNav
+                  key={link.href}
+                  active={servicesActive}
+                  pathname={pathname}
+                />
+              );
+            }
             const active = pathname === link.href;
             return (
               <Link
@@ -140,6 +379,16 @@ export function Header() {
       >
         <Container className="flex flex-col gap-1 py-3">
           {navLinks.map((link) => {
+            if (link.href === "/services") {
+              return (
+                <MobileServicesNav
+                  key={link.href}
+                  active={servicesActive}
+                  pathname={pathname}
+                  onNavigate={closeMenu}
+                />
+              );
+            }
             const active = pathname === link.href;
             return (
               <Link

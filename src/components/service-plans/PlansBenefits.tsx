@@ -41,7 +41,12 @@ const benefits: readonly {
           stroke="currentColor"
           strokeWidth="1.6"
         />
-        <path d="M8 3.5v3M16 3.5v3M3.5 9.5h17" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
+        <path
+          d="M8 3.5v3M16 3.5v3M3.5 9.5h17"
+          stroke="currentColor"
+          strokeWidth="1.6"
+          strokeLinecap="round"
+        />
         <path
           d="m9.2 14.2 1.8 1.8 3.8-3.8"
           stroke="currentColor"
@@ -75,20 +80,22 @@ const benefits: readonly {
 ];
 
 /**
- * Value of Regular Care — compact landscape photo + short intro + 3 benefits.
- * Icons are inline SVGs (no lucide dependency in this repo).
+ * Value of Regular Care — full-width Midnight Navy with photo + 3 benefits.
  */
 export function PlansBenefits() {
   return (
     <section
       aria-labelledby="plans-benefits-heading"
-      className="bg-white text-midnight"
-      style={{ paddingBlock: "clamp(2.75rem, 4.5vw, 4rem)" }}
+      className="text-pure"
+      style={{
+        backgroundColor: "#061A38",
+        paddingBlock: "clamp(2.75rem, 4.5vw, 4rem)",
+      }}
     >
       <Container>
         <div className="grid items-center gap-6 lg:grid-cols-[minmax(0,0.92fr)_minmax(0,1.08fr)] lg:gap-10">
           <figure className="m-0 w-full">
-            <div className="relative aspect-[4/3] w-full overflow-hidden rounded-lg bg-cloud">
+            <div className="relative aspect-[4/3] w-full overflow-hidden rounded-lg bg-[#0A274F]">
               <Image
                 src="/our-work/img-0509.webp"
                 alt="Well-maintained tan brick two-garage home with clean white-trimmed windows"
@@ -100,23 +107,23 @@ export function PlansBenefits() {
           </figure>
 
           <div className="max-w-xl">
-            <p className="text-[0.7rem] font-semibold uppercase tracking-[0.18em] text-signature sm:text-xs">
+            <p className="text-[0.7rem] font-semibold uppercase tracking-[0.18em] text-sky sm:text-xs">
               The Value of Regular Care
             </p>
             <h2
               id="plans-benefits-heading"
-              className="font-heading mt-2 text-[1.65rem] font-semibold tracking-tight text-midnight sm:mt-2.5 sm:text-[1.9rem] sm:leading-tight"
+              className="font-heading mt-2 text-[1.65rem] font-semibold tracking-tight text-pure sm:mt-2.5 sm:text-[1.9rem] sm:leading-tight"
             >
               Clear Windows, Season After Season.
             </h2>
-            <p className="mt-3 text-base leading-relaxed text-navy-muted">
+            <p className="mt-3 text-base leading-relaxed text-white/72">
               Keep your home looking its best with professional window cleaning
               that fits your schedule.
             </p>
           </div>
         </div>
 
-        <div className="mt-8 border-t border-border pt-7 sm:mt-9 sm:pt-8">
+        <div className="mt-8 border-t border-white/12 pt-7 sm:mt-9 sm:pt-8">
           <ul className="grid gap-6 sm:grid-cols-3 sm:gap-0">
             {benefits.map((benefit, index) => (
               <li
@@ -126,7 +133,7 @@ export function PlansBenefits() {
                   index === 0 ? "sm:pl-0" : "",
                   index === benefits.length - 1 ? "sm:pr-0" : "",
                   index > 0
-                    ? "border-t border-border pt-6 sm:border-t-0 sm:border-l sm:pt-0"
+                    ? "border-t border-white/12 pt-6 sm:border-t-0 sm:border-l sm:pt-0"
                     : "",
                 ]
                   .filter(Boolean)
@@ -137,10 +144,10 @@ export function PlansBenefits() {
                     {benefit.icon}
                   </span>
                   <div>
-                    <h3 className="font-heading text-base font-semibold tracking-tight text-midnight sm:text-lg">
+                    <h3 className="font-heading text-base font-semibold tracking-tight text-pure sm:text-lg">
                       {benefit.title}
                     </h3>
-                    <p className="mt-1.5 text-sm leading-relaxed text-navy-muted">
+                    <p className="mt-1.5 text-sm leading-relaxed text-white/70">
                       {benefit.body}
                     </p>
                   </div>

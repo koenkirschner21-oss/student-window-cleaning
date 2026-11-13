@@ -7,6 +7,7 @@ import {
   useRef,
   useState,
   type KeyboardEvent,
+  type RefObject,
   type TouchEvent,
 } from "react";
 import { Container } from "@/components/ui/Container";
@@ -26,14 +27,12 @@ export const GOOGLE_REVIEWS_URL = googleBusiness.leaveReviewUrl;
 const GOOGLE_REVIEWS_LISTING_URL = googleBusiness.reviewsListingUrl;
 
 const DESKTOP_PAGE_SIZE = 4;
-/** Compact quote preview — longer authentic text expands in-card or opens on Google. */
-const QUOTE_PREVIEW_CHARS = 145;
+/** Fixed three-line quote band so equal-height cards stay visually balanced. */
+const QUOTE_CLAMP_CLASS =
+  "line-clamp-3 whitespace-pre-line text-sm leading-snug text-navy-muted sm:text-[0.9375rem] sm:leading-relaxed";
+const QUOTE_BAND_CLASS =
+  "min-h-[3.75rem] sm:min-h-[4.21875rem]"; /* ~3 lines at current leading */
 const reviews = googleReviews;
-
-function reviewNeedsPreview(text: string) {
-  const normalized = text.replace(/\s+/g, " ").trim();
-  return normalized.length > QUOTE_PREVIEW_CHARS || text.split("\n").length > 3;
-}
 
 function initialsFor(name: string) {
   const parts = name.trim().split(/\s+/).filter(Boolean);
@@ -129,17 +128,115 @@ function Avatar({ review }: { review: GoogleReview }) {
 }
 
 const cardShellClass =
-  "relative flex h-full flex-col rounded-[15px] border border-[color-mix(in_srgb,var(--color-signature-blue)_14%,var(--color-border))] bg-[color-mix(in_srgb,var(--color-signature-blue)_5%,white)] px-5 py-5 text-left shadow-none transition-[border-color,transform,box-shadow] duration-200 ease-out sm:px-6 sm:py-6 motion-safe:hover:-translate-y-[2px] hover:border-[color-mix(in_srgb,var(--color-signature-blue)_28%,var(--color-border))] motion-safe:hover:shadow-[0_8px_22px_color-mix(in_srgb,var(--color-midnight-navy)_8%,transparent)]";
+  "relative flex h-full flex-col rounded-[14px] border border-border bg-pure px-4 py-4 text-left shadow-none transition-[border-color,box-shadow,transform] duration-200 ease-out sm:px-5 sm:py-[1.125rem] motion-safe:hover:-translate-y-px hover:border-[color-mix(in_srgb,var(--color-midnight-navy)_18%,var(--color-border))] motion-safe:hover:shadow-[0_6px_18px_color-mix(in_srgb,var(--color-midnight-navy)_7%,transparent)]";
 
 function reviewCardHref(review: GoogleReview) {
   return review.directReviewUrl || GOOGLE_REVIEWS_LISTING_URL || null;
 }
 
+function ReviewDialog({
+  review,
+  onClose,
+  returnFocusRef,
+}: {
+  review: GoogleReview;
+  onClose: () => void;
+  returnFocusRef: RefObject<HTMLButtonElement | null>;
+}) {
+  const titleId = useId();
+  const closeRef = useRef<HTMLButtonElement>(null);
+
+  useEffect(() => {
+    const previous = document.body.style.overflow;
+    const trigger = returnFocusRef.current;
+    document.body.style.overflow = "hidden";
+    closeRef.current?.focus();
+
+    function onKeyDown(event: globalThis.KeyboardEvent) {
+      if (event.key === "Escape") {
+        event.preventDefault();
+        onClose();
+      }
+    }
+
+    window.addEventListener("keydown", onKeyDown);
+    return () => {
+      document.body.style.overflow = previous;
+      window.removeEventListener("keydown", onKeyDown);
+      trigger?.focus();
+    };
+  }, [onClose, returnFocusRef]);
+
+  return (
+    <div
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby={titleId}
+      className="fixed inset-0 z-50 flex items-end justify-center bg-midnight/55 p-3 sm:items-center sm:p-6"
+      onClick={onClose}
+    >
+      <div
+        className="relative flex max-h-[min(88vh,36rem)] w-full max-w-lg flex-col overflow-hidden rounded-[14px] border border-border bg-pure shadow-[0_18px_48px_-24px_rgba(6,26,56,0.55)]"
+        onClick={(event) => event.stopPropagation()}
+      >
+        <div className="flex items-start justify-between gap-3 border-b border-border px-4 py-3.5 sm:px-5">
+          <div className="min-w-0">
+            <p
+              id={titleId}
+              className="font-heading text-base font-semibold text-midnight"
+            >
+              {review.name}
+            </p>
+            <p className="mt-1 flex flex-wrap items-center gap-x-2 gap-y-1 text-sm text-navy-muted">
+              <GoldStars rating={review.rating} size="sm" />
+              <span aria-hidden>·</span>
+              <GoogleMark compact />
+              <span aria-hidden>·</span>
+              <span>Review</span>
+            </p>
+          </div>
+          <button
+            ref={closeRef}
+            type="button"
+            onClick={onClose}
+            className="inline-flex min-h-10 shrink-0 items-center justify-center rounded-md bg-cloud px-3 text-sm font-semibold text-midnight transition-colors hover:bg-ice focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-signature"
+          >
+            Close
+          </button>
+        </div>
+
+        <div className="overflow-y-auto overscroll-contain px-4 py-4 sm:px-5 sm:py-5">
+          <p className="whitespace-pre-line text-sm leading-relaxed text-navy-muted sm:text-[0.9375rem]">
+            {review.text}
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function ReviewCard({ review }: { review: GoogleReview }) {
   const href = reviewCardHref(review);
-  const needsPreview = reviewNeedsPreview(review.text);
-  const [expanded, setExpanded] = useState(false);
-  const showPreview = needsPreview && !expanded;
+  const textRef = useRef<HTMLParagraphElement>(null);
+  const triggerRef = useRef<HTMLButtonElement>(null);
+  const [isTruncated, setIsTruncated] = useState(false);
+  const [dialogOpen, setDialogOpen] = useState(false);
+
+  useEffect(() => {
+    const el = textRef.current;
+    if (!el) return;
+
+    const measure = () => {
+      setIsTruncated(el.scrollHeight > el.clientHeight + 1);
+    };
+
+    measure();
+    const observer = new ResizeObserver(measure);
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [review.text]);
+
+  const closeDialog = useCallback(() => setDialogOpen(false), []);
 
   return (
     <article className={cardShellClass}>
@@ -148,55 +245,43 @@ function ReviewCard({ review }: { review: GoogleReview }) {
           href={href}
           target="_blank"
           rel="noopener noreferrer"
-          className="absolute inset-0 z-0 rounded-[15px] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-signature"
+          className="absolute inset-0 z-0 rounded-[14px] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-signature"
           aria-label={`Read Google reviews — review from ${review.name}`}
         />
       ) : null}
 
-      <div className="relative z-[1] flex h-full flex-col">
-        <div className="pointer-events-none">
+      <div className="relative z-[1] flex min-h-0 flex-1 flex-col">
+        <div className="pointer-events-none shrink-0">
           <GoldStars rating={review.rating} size="md" />
         </div>
 
-        <blockquote className="pointer-events-none mt-3 flex min-h-[6.75rem] flex-1 flex-col">
-          <div
-            className={
-              expanded
-                ? "min-h-0 max-h-[6.75rem] flex-1 overflow-y-auto overscroll-contain"
-                : undefined
-            }
-          >
-            <p
-              className={[
-                "whitespace-pre-line text-sm leading-relaxed text-navy-muted sm:text-[0.95rem]",
-                showPreview ? "line-clamp-4" : undefined,
-              ]
-                .filter(Boolean)
-                .join(" ")}
-            >
-              {review.text}
-            </p>
-          </div>
+        <blockquote className={`pointer-events-none mt-2.5 ${QUOTE_BAND_CLASS}`}>
+          <p ref={textRef} className={QUOTE_CLAMP_CLASS}>
+            {review.text}
+          </p>
         </blockquote>
 
-        {needsPreview ? (
-          <button
-            type="button"
-            className="relative z-10 mt-2 self-start text-sm font-medium text-signature transition-colors hover:text-[#0656d6] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-signature"
-            aria-expanded={expanded}
-            onClick={(event) => {
-              event.preventDefault();
-              event.stopPropagation();
-              setExpanded((value) => !value);
-            }}
-          >
-            {expanded ? "Show less" : "Full review"}
-          </button>
-        ) : (
-          <span className="mt-2 block h-5" aria-hidden />
-        )}
+        {/* Reserved link row keeps every card the same height. */}
+        <div className="mt-1.5 flex min-h-5 items-center">
+          {isTruncated ? (
+            <button
+              ref={triggerRef}
+              type="button"
+              className="relative z-10 self-start text-sm font-medium text-signature transition-colors hover:text-[#0656d6] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-signature"
+              aria-haspopup="dialog"
+              aria-expanded={dialogOpen}
+              onClick={(event) => {
+                event.preventDefault();
+                event.stopPropagation();
+                setDialogOpen(true);
+              }}
+            >
+              Read full review
+            </button>
+          ) : null}
+        </div>
 
-        <footer className="pointer-events-none mt-4 flex items-center gap-3">
+        <footer className="pointer-events-none mt-auto flex items-center gap-2.5 pt-3">
           <Avatar review={review} />
           <div className="min-w-0">
             <p className="font-heading text-sm font-semibold text-midnight">
@@ -210,6 +295,14 @@ function ReviewCard({ review }: { review: GoogleReview }) {
           </div>
         </footer>
       </div>
+
+      {dialogOpen ? (
+        <ReviewDialog
+          review={review}
+          onClose={closeDialog}
+          returnFocusRef={triggerRef}
+        />
+      ) : null}
     </article>
   );
 }
@@ -361,7 +454,7 @@ function ReviewGrid({
 }) {
   const count = items.length;
   const columns = twoByTwo
-    ? "sm:grid-cols-2"
+    ? "sm:grid-cols-2 sm:grid-rows-2"
     : count === 3
       ? "sm:grid-cols-2 lg:grid-cols-3"
       : count === 2
@@ -370,10 +463,10 @@ function ReviewGrid({
 
   return (
     <ul
-      className={`grid list-none items-stretch gap-5 p-0 sm:auto-rows-fr sm:gap-6 ${columns}`}
+      className={`grid list-none items-stretch gap-4 p-0 sm:gap-x-5 sm:gap-y-4 ${columns}`}
     >
       {items.map((review) => (
-        <li key={review.id} className="min-w-0 sm:h-full">
+        <li key={review.id} className="min-w-0 h-full">
           <ReviewCard review={review} />
         </li>
       ))}
@@ -398,15 +491,11 @@ function DesktopReviews() {
       onTouchEnd={onTouchEnd}
     >
       <div
-        className={[
-          // Stable 2×2 frame so page changes don’t jump (compact ~ page-2 depth).
-          "min-h-[28.5rem]",
+        className={
           reduceMotion
             ? undefined
-            : "motion-safe:transition-opacity motion-safe:duration-200",
-        ]
-          .filter(Boolean)
-          .join(" ")}
+            : "motion-safe:transition-opacity motion-safe:duration-200"
+        }
       >
         <ReviewGrid items={visible} twoByTwo={twoByTwo} />
       </div>
@@ -541,7 +630,7 @@ export function GoogleReviews() {
       style={{ paddingBlock: "clamp(2.5rem, 5vw, 3.75rem)" }}
     >
       <Container>
-        <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between lg:gap-8">
+        <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between lg:gap-8">
           <header className="max-w-xl text-left">
             <p className="text-[0.7rem] font-semibold uppercase tracking-[0.18em] text-signature sm:text-xs">
               Real Customer Experiences
@@ -557,18 +646,18 @@ export function GoogleReviews() {
             </p>
           </header>
 
-          <div className="flex shrink-0 flex-col items-start lg:items-end lg:pb-1">
+          <div className="flex shrink-0 flex-col items-start lg:pt-8">
             <GoogleSummaryBadge />
           </div>
         </div>
 
-        <div className="mt-7 lg:mt-8">
+        <div className="mt-6 lg:mt-7">
           <DesktopReviews />
           <MobileReviews />
         </div>
 
         <aside
-          className="mt-7 overflow-hidden rounded-[15px] sm:mt-8"
+          className="mt-6 overflow-hidden rounded-[15px] sm:mt-7"
           aria-labelledby="reviews-cta-heading"
         >
           <div
