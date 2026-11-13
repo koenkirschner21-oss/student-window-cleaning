@@ -10,6 +10,8 @@ export type CleaningProcessStep = {
   image?: {
     src: string;
     alt: string;
+    /** Optional CSS object-position to keep work details visible in cropped frames. */
+    objectPosition?: string;
   };
 };
 
@@ -117,7 +119,10 @@ export function CleaningProcessSection({
                     alt={step.image!.alt}
                     fill
                     sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
-                    className="object-cover object-center"
+                    className="object-cover"
+                    style={{
+                      objectPosition: step.image!.objectPosition ?? "center",
+                    }}
                   />
                 </figure>
                 <span

@@ -19,8 +19,9 @@ const photos = {
     alt: "Residential gutter fitted with a black mesh guard covering the channel along a shingled roofline",
   },
   processAssess: {
-    src: "/services/gutter-cleaning-residential-roofline.webp",
-    alt: "Residential gutter and roofline being assessed for gutter guard suitability",
+    src: "/services/gutter-guards/process-assess-technician-ladder.webp",
+    alt: "Technician on a ladder inspecting a residential gutter system during assessment",
+    objectPosition: "center 35%",
   },
   processPrepare: {
     src: "/services/gutter-cleaning-hose.webp",
@@ -31,8 +32,9 @@ const photos = {
     alt: "Micro-mesh gutter guard being fitted into a residential gutter",
   },
   processFinal: {
-    src: "/our-work/gutter-detail-cleared.webp",
-    alt: "Cleared gutter channel after preparation and installation review",
+    src: "/services/gutter-guards/process-final-check-mesh-installed.webp",
+    alt: "Installed perforated mesh gutter guard along a residential roofline during final review",
+    objectPosition: "center 28%",
   },
 } as const;
 
