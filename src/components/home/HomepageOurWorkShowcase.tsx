@@ -22,11 +22,11 @@ export function HomepageOurWorkShowcase() {
           <div className="grid min-h-[17.5rem] md:min-h-[18.75rem] md:grid-cols-2 lg:min-h-[20rem]">
             <div className="relative min-h-[13rem] md:min-h-0">
               <Image
-                src="/home/our-work-showcase.webp"
-                alt="Front elevation of a two-story brick home with large white-trimmed windows, garage, and landscaped front yard after Student Window Cleaning service"
+                src="/about/student-community-lang-group.webp"
+                alt="University student community group in professional attire posing together in front of a Gordon S. Lang School of Business and Economics banner"
                 fill
                 sizes="(max-width: 768px) 100vw, 50vw"
-                className="object-cover object-[center_42%]"
+                className="object-cover object-center"
                 priority={false}
               />
             </div>
