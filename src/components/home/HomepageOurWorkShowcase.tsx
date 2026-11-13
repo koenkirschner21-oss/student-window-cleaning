@@ -3,8 +3,8 @@ import Link from "next/link";
 import { Container } from "@/components/ui/Container";
 
 /**
- * Compact homepage Our Work teaser — photography-first strip after the quote
- * section, patterned after the Screen Cleaning feature panel.
+ * Compact homepage Our Work teaser — navy content left, photo right
+ * (alternates with the quote section layout above).
  */
 export function HomepageOurWorkShowcase() {
   return (
@@ -20,17 +20,6 @@ export function HomepageOurWorkShowcase() {
       <Container>
         <aside className="overflow-hidden rounded-[15px]">
           <div className="grid min-h-[17.5rem] md:min-h-[18.75rem] md:grid-cols-2 lg:min-h-[20rem]">
-            <div className="relative min-h-[13rem] md:min-h-0">
-              <Image
-                src="/about/student-community-lang-group.webp"
-                alt="University student community group in professional attire posing together in front of a Gordon S. Lang School of Business and Economics banner"
-                fill
-                sizes="(max-width: 768px) 100vw, 50vw"
-                className="object-cover object-center"
-                priority={false}
-              />
-            </div>
-
             <div
               className="flex flex-col justify-center px-5 py-7 text-pure sm:px-7 sm:py-8 lg:px-9"
               style={{ backgroundColor: "#061A38" }}
@@ -56,6 +45,17 @@ export function HomepageOurWorkShowcase() {
                   Explore Our Work →
                 </Link>
               </div>
+            </div>
+
+            <div className="relative min-h-[13rem] md:min-h-0">
+              <Image
+                src="/about/student-community-lang-group.webp"
+                alt="University student community group in professional attire posing together in front of a Gordon S. Lang School of Business and Economics banner"
+                fill
+                sizes="(max-width: 768px) 100vw, 50vw"
+                className="object-cover object-center"
+                priority={false}
+              />
             </div>
           </div>
         </aside>
