@@ -3,27 +3,49 @@ import { Suspense } from "react";
 import { QuoteForm } from "@/components/quote/QuoteForm";
 import { QuoteFormWithSearchParams } from "@/components/quote/QuoteFormWithSearchParams";
 import { QuoteTrustBand } from "@/components/quote/QuoteTrustBand";
+import { JsonLd } from "@/components/seo/JsonLd";
 import { Container } from "@/components/ui/Container";
+import {
+  buildBreadcrumbJsonLd,
+  defaultOgImage,
+  socialImages,
+} from "@/lib/seo";
 import { contact } from "@/lib/site";
 
+const path = "/quote";
+const title = "Free Window Cleaning Quote";
+const description =
+  "Request a free virtual window and gutter cleaning quote from Student Window Cleaning in Whitby and Durham Region. Fast, simple, and no obligation.";
+
 export const metadata: Metadata = {
-  title: "Get a Free Virtual Quote | Window Cleaning in Whitby",
-  description:
-    "Request a free virtual window and gutter cleaning quote from Student Window Cleaning in Whitby and Durham Region. Fast, simple, and no obligation.",
+  title,
+  description,
   alternates: {
-    canonical: "/quote",
+    canonical: path,
   },
   openGraph: {
-    title: "Get a Free Virtual Quote | Student Window Cleaning",
-    description:
-      "Tell us about your home or business. We’ll review the property and prepare a personalized virtual quote — no obligation.",
-    url: "/quote",
+    title,
+    description,
+    url: path,
+    images: socialImages(defaultOgImage),
+  },
+  twitter: {
+    card: "summary_large_image",
+    title,
+    description,
+    images: [defaultOgImage.url],
   },
 };
 
 export default function QuotePage() {
   return (
     <main id="main-content" className="flex-1">
+      <JsonLd
+        data={buildBreadcrumbJsonLd([
+          { name: "Home", path: "/" },
+          { name: "Get a Quote", path },
+        ])}
+      />
       {/* Full-width Midnight Navy — form remains white focal point */}
       <section
         aria-labelledby="quote-page-heading"

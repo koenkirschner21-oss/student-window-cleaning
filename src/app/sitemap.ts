@@ -1,28 +1,48 @@
 import type { MetadataRoute } from "next";
-import { site } from "@/lib/site";
+import { absoluteUrl } from "@/lib/seo";
 
+/**
+ * Indexable marketing routes only.
+ * Intentionally omit /privacy and /terms (noindex drafts).
+ * Do not use `new Date()` as lastmod — it implies false freshness.
+ */
 const routes = [
-  "/",
-  "/services",
-  "/services/exterior-window-cleaning",
-  "/services/interior-window-cleaning",
-  "/services/gutter-cleaning",
-  "/services/gutter-guards",
-  "/cleaning-plans",
-  "/about",
-  "/our-work",
-  "/quote",
-  "/privacy",
-  "/terms",
+  { path: "/", priority: 1, changeFrequency: "weekly" as const },
+  { path: "/services", priority: 0.9, changeFrequency: "monthly" as const },
+  {
+    path: "/services/exterior-window-cleaning",
+    priority: 0.8,
+    changeFrequency: "monthly" as const,
+  },
+  {
+    path: "/services/interior-window-cleaning",
+    priority: 0.8,
+    changeFrequency: "monthly" as const,
+  },
+  {
+    path: "/services/gutter-cleaning",
+    priority: 0.8,
+    changeFrequency: "monthly" as const,
+  },
+  {
+    path: "/services/gutter-guards",
+    priority: 0.7,
+    changeFrequency: "monthly" as const,
+  },
+  {
+    path: "/cleaning-plans",
+    priority: 0.8,
+    changeFrequency: "monthly" as const,
+  },
+  { path: "/about", priority: 0.6, changeFrequency: "monthly" as const },
+  { path: "/our-work", priority: 0.7, changeFrequency: "monthly" as const },
+  { path: "/quote", priority: 0.9, changeFrequency: "monthly" as const },
 ] as const;
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const lastModified = new Date();
-
-  return routes.map((path) => ({
-    url: `${site.url}${path === "/" ? "" : path}`,
-    lastModified,
-    changeFrequency: path === "/" ? "weekly" : "monthly",
-    priority: path === "/" ? 1 : 0.6,
+  return routes.map((route) => ({
+    url: absoluteUrl(route.path),
+    changeFrequency: route.changeFrequency,
+    priority: route.priority,
   }));
 }

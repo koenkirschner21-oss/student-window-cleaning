@@ -2,8 +2,17 @@ export const site = {
   name: "Student Window Cleaning",
   shortName: "SWC",
   tagline: "Student run. Professionally done.",
+  /**
+   * Default meta description / OG fallback.
+   * Keep Whitby-local and honest; page-level metadata may override.
+   */
   description:
-    "Student Window Cleaning — a student-run window and exterior cleaning service. Get a free quote for your home.",
+    "Student-run window and gutter cleaning in Whitby and Durham Region. Request a free virtual quote from Student Window Cleaning.",
+  /**
+   * Public origin for canonicals, sitemap, and absolute social URLs.
+   * Pre-launch: temporary Vercel host (always noindex via hostname policy).
+   * At December launch: set to the permanent custom domain HTTPS origin.
+   */
   url: "https://student-window-cleaning.vercel.app",
 } as const;
 

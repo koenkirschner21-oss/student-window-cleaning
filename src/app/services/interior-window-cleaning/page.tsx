@@ -1,21 +1,57 @@
 import type { Metadata } from "next";
+import { JsonLd } from "@/components/seo/JsonLd";
 import { InteriorWindowCleaningPage } from "@/components/services/InteriorWindowCleaningPage";
+import {
+  buildBreadcrumbJsonLd,
+  buildServiceJsonLd,
+  defaultOgImage,
+  socialImages,
+} from "@/lib/seo";
+
+const path = "/services/interior-window-cleaning";
+const title = "Interior Window Cleaning in Whitby";
+const description =
+  "Professional interior window cleaning in Whitby and Durham Region — clearer views, careful detailing, and free personalized quotes from Student Window Cleaning.";
 
 export const metadata: Metadata = {
-  title: "Interior Window Cleaning in Whitby & Durham Region",
-  description:
-    "Professional interior window cleaning in Whitby and Durham Region from Student Window Cleaning — clearer views, careful detailing, free personalized quotes.",
+  title,
+  description,
   alternates: {
-    canonical: "/services/interior-window-cleaning",
+    canonical: path,
   },
   openGraph: {
-    title: "Interior Window Cleaning | Student Window Cleaning",
-    description:
-      "Bring more natural light into your home with professional interior window cleaning from our local student-run team.",
-    url: "/services/interior-window-cleaning",
+    title,
+    description,
+    url: path,
+    images: socialImages(defaultOgImage),
+  },
+  twitter: {
+    card: "summary_large_image",
+    title,
+    description,
+    images: [defaultOgImage.url],
   },
 };
 
 export default function Page() {
-  return <InteriorWindowCleaningPage />;
+  return (
+    <>
+      <JsonLd
+        data={buildBreadcrumbJsonLd([
+          { name: "Home", path: "/" },
+          { name: "Services", path: "/services" },
+          { name: "Interior Window Cleaning", path },
+        ])}
+      />
+      <JsonLd
+        data={buildServiceJsonLd({
+          name: "Interior Window Cleaning",
+          description,
+          path,
+          serviceType: "Interior window cleaning",
+        })}
+      />
+      <InteriorWindowCleaningPage />
+    </>
+  );
 }
