@@ -1,4 +1,11 @@
 import Image from "next/image";
+import {
+  CalendarCheck,
+  Leaf,
+  ShieldCheck,
+  TreePine,
+  type LucideIcon,
+} from "lucide-react";
 import { CleaningProcessSection } from "@/components/services/CleaningProcessSection";
 import { ServicePageCta } from "@/components/services/ServicePageCta";
 import { ServicePageHero } from "@/components/services/ServicePageHero";
@@ -44,32 +51,27 @@ const introBenefits = [
   "Lower ongoing maintenance",
 ] as const;
 
-const fitPoints = [
+const fitPoints: readonly {
+  title: string;
+  Icon: LucideIcon;
+}[] = [
   {
     title: "Homes Near Trees",
-    description:
-      "Useful when nearby trees regularly drop leaves and debris into the gutter line.",
-    icon: "tree" as const,
+    Icon: TreePine,
   },
   {
     title: "Recurring Leaf Buildup",
-    description:
-      "A practical option if gutters fill between seasonal cleanings.",
-    icon: "leaf" as const,
+    Icon: Leaf,
   },
   {
     title: "Easier Long-Term Care",
-    description:
-      "Helpful for homeowners who want simpler upkeep between visits.",
-    icon: "care" as const,
+    Icon: CalendarCheck,
   },
   {
     title: "Good for Ongoing Protection",
-    description:
-      "Adds a layer of protection that helps keep gutters clearer over time.",
-    icon: "shield" as const,
+    Icon: ShieldCheck,
   },
-] as const;
+];
 
 const processSteps = [
   {
@@ -138,93 +140,6 @@ function CheckCircleIcon({ className = "size-4" }: { className?: string }) {
         d="M5.1 8.15 7.05 10l3.85-4.1"
         stroke="currentColor"
         strokeWidth="1.5"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-  );
-}
-
-function FitIcon({ kind }: { kind: (typeof fitPoints)[number]["icon"] }) {
-  const className = "size-7";
-
-  if (kind === "tree") {
-    return (
-      <svg viewBox="0 0 24 24" fill="none" aria-hidden className={className}>
-        <path
-          d="M12 20v-6"
-          stroke="currentColor"
-          strokeWidth="1.75"
-          strokeLinecap="round"
-        />
-        <path
-          d="M12 14c-3.2 0-5.5-2.1-5.5-4.75S9.5 4.5 12 4.5s5.5 2.1 5.5 4.75S15.2 14 12 14Z"
-          stroke="currentColor"
-          strokeWidth="1.75"
-          strokeLinejoin="round"
-        />
-        <path
-          d="M8.5 11.5c-1.4.4-2.5 1.5-2.5 3 0 1.7 1.6 3 3.5 3h5c1.9 0 3.5-1.3 3.5-3 0-1.5-1.1-2.6-2.5-3"
-          stroke="currentColor"
-          strokeWidth="1.75"
-          strokeLinejoin="round"
-        />
-      </svg>
-    );
-  }
-
-  if (kind === "leaf") {
-    return (
-      <svg viewBox="0 0 24 24" fill="none" aria-hidden className={className}>
-        <path
-          d="M5 18c4-1 7-4 9-8 2-4 3-7 5-8-1 4-2 8-5 11-3 3-6 4-9 5Z"
-          stroke="currentColor"
-          strokeWidth="1.75"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        />
-        <path
-          d="M8 14c2-1 4-3 6-6"
-          stroke="currentColor"
-          strokeWidth="1.75"
-          strokeLinecap="round"
-        />
-      </svg>
-    );
-  }
-
-  if (kind === "care") {
-    return (
-      <svg viewBox="0 0 24 24" fill="none" aria-hidden className={className}>
-        <path
-          d="M4.5 11.25 12 5.5l7.5 5.75"
-          stroke="currentColor"
-          strokeWidth="1.75"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        />
-        <path
-          d="M6.5 10.75V19h11V10.75"
-          stroke="currentColor"
-          strokeWidth="1.75"
-          strokeLinejoin="round"
-        />
-      </svg>
-    );
-  }
-
-  return (
-    <svg viewBox="0 0 24 24" fill="none" aria-hidden className={className}>
-      <path
-        d="M12 3.75 19 7v5.25c0 4.35-2.95 7.85-7 8.9-4.05-1.05-7-4.55-7-8.9V7l7-3.25Z"
-        stroke="currentColor"
-        strokeWidth="1.75"
-        strokeLinejoin="round"
-      />
-      <path
-        d="M9.5 12.1 11.2 13.75 14.6 10.1"
-        stroke="currentColor"
-        strokeWidth="1.75"
         strokeLinecap="round"
         strokeLinejoin="round"
       />
@@ -350,9 +265,6 @@ export function GutterGuardsPageContent() {
                 </figure>
               ))}
             </div>
-            <p className="mt-5 text-center text-xs leading-relaxed text-white/55 sm:mt-6 sm:text-sm">
-              Illustrative example — mesh style may vary by property.
-            </p>
           </div>
         </Container>
       </section>
@@ -361,7 +273,7 @@ export function GutterGuardsPageContent() {
       <section
         aria-labelledby="gutter-guards-fit-heading"
         className="bg-white text-midnight"
-        style={{ paddingBlock: "clamp(3.25rem, 5.5vw, 4.75rem)" }}
+        style={{ paddingBlock: "clamp(2.75rem, 5vw, 4rem)" }}
       >
         <Container width="portfolio">
           <div className="mx-auto max-w-2xl text-center">
@@ -380,30 +292,23 @@ export function GutterGuardsPageContent() {
             </p>
           </div>
 
-          <ul className="mt-10 grid gap-8 sm:mt-11 sm:grid-cols-2 lg:grid-cols-4 lg:gap-6">
-            {fitPoints.map((item) => (
+          <ul className="mt-9 grid grid-cols-1 gap-8 sm:mt-10 sm:grid-cols-2 sm:gap-x-8 sm:gap-y-9 lg:grid-cols-4 lg:gap-x-10">
+            {fitPoints.map(({ title, Icon }) => (
               <li
-                key={item.title}
+                key={title}
                 className="flex min-w-0 flex-col items-center text-center"
               >
-                <span className="text-signature">
-                  <FitIcon kind={item.icon} />
-                </span>
-                <h3 className="font-heading mt-3.5 text-[1.05rem] font-semibold tracking-tight text-midnight">
-                  {item.title}
+                <Icon
+                  aria-hidden
+                  className="size-11 text-signature sm:size-12"
+                  strokeWidth={1.75}
+                />
+                <h3 className="font-heading mt-4 text-[1.1rem] font-semibold tracking-tight text-midnight sm:text-[1.15rem]">
+                  {title}
                 </h3>
-                <p className="mt-2 max-w-[16rem] text-sm leading-relaxed text-navy-muted">
-                  {item.description}
-                </p>
               </li>
             ))}
           </ul>
-
-          <p className="mx-auto mt-9 max-w-2xl text-center text-sm leading-relaxed text-navy-muted sm:mt-10 sm:text-[0.95rem]">
-            Gutter guards can help reduce maintenance, but they do not make
-            gutters completely maintenance-free. Suitability depends on the home
-            and roofline — request a quote to discuss your property.
-          </p>
         </Container>
       </section>
 
