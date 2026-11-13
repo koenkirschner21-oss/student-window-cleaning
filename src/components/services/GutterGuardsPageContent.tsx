@@ -11,12 +11,12 @@ const photos = {
     alt: "Close-up of a gutter guard being installed into a white residential gutter under roof shingles",
   },
   valueLeft: {
-    src: "/before-after/gutters/before.webp",
-    alt: "Residential gutter channel filled with leaves and debris",
+    src: "/before-after/gutter-guards/before-clogged-gutter-leaves-debris.webp",
+    alt: "Open residential gutter filled with dry brown leaves and debris along a shingled roofline",
   },
   valueRight: {
-    src: "/before-after/gutters/after-aligned.webp",
-    alt: "Cleared residential gutter channel after debris removal",
+    src: "/before-after/gutter-guards/after-mesh-gutter-guard-installed.webp",
+    alt: "Residential gutter fitted with a black mesh guard covering the channel along a shingled roofline",
   },
   processAssess: {
     src: "/services/gutter-cleaning-residential-roofline.webp",
@@ -322,28 +322,35 @@ export function GutterGuardsPageContent() {
             </p>
           </div>
 
-          <div className="mt-9 grid gap-4 sm:mt-10 sm:grid-cols-2 sm:gap-5 lg:gap-6">
-            {(
-              [
-                { ...photos.valueLeft, label: "Without protection" },
-                { ...photos.valueRight, label: "After clearing" },
-              ] as const
-            ).map((item) => (
-              <figure key={item.label} className="m-0 min-w-0">
-                <div className="relative aspect-[4/3] overflow-hidden rounded-[14px] bg-[#0A274F] sm:aspect-[5/4]">
-                  <Image
-                    src={item.src}
-                    alt={item.alt}
-                    fill
-                    sizes="(max-width: 640px) 100vw, 50vw"
-                    className="object-cover object-center"
-                  />
-                </div>
-                <figcaption className="mt-3 text-center text-sm font-semibold tracking-tight text-white/80">
-                  {item.label}
-                </figcaption>
-              </figure>
-            ))}
+          <div className="mx-auto mt-9 max-w-[52rem] sm:mt-10">
+            <div className="grid gap-5 sm:grid-cols-2 sm:gap-5 lg:gap-6">
+              {(
+                [
+                  { ...photos.valueLeft, label: "Before" },
+                  { ...photos.valueRight, label: "After" },
+                ] as const
+              ).map((item) => (
+                <figure key={item.label} className="m-0 min-w-0">
+                  <div className="relative aspect-[3/4] overflow-hidden rounded-[14px] bg-[#0A274F]">
+                    <Image
+                      src={item.src}
+                      alt={item.alt}
+                      fill
+                      sizes="(max-width: 640px) 100vw, 26rem"
+                      className="object-cover object-center"
+                    />
+                  </div>
+                  <figcaption className="mt-3 flex justify-center">
+                    <span className="inline-flex h-8 w-[6.75rem] items-center justify-center rounded-md bg-pure text-[0.7rem] font-semibold uppercase tracking-[0.14em] text-midnight sm:w-[7.25rem] sm:text-xs">
+                      {item.label}
+                    </span>
+                  </figcaption>
+                </figure>
+              ))}
+            </div>
+            <p className="mt-5 text-center text-xs leading-relaxed text-white/55 sm:mt-6 sm:text-sm">
+              Illustrative example — mesh style may vary by property.
+            </p>
           </div>
         </Container>
       </section>
