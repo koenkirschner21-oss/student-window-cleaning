@@ -129,7 +129,7 @@ function Avatar({ review }: { review: GoogleReview }) {
 }
 
 const cardShellClass =
-  "relative flex h-full flex-col rounded-[15px] border border-[color-mix(in_srgb,var(--color-signature-blue)_14%,var(--color-border))] bg-[color-mix(in_srgb,var(--color-signature-blue)_5%,white)] px-5 py-5 text-left shadow-none transition-[border-color,transform,box-shadow] duration-200 ease-out sm:px-6 sm:py-6 motion-safe:hover:-translate-y-[2px] hover:border-[color-mix(in_srgb,var(--color-signature-blue)_28%,var(--color-border))] motion-safe:hover:shadow-[0_8px_22px_color-mix(in_srgb,var(--color-midnight-navy)_8%,transparent)]";
+  "relative flex flex-col rounded-[14px] border border-border bg-pure px-4 py-4 text-left shadow-none transition-[border-color,box-shadow,transform] duration-200 ease-out sm:px-5 sm:py-[1.125rem] motion-safe:hover:-translate-y-px hover:border-[color-mix(in_srgb,var(--color-midnight-navy)_18%,var(--color-border))] motion-safe:hover:shadow-[0_6px_18px_color-mix(in_srgb,var(--color-midnight-navy)_7%,transparent)]";
 
 function reviewCardHref(review: GoogleReview) {
   return review.directReviewUrl || GOOGLE_REVIEWS_LISTING_URL || null;
@@ -148,27 +148,27 @@ function ReviewCard({ review }: { review: GoogleReview }) {
           href={href}
           target="_blank"
           rel="noopener noreferrer"
-          className="absolute inset-0 z-0 rounded-[15px] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-signature"
+          className="absolute inset-0 z-0 rounded-[14px] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-signature"
           aria-label={`Read Google reviews — review from ${review.name}`}
         />
       ) : null}
 
-      <div className="relative z-[1] flex h-full flex-col">
+      <div className="relative z-[1] flex flex-col">
         <div className="pointer-events-none">
           <GoldStars rating={review.rating} size="md" />
         </div>
 
-        <blockquote className="pointer-events-none mt-3 flex min-h-[6.75rem] flex-1 flex-col">
+        <blockquote className="pointer-events-none mt-2.5">
           <div
             className={
               expanded
-                ? "min-h-0 max-h-[6.75rem] flex-1 overflow-y-auto overscroll-contain"
+                ? "max-h-[7.5rem] overflow-y-auto overscroll-contain"
                 : undefined
             }
           >
             <p
               className={[
-                "whitespace-pre-line text-sm leading-relaxed text-navy-muted sm:text-[0.95rem]",
+                "whitespace-pre-line text-sm leading-snug text-navy-muted sm:text-[0.9375rem] sm:leading-relaxed",
                 showPreview ? "line-clamp-4" : undefined,
               ]
                 .filter(Boolean)
@@ -182,7 +182,7 @@ function ReviewCard({ review }: { review: GoogleReview }) {
         {needsPreview ? (
           <button
             type="button"
-            className="relative z-10 mt-2 self-start text-sm font-medium text-signature transition-colors hover:text-[#0656d6] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-signature"
+            className="relative z-10 mt-1.5 self-start text-sm font-medium text-signature transition-colors hover:text-[#0656d6] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-signature"
             aria-expanded={expanded}
             onClick={(event) => {
               event.preventDefault();
@@ -192,11 +192,9 @@ function ReviewCard({ review }: { review: GoogleReview }) {
           >
             {expanded ? "Show less" : "Full review"}
           </button>
-        ) : (
-          <span className="mt-2 block h-5" aria-hidden />
-        )}
+        ) : null}
 
-        <footer className="pointer-events-none mt-4 flex items-center gap-3">
+        <footer className="pointer-events-none mt-3 flex items-center gap-2.5">
           <Avatar review={review} />
           <div className="min-w-0">
             <p className="font-heading text-sm font-semibold text-midnight">
@@ -370,10 +368,10 @@ function ReviewGrid({
 
   return (
     <ul
-      className={`grid list-none items-stretch gap-5 p-0 sm:auto-rows-fr sm:gap-6 ${columns}`}
+      className={`grid list-none items-start gap-4 p-0 sm:gap-x-5 sm:gap-y-4 ${columns}`}
     >
       {items.map((review) => (
-        <li key={review.id} className="min-w-0 sm:h-full">
+        <li key={review.id} className="min-w-0">
           <ReviewCard review={review} />
         </li>
       ))}
@@ -398,15 +396,11 @@ function DesktopReviews() {
       onTouchEnd={onTouchEnd}
     >
       <div
-        className={[
-          // Stable 2×2 frame so page changes don’t jump (compact ~ page-2 depth).
-          "min-h-[28.5rem]",
+        className={
           reduceMotion
             ? undefined
-            : "motion-safe:transition-opacity motion-safe:duration-200",
-        ]
-          .filter(Boolean)
-          .join(" ")}
+            : "motion-safe:transition-opacity motion-safe:duration-200"
+        }
       >
         <ReviewGrid items={visible} twoByTwo={twoByTwo} />
       </div>
@@ -541,7 +535,7 @@ export function GoogleReviews() {
       style={{ paddingBlock: "clamp(2.5rem, 5vw, 3.75rem)" }}
     >
       <Container>
-        <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between lg:gap-8">
+        <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between lg:gap-8">
           <header className="max-w-xl text-left">
             <p className="text-[0.7rem] font-semibold uppercase tracking-[0.18em] text-signature sm:text-xs">
               Real Customer Experiences
@@ -557,18 +551,18 @@ export function GoogleReviews() {
             </p>
           </header>
 
-          <div className="flex shrink-0 flex-col items-start lg:items-end lg:pb-1">
+          <div className="flex shrink-0 flex-col items-start lg:pt-8">
             <GoogleSummaryBadge />
           </div>
         </div>
 
-        <div className="mt-7 lg:mt-8">
+        <div className="mt-6 lg:mt-7">
           <DesktopReviews />
           <MobileReviews />
         </div>
 
         <aside
-          className="mt-7 overflow-hidden rounded-[15px] sm:mt-8"
+          className="mt-6 overflow-hidden rounded-[15px] sm:mt-7"
           aria-labelledby="reviews-cta-heading"
         >
           <div
