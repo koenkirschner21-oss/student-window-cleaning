@@ -6,10 +6,12 @@ Companion to the Phase 1 implementation PR. No business-copy decisions are final
 
 | Host | Indexable? | Mechanism |
 | --- | --- | --- |
-| `*.vercel.app` (including `student-window-cleaning.vercel.app`) | **No** | Always `X-Robots-Tag: noindex, follow` from `src/proxy.ts`. While `site.url` still points at vercel.app, HTML robots is also `noindex`. After launch, HTML may say `index` (same build as the custom domain) but the vercel.app host remains noindex via the header. |
-| Configured public host while `site.url` is still a vercel.app URL | **No** | HTML robots derived from `site.url` + proxy header |
-| Permanent custom domain **after** `site.url` is updated to that HTTPS origin | **Yes** | HTML robots allow indexing; proxy sets `X-Robots-Tag: index, follow` only when the request host matches that configured hostname |
+| `*.vercel.app` (including `student-window-cleaning.vercel.app`) | **No** | Shared `shouldIndexHostname()` drives both HTML `robots` (`generateMetadata` + request Host) and `X-Robots-Tag` (`src/proxy.ts`). Always noindex on vercel.app — before and after a custom domain is attached. |
+| Configured public host while `site.url` is still a vercel.app URL | **No** | Same shared policy: temporary origin cannot index |
+| Permanent custom domain **after** `site.url` is updated to that HTTPS origin | **Yes** | Request host matches configured public hostname → HTML + header both `index, follow` |
 | Preview deployments | **No** | Existing Vercel SSO + platform `x-robots-tag: noindex`, plus app `*.vercel.app` policy |
+
+HTML meta and `X-Robots-Tag` intentionally use the **same** helper so they cannot diverge for a given request host.
 
 `VERCEL_ENV=production` is **not** used to decide indexing — production can still be the vercel.app host.
 
