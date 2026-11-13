@@ -48,100 +48,70 @@ function ChevronIcon({ open }: { open?: boolean }) {
   );
 }
 
-function ServiceIcon({ kind }: { kind: (typeof serviceNavItems)[number]["icon"] }) {
-  const className = "size-4 shrink-0 text-signature";
-  if (kind === "exterior") {
-    return (
-      <svg viewBox="0 0 16 16" fill="none" aria-hidden className={className}>
-        <rect x="2.5" y="2.5" width="11" height="11" rx="1.25" stroke="currentColor" strokeWidth="1.5" />
-        <path d="M8 2.5v11M2.5 8h11" stroke="currentColor" strokeWidth="1.5" />
-      </svg>
-    );
-  }
-  if (kind === "interior") {
-    return (
-      <svg viewBox="0 0 16 16" fill="none" aria-hidden className={className}>
-        <path
-          d="M2.75 13.25V4.5L8 2.75l5.25 1.75v8.75"
-          stroke="currentColor"
-          strokeWidth="1.5"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        />
-        <path d="M8 6.5v6.75" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
-      </svg>
-    );
-  }
-  if (kind === "gutter") {
-    return (
-      <svg viewBox="0 0 16 16" fill="none" aria-hidden className={className}>
-        <path
-          d="M2.5 5.5h11M3.5 5.5v2.25c0 .8.45 1.5 1.15 1.85L6 10.25v3.25"
-          stroke="currentColor"
-          strokeWidth="1.5"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        />
-        <path
-          d="M12.5 5.5v1.5"
-          stroke="currentColor"
-          strokeWidth="1.5"
-          strokeLinecap="round"
-        />
-      </svg>
-    );
-  }
-  return (
-    <svg viewBox="0 0 16 16" fill="none" aria-hidden className={className}>
-      <path
-        d="M2.5 6.25h11v1.5H2.5z"
-        stroke="currentColor"
-        strokeWidth="1.5"
-        strokeLinejoin="round"
-      />
-      <path
-        d="M4 6.25V4.75c0-.7.55-1.25 1.25-1.25h5.5c.7 0 1.25.55 1.25 1.25v1.5"
-        stroke="currentColor"
-        strokeWidth="1.5"
-        strokeLinejoin="round"
-      />
-      <circle cx="5.25" cy="5.35" r="0.65" fill="currentColor" />
-      <circle cx="8" cy="5.35" r="0.65" fill="currentColor" />
-      <circle cx="10.75" cy="5.35" r="0.65" fill="currentColor" />
-    </svg>
-  );
+function serviceDropdownItemClass(active: boolean) {
+  return [
+    "flex min-h-11 items-center px-4 text-left text-sm font-medium tracking-tight text-midnight",
+    "transition-colors duration-150",
+    active ? "bg-ice" : "bg-transparent hover:bg-ice",
+    "focus-visible:bg-ice focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-signature",
+  ].join(" ");
 }
 
 function ServicesDropdownPanel({
   id,
+  pathname,
   onNavigate,
 }: {
   id: string;
+  pathname: string;
   onNavigate?: () => void;
 }) {
   return (
-    <ul
+    <div
       id={id}
-      role="list"
-      className="min-w-[16.5rem] rounded-md border border-border bg-pure py-1.5 shadow-[0_12px_32px_-16px_rgba(6,26,56,0.35)]"
+      className="min-w-[17rem] overflow-hidden rounded-[10px] border border-border bg-pure py-1.5 shadow-[0_10px_28px_-18px_rgba(6,26,56,0.45)]"
     >
-      {serviceNavItems.map((item) => (
-        <li key={item.href}>
-          <Link
-            href={item.href}
-            className="flex min-h-11 items-center gap-2.5 px-3.5 text-sm font-medium text-midnight transition-colors duration-150 hover:bg-ice focus-visible:bg-ice focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-signature"
-            onClick={onNavigate}
-          >
-            <ServiceIcon kind={item.icon} />
-            <span>{item.label}</span>
-          </Link>
-        </li>
-      ))}
-    </ul>
+      <ul role="list" className="m-0 list-none p-0">
+        {serviceNavItems.map((item) => {
+          const active = pathname === item.href;
+          return (
+            <li key={item.href}>
+              <Link
+                href={item.href}
+                className={serviceDropdownItemClass(active)}
+                aria-current={active ? "page" : undefined}
+                onClick={onNavigate}
+              >
+                {item.label}
+              </Link>
+            </li>
+          );
+        })}
+      </ul>
+      <div className="mx-4 my-1.5 h-px bg-border" aria-hidden />
+      <Link
+        href="/services"
+        className={[
+          "mx-1.5 flex min-h-10 items-center rounded-md px-2.5 text-sm font-semibold tracking-tight text-signature",
+          "transition-colors duration-150 hover:bg-ice",
+          "focus-visible:bg-ice focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-signature",
+        ].join(" ")}
+        aria-current={pathname === "/services" ? "page" : undefined}
+        onClick={onNavigate}
+      >
+        View All Services
+      </Link>
+    </div>
   );
 }
 
-function DesktopServicesNav({ active }: { active: boolean }) {
+function DesktopServicesNav({
+  active,
+  pathname,
+}: {
+  active: boolean;
+  pathname: string;
+}) {
   const [open, setOpen] = useState(false);
   const wrapRef = useRef<HTMLDivElement>(null);
   const chevronRef = useRef<HTMLButtonElement>(null);
@@ -226,6 +196,7 @@ function DesktopServicesNav({ active }: { active: boolean }) {
       >
         <ServicesDropdownPanel
           id={menuId}
+          pathname={pathname}
           onNavigate={() => setOpen(false)}
         />
       </div>
@@ -235,9 +206,11 @@ function DesktopServicesNav({ active }: { active: boolean }) {
 
 function MobileServicesNav({
   active,
+  pathname,
   onNavigate,
 }: {
   active: boolean;
+  pathname: string;
   onNavigate: () => void;
 }) {
   const [expanded, setExpanded] = useState(false);
@@ -267,19 +240,31 @@ function MobileServicesNav({
       </div>
       <div id={submenuId} hidden={!expanded} className="pb-1 pl-2">
         <ul className="mt-1 space-y-0.5 border-l border-border pl-3">
-          {serviceNavItems.map((item) => (
-            <li key={item.href}>
-              <Link
-                href={item.href}
-                className="flex min-h-11 items-center gap-2.5 rounded-md px-2 text-sm font-medium text-midnight transition-colors hover:bg-ice focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-signature"
-                onClick={onNavigate}
-              >
-                <ServiceIcon kind={item.icon} />
-                <span>{item.label}</span>
-              </Link>
-            </li>
-          ))}
+          {serviceNavItems.map((item) => {
+            const itemActive = pathname === item.href;
+            return (
+              <li key={item.href}>
+                <Link
+                  href={item.href}
+                  className={serviceDropdownItemClass(itemActive)}
+                  aria-current={itemActive ? "page" : undefined}
+                  onClick={onNavigate}
+                >
+                  {item.label}
+                </Link>
+              </li>
+            );
+          })}
         </ul>
+        <div className="my-1.5 ml-1 h-px bg-border" aria-hidden />
+        <Link
+          href="/services"
+          className="flex min-h-10 items-center rounded-md px-4 text-sm font-semibold tracking-tight text-signature transition-colors duration-150 hover:bg-ice focus-visible:bg-ice focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-signature"
+          aria-current={pathname === "/services" ? "page" : undefined}
+          onClick={onNavigate}
+        >
+          View All Services
+        </Link>
       </div>
     </div>
   );
@@ -291,7 +276,8 @@ export function Header() {
   const menuId = useId();
   const toggleRef = useRef<HTMLButtonElement>(null);
   const menuRef = useRef<HTMLDivElement>(null);
-  const servicesActive = pathname === "/services";
+  const servicesActive =
+    pathname === "/services" || pathname.startsWith("/services/");
 
   useEffect(() => {
     if (!open) return;
@@ -345,7 +331,11 @@ export function Header() {
           {navLinks.map((link) => {
             if (link.href === "/services") {
               return (
-                <DesktopServicesNav key={link.href} active={servicesActive} />
+                <DesktopServicesNav
+                  key={link.href}
+                  active={servicesActive}
+                  pathname={pathname}
+                />
               );
             }
             const active = pathname === link.href;
@@ -407,6 +397,7 @@ export function Header() {
                 <MobileServicesNav
                   key={link.href}
                   active={servicesActive}
+                  pathname={pathname}
                   onNavigate={closeMenu}
                 />
               );
