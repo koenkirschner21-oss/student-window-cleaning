@@ -21,7 +21,7 @@ export function QuoteTrustBand() {
               src={quoteTrustPhoto.src}
               alt={quoteTrustPhoto.alt}
               fill
-              className="object-cover object-[center_58%]"
+              className="object-cover object-center"
               sizes="(min-width: 1024px) 580px, 100vw"
               priority={false}
             />

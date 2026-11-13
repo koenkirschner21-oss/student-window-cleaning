@@ -190,17 +190,15 @@ export const addressAutocomplete = {
 } as const;
 
 /**
- * Quote trust-band residential photo.
- * Approved landscape source (privacy-treated address above garage).
- * Prefer object-cover in the shorter/wider trust band — no AI enhancement.
- * Not claimed as a completed Student Window Cleaning job.
+ * Quote trust-band photo — student community group portrait.
+ * Prefer object-cover + object-center so faces stay visible in the band.
  */
 export const quoteTrustPhoto: {
   src: string;
   alt: string;
 } | null = {
-  src: "/quote/residential-property.webp",
-  alt: "Landscape view of a modern two-story home with white-trimmed windows, garage, and driveway",
+  src: "/about/student-community-lang-group.webp",
+  alt: "University student community group in professional attire posing together in front of a Gordon S. Lang School of Business and Economics banner",
 };
 
 /**
