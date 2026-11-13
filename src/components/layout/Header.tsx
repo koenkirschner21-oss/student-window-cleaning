@@ -50,9 +50,11 @@ function ChevronIcon({ open }: { open?: boolean }) {
 
 function serviceDropdownItemClass(active: boolean) {
   return [
-    "flex min-h-11 items-center px-4 text-left text-sm font-medium tracking-tight text-midnight",
-    "transition-colors duration-150",
-    active ? "bg-ice" : "bg-transparent hover:bg-ice",
+    "flex min-h-[2.65rem] items-center px-4 text-left text-sm font-medium tracking-tight text-midnight",
+    "transition-[background-color,color] duration-150 ease-out",
+    active
+      ? "bg-ice text-midnight"
+      : "bg-transparent hover:bg-ice hover:text-midnight",
     "focus-visible:bg-ice focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-signature",
   ].join(" ");
 }
@@ -67,41 +69,27 @@ function ServicesDropdownPanel({
   onNavigate?: () => void;
 }) {
   return (
-    <div
+    <ul
       id={id}
-      className="min-w-[17rem] overflow-hidden rounded-[10px] border border-border bg-pure py-1.5 shadow-[0_10px_28px_-18px_rgba(6,26,56,0.45)]"
+      role="list"
+      className="m-0 w-[16.5rem] list-none overflow-hidden rounded-[10px] border border-border bg-pure py-1.5 shadow-[0_12px_30px_-16px_rgba(6,26,56,0.42)]"
     >
-      <ul role="list" className="m-0 list-none p-0">
-        {serviceNavItems.map((item) => {
-          const active = pathname === item.href;
-          return (
-            <li key={item.href}>
-              <Link
-                href={item.href}
-                className={serviceDropdownItemClass(active)}
-                aria-current={active ? "page" : undefined}
-                onClick={onNavigate}
-              >
-                {item.label}
-              </Link>
-            </li>
-          );
-        })}
-      </ul>
-      <div className="mx-4 my-1.5 h-px bg-border" aria-hidden />
-      <Link
-        href="/services"
-        className={[
-          "mx-1.5 flex min-h-10 items-center rounded-md px-2.5 text-sm font-semibold tracking-tight text-signature",
-          "transition-colors duration-150 hover:bg-ice",
-          "focus-visible:bg-ice focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-signature",
-        ].join(" ")}
-        aria-current={pathname === "/services" ? "page" : undefined}
-        onClick={onNavigate}
-      >
-        View All Services
-      </Link>
-    </div>
+      {serviceNavItems.map((item) => {
+        const active = pathname === item.href;
+        return (
+          <li key={item.href}>
+            <Link
+              href={item.href}
+              className={serviceDropdownItemClass(active)}
+              aria-current={active ? "page" : undefined}
+              onClick={onNavigate}
+            >
+              {item.label}
+            </Link>
+          </li>
+        );
+      })}
+    </ul>
   );
 }
 
@@ -159,7 +147,7 @@ function DesktopServicesNav({
   return (
     <div
       ref={wrapRef}
-      className="relative"
+      className="relative flex h-full min-h-[var(--header-height)] items-center self-stretch"
       onMouseEnter={() => {
         clearCloseTimer();
         setOpen(true);
@@ -187,10 +175,11 @@ function DesktopServicesNav({
         </button>
       </div>
 
+      {/* Anchored to the bottom edge of the full navbar height to avoid overlap. */}
       <div
         className={[
-          "absolute left-0 top-full z-[60] pt-2 transition-opacity duration-150",
-          open ? "visible opacity-100" : "invisible opacity-0",
+          "absolute top-full left-0 z-[60] pt-1.5 transition-opacity duration-150",
+          open ? "visible opacity-100" : "invisible pointer-events-none opacity-0",
         ].join(" ")}
         onMouseEnter={clearCloseTimer}
       >
@@ -256,15 +245,6 @@ function MobileServicesNav({
             );
           })}
         </ul>
-        <div className="my-1.5 ml-1 h-px bg-border" aria-hidden />
-        <Link
-          href="/services"
-          className="flex min-h-10 items-center rounded-md px-4 text-sm font-semibold tracking-tight text-signature transition-colors duration-150 hover:bg-ice focus-visible:bg-ice focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-signature"
-          aria-current={pathname === "/services" ? "page" : undefined}
-          onClick={onNavigate}
-        >
-          View All Services
-        </Link>
       </div>
     </div>
   );
@@ -326,7 +306,7 @@ export function Header() {
 
         <nav
           aria-label="Primary"
-          className="hidden items-center justify-center gap-8 lg:flex"
+          className="hidden h-full items-center justify-center gap-8 lg:flex"
         >
           {navLinks.map((link) => {
             if (link.href === "/services") {
