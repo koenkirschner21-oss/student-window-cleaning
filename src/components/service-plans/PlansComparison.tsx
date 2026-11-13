@@ -19,14 +19,9 @@ export function PlansComparison() {
           >
             Save Up to $100 on Every Visit.
           </h2>
-          <p className="mt-3 text-base leading-relaxed text-navy-muted">
-            Keep your windows looking their best while saving with our seasonal
-            cleaning plans. Choose a one-time clean or schedule multiple visits
-            throughout the year.
-          </p>
         </div>
 
-        <CleaningPlanCards className="mt-8 sm:mt-9 md:grid-cols-2 lg:mt-10" />
+        <CleaningPlanCards className="mt-7 sm:mt-8 md:grid-cols-2 lg:mt-9" />
       </Container>
     </section>
   );

@@ -9,7 +9,6 @@ export type CleaningPlanCard = {
   recommended: boolean;
   primary: string;
   frequencyLabel: string;
-  supporting?: string;
   savingsSupporting?: string;
   benefits: readonly string[];
   pricingLine?: string;
@@ -25,8 +24,6 @@ export const cleaningPlanCards: readonly CleaningPlanCard[] = [
     recommended: false,
     primary: "1 Visit",
     frequencyLabel: "One-Time Cleaning",
-    supporting:
-      "Professional window cleaning whenever your home needs a refresh.",
     benefits: [
       "One cleaning visit",
       "Choose your cleaning services",
@@ -94,6 +91,8 @@ type CleaningPlanCardsProps = {
 
 /**
  * Three equal-height plan cards with frequency-preselect quote CTAs.
+ * Shared header / body / footer regions keep labels, headlines, dividers,
+ * and CTAs aligned across Basic / Best Value / Premium.
  */
 export function CleaningPlanCards({
   className = "",
@@ -114,76 +113,74 @@ export function CleaningPlanCards({
           <li key={plan.id} className="flex min-w-0">
             <article
               className={[
-                "flex w-full flex-col rounded-[1.125rem] border p-6 sm:p-7",
+                "grid w-full grid-rows-[auto_auto_1fr_auto_auto] rounded-[1.125rem] border p-6 sm:p-7",
                 featured
                   ? "border-midnight bg-midnight text-pure"
                   : "border-border bg-pure text-midnight",
               ].join(" ")}
             >
-              <div className="min-h-[1.75rem]">
-                {plan.recommended ? (
-                  <p className="inline-flex rounded-md bg-signature/15 px-2.5 py-1 text-[0.65rem] font-semibold uppercase tracking-[0.14em] text-sky">
-                    Recommended
-                  </p>
-                ) : null}
-              </div>
+              {/* Region 1 — plan identity (aligned across cards) */}
+              <header className="flex flex-col">
+                <div className="flex min-h-[1.75rem] items-start">
+                  {plan.recommended ? (
+                    <p className="inline-flex rounded-md bg-signature/15 px-2.5 py-1 text-[0.65rem] font-semibold uppercase tracking-[0.14em] text-sky">
+                      Recommended
+                    </p>
+                  ) : null}
+                </div>
 
-              <p
-                className={[
-                  "mt-3 text-[0.65rem] font-semibold uppercase tracking-[0.14em]",
-                  featured ? "text-sky" : "text-signature",
-                ].join(" ")}
-              >
-                {plan.name}
-              </p>
-
-              <p
-                className={[
-                  "font-heading mt-2 text-3xl font-extrabold tracking-tight sm:text-[2.35rem]",
-                  featured ? "text-pure" : "text-midnight",
-                ].join(" ")}
-              >
-                {plan.primary}
-              </p>
-
-              {plan.savingsSupporting ? (
                 <p
                   className={[
-                    "mt-1 text-[0.7rem] font-semibold uppercase tracking-[0.16em]",
+                    "mt-3 text-[0.65rem] font-semibold uppercase tracking-[0.14em]",
                     featured ? "text-sky" : "text-signature",
                   ].join(" ")}
                 >
-                  {plan.savingsSupporting}
+                  {plan.name}
                 </p>
-              ) : null}
 
-              <p
-                className={[
-                  "mt-3 text-sm font-medium tracking-tight",
-                  featured ? "text-white/85" : "text-midnight",
-                ].join(" ")}
-              >
-                {plan.frequencyLabel}
-              </p>
-
-              {plan.supporting ? (
                 <p
                   className={[
-                    "mt-2 text-sm leading-relaxed",
-                    featured ? "text-white/70" : "text-navy-muted",
+                    "font-heading mt-2 text-3xl font-extrabold tracking-tight sm:text-[2.35rem]",
+                    featured ? "text-pure" : "text-midnight",
                   ].join(" ")}
                 >
-                  {plan.supporting}
+                  {plan.primary}
                 </p>
-              ) : null}
 
+                {/* Reserved so cards without “EACH VISIT” still share the row. */}
+                <div className="mt-1 flex min-h-[1.125rem] items-center">
+                  {plan.savingsSupporting ? (
+                    <p
+                      className={[
+                        "text-[0.7rem] font-semibold uppercase tracking-[0.16em]",
+                        featured ? "text-sky" : "text-signature",
+                      ].join(" ")}
+                    >
+                      {plan.savingsSupporting}
+                    </p>
+                  ) : null}
+                </div>
+
+                <p
+                  className={[
+                    "mt-3 text-sm font-medium tracking-tight",
+                    featured ? "text-white/85" : "text-midnight",
+                  ].join(" ")}
+                >
+                  {plan.frequencyLabel}
+                </p>
+              </header>
+
+              {/* Region 2 — divider */}
               <div
                 className={[
-                  "my-5 h-px w-full",
+                  "my-4 h-px w-full sm:my-5",
                   featured ? "bg-white/15" : "bg-border",
                 ].join(" ")}
+                aria-hidden
               />
 
+              {/* Region 3 — benefits (grows; keeps CTAs bottom-aligned) */}
               <ul className="space-y-2.5">
                 {plan.benefits.map((item) => (
                   <li
@@ -199,20 +196,22 @@ export function CleaningPlanCards({
                 ))}
               </ul>
 
-              {plan.pricingLine ? (
-                <p
-                  className={[
-                    "mt-5 text-sm font-semibold tracking-tight",
-                    featured ? "text-sky" : "text-midnight",
-                  ].join(" ")}
-                >
-                  {plan.pricingLine}
-                </p>
-              ) : (
-                <div className="mt-5 h-5" aria-hidden />
-              )}
+              {/* Region 4 — pricing line (reserved height when absent) */}
+              <div className="mt-5 flex min-h-5 items-center">
+                {plan.pricingLine ? (
+                  <p
+                    className={[
+                      "text-sm font-semibold tracking-tight",
+                      featured ? "text-sky" : "text-midnight",
+                    ].join(" ")}
+                  >
+                    {plan.pricingLine}
+                  </p>
+                ) : null}
+              </div>
 
-              <div className="mt-auto pt-6">
+              {/* Region 5 — CTA */}
+              <div className="pt-5 sm:pt-6">
                 <Link
                   href={quoteHref({
                     frequency: plan.frequency,
