@@ -34,8 +34,6 @@ const plans = [
     eyebrow: "Basic",
     primary: "1 Visit",
     label: "One-Time Cleaning",
-    description:
-      "A professional one-time clean whenever your home needs a refresh.",
   },
   {
     id: "best-value",
@@ -45,8 +43,6 @@ const plans = [
     primary: "$50 OFF",
     eachVisit: true,
     label: "2 Cleaning Visits",
-    description:
-      "Enjoy seasonal window cleaning with savings on both visits.",
   },
   {
     id: "premium",
@@ -56,8 +52,6 @@ const plans = [
     primary: "$100 OFF",
     eachVisit: true,
     label: "3 Cleaning Visits",
-    description:
-      "More frequent cleaning, with greater savings on every visit.",
   },
 ] as const;
 
@@ -123,7 +117,7 @@ export function CleaningPlans() {
         </header>
 
         {/*
-          Compact content-aware subgrid (6 zones). Longest content in a zone
+          Compact content-aware subgrid (5 zones). Longest content in a zone
           sets that zone’s height — no fixed card heights or spacer rows.
           Mobile: per-card auto rows (no desktop blank space).
         */}
@@ -135,11 +129,11 @@ export function CleaningPlans() {
             return (
               <li
                 key={plan.id}
-                className="min-w-0 lg:row-span-6 lg:grid lg:grid-rows-subgrid"
+                className="min-w-0 lg:row-span-5 lg:grid lg:grid-rows-subgrid"
               >
                 <article
                   className={[
-                    "grid h-full w-full grid-rows-[repeat(6,auto)] rounded-[15px] p-6 sm:p-7 lg:row-span-6 lg:grid-rows-subgrid",
+                    "grid h-full w-full grid-rows-[repeat(5,auto)] rounded-[15px] p-6 sm:p-7 lg:row-span-5 lg:grid-rows-subgrid",
                     featured
                       ? "border border-signature bg-signature text-pure shadow-[0_10px_28px_color-mix(in_srgb,var(--color-signature-blue)_28%,transparent)]"
                       : "border border-white/15 bg-pure text-midnight",
@@ -191,20 +185,10 @@ export function CleaningPlans() {
                     </p>
                   </div>
 
-                  {/* Zone 4 — description */}
-                  <p
-                    className={[
-                      "mt-3 text-sm leading-relaxed sm:text-[0.95rem]",
-                      featured ? "text-white/80" : "text-navy-muted",
-                    ].join(" ")}
-                  >
-                    {plan.description}
-                  </p>
-
-                  {/* Zone 5 — four benefit rows (equal internal tracks; zone height = content) */}
+                  {/* Zone 4 — four benefit rows */}
                   <ul
                     className={[
-                      "mt-4 grid list-none grid-rows-4 content-start p-0",
+                      "mt-3.5 grid list-none grid-rows-4 content-start p-0",
                       featured
                         ? "border-t border-white/15"
                         : "border-t border-[color-mix(in_srgb,var(--color-midnight-navy)_8%,transparent)]",
@@ -245,8 +229,8 @@ export function CleaningPlans() {
                     })}
                   </ul>
 
-                  {/* Zone 6 — CTA */}
-                  <div className="pt-6">
+                  {/* Zone 5 — CTA */}
+                  <div className="pt-5">
                     <Link
                       href={quoteHref({ frequency: plan.frequency })}
                       className={[
