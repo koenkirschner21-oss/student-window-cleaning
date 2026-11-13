@@ -102,7 +102,7 @@ function DesktopServicesNav({
 }) {
   const [open, setOpen] = useState(false);
   const wrapRef = useRef<HTMLDivElement>(null);
-  const chevronRef = useRef<HTMLButtonElement>(null);
+  const triggerRef = useRef<HTMLAnchorElement>(null);
   const menuId = useId();
   const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -130,7 +130,7 @@ function DesktopServicesNav({
     const onKey = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
         setOpen(false);
-        chevronRef.current?.focus();
+        triggerRef.current?.focus();
       }
     };
 
@@ -154,31 +154,38 @@ function DesktopServicesNav({
       }}
       onMouseLeave={scheduleClose}
     >
-      <div className="inline-flex items-center gap-0.5">
-        <Link
-          href="/services"
-          className={navLinkClass(active)}
-          aria-current={active ? "page" : undefined}
-        >
-          Services
-        </Link>
-        <button
-          ref={chevronRef}
-          type="button"
-          className="inline-flex size-8 items-center justify-center rounded-md text-midnight transition-colors hover:text-signature focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-signature"
-          aria-expanded={open}
-          aria-controls={menuId}
-          aria-label={open ? "Close Services menu" : "Open Services menu"}
-          onClick={() => setOpen((value) => !value)}
-        >
-          <ChevronIcon open={open} />
-        </button>
-      </div>
+      <Link
+        ref={triggerRef}
+        href="/services"
+        className={navLinkClass(active)}
+        aria-current={active ? "page" : undefined}
+        aria-haspopup="menu"
+        aria-expanded={open}
+        aria-controls={menuId}
+        onFocus={() => {
+          clearCloseTimer();
+          setOpen(true);
+        }}
+        onKeyDown={(event) => {
+          if (event.key === "ArrowDown") {
+            event.preventDefault();
+            clearCloseTimer();
+            setOpen(true);
+            requestAnimationFrame(() => {
+              wrapRef.current
+                ?.querySelector<HTMLElement>(`#${CSS.escape(menuId)} a`)
+                ?.focus();
+            });
+          }
+        }}
+      >
+        Services
+      </Link>
 
-      {/* Anchored to the bottom edge of the full navbar height to avoid overlap. */}
+      {/* Anchored below the navbar; shifted left so Services sits more naturally above the panel. */}
       <div
         className={[
-          "absolute top-full left-0 z-[60] pt-1.5 transition-opacity duration-150",
+          "absolute top-full left-[-2.5rem] z-[60] pt-1.5 transition-opacity duration-150",
           open ? "visible opacity-100" : "invisible pointer-events-none opacity-0",
         ].join(" ")}
         onMouseEnter={clearCloseTimer}
